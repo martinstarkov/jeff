@@ -1,5 +1,5 @@
 #include "SensorController.h"
-
+  
 void SensorController::init() {
   
   // past midnight, this was the only way I could figure out how to make temperature compabile with the rest.
@@ -9,6 +9,7 @@ void SensorController::init() {
   while (!Serial);
   Serial.println("Serial initalized");
   initBNO();
+  initBMPs();
   Serial.println("Sensor controller fully initalized");
 }
 
@@ -22,6 +23,37 @@ void SensorController::initBNO() {
   
 }
 
+void SensorController::initBMPs(){
+  Adafruit_BMP280 bmp1;
+  Adafruit_BMP280 bmp2;
+  Adafruit_BMP280 bmp3;
+
+  if (!bmp1.begin() || !bmp2.begin() || !bmp3.begin()) {
+    Serial.println("Could not find a valid BMP085 sensor, check wiring!");
+    while (1);
+  }
+
+    /* Default settings from datasheet. */
+  bmp1.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+    /* Default settings from datasheet. */
+  bmp2.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+    /* Default settings from datasheet. */
+  bmp3.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+  Serial.println("all BMP sensors initialized");
+}
+
 void SensorController::recordData() {
   bno->getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
   bno->getEvent(&angVelocityData, Adafruit_BNO055::VECTOR_GYROSCOPE);
@@ -29,6 +61,84 @@ void SensorController::recordData() {
   bno->getEvent(&accelerometerData, Adafruit_BNO055::VECTOR_ACCELEROMETER);
   bno->getEvent(&magnetometerData, Adafruit_BNO055::VECTOR_MAGNETOMETER);
   bno->getEvent(&gravityData, Adafruit_BNO055::VECTOR_GRAVITY);
+
+  //record BMP data
+  bmp1Data[0] = bmp1.readTemperature();
+  bmp1Data[1] = bmp1.readPressure();
+  bmp1Data[2] = bmp1.readAltitude();
+  //bmp1.readAltitude(101500); Need to adjust to local forecast
+
+  bmp2Data[0] = bmp2.readTemperature();
+  bmp2Data[1] = bmp2.readPressure();
+  bmp2Data[2] = bmp2.readAltitude();
+  //bmp2.readAltitude(101500); Need to adjust to local forecast
+
+  bmp3Data[0] = bmp3.readTemperature();
+  bmp3Data[1] = bmp3.readPressure();
+  bmp3Data[2] = bmp3.readAltitude();
+  //bmp3.readAltitude(101500); Need to adjust to local forecast
+}
+
+void SensorController::correctData(){
+  //Temperature
+  if(abs(bmp1Data[0] - bmp2Data[0]) < bmpTemp_Threshold && abs(bmp2Data[0] - bmp3Data[0]) < bmpTemp_Threshold && abs(bmp3Data[0] - bmp1Data[0]) < bmpTemp_Threshold){
+    bmpCorrectedData[0] = (bmp1Data[0] + bmp2Data[0] + bmp3Data[0]) / 3;
+  }
+  else if (abs(bmp1Data[0] - bmp2Data[0]) < bmpTemp_Threshold){
+    bmpCorrectedData[0] = (bmp1Data[0] + bmp2Data[0]) / 2;
+  }
+  else if(abs(bmp2Data[0] - bmp3Data[0]) < bmpTemp_Threshold){
+    bmpCorrectedData[0] = (bmp2Data[0] + bmp3Data[0]) / 2;
+  }
+  else if(abs(bmp3Data[0] - bmp1Data[0]) < bmpTemp_Threshold){
+    bmpCorrectedData[0] = (bmp3Data[0] + bmp1Data[0]) / 2;
+  }
+  else{
+    //not sure what to do here (although probably won't happen. Hopefully.)
+//    int delta1 = abs(bmpCorrectedData[0] - bmp1Data[0]);
+//    int delta2 = abs(bmpCorrectedData[0] - bmp2Data[0]);
+//    int delta3 = abs(bmpCorrectedData[0] - bmp3Data[0]);
+  }
+
+  //Pressure
+  if(abs(bmp1Data[1] - bmp2Data[1]) < bmpPressure_Threshold && abs(bmp2Data[1] - bmp3Data[1]) < bmpPressure_Threshold && abs(bmp3Data[1] - bmp1Data[1]) < bmpPressure_Threshold){
+    bmpCorrectedData[1] = (bmp1Data[1] + bmp2Data[1] + bmp3Data[1]) / 3;
+  }
+  else if (abs(bmp1Data[1] - bmp2Data[1]) < bmpPressure_Threshold){
+    bmpCorrectedData[1] = bmp1Data[1];
+  }
+  else if(abs(bmp2Data[1] - bmp3Data[1]) < bmpPressure_Threshold){
+    bmpCorrectedData[1] = bmp2Data[1];
+  }
+  else if(abs(bmp3Data[1] - bmp1Data[1]) < bmpPressure_Threshold){
+    bmpCorrectedData[1] = bmp3Data[1];
+  }
+  else{
+    //not sure what to do here (although probably won't happen. Hopefully.)
+//    int delta1 = abs(bmpCorrectedData[1] - bmp1Data[1]);
+//    int delta2 = abs(bmpCorrectedData[1] - bmp2Data[1]);
+//    int delta3 = abs(bmpCorrectedData[1] - bmp3Data[1]);
+  }
+
+  //Altitude
+  if(abs(bmp1Data[2] - bmp2Data[2]) < bmpAltitude_Threshold && abs(bmp2Data[2] - bmp3Data[2]) < bmpAltitude_Threshold && abs(bmp3Data[2] - bmp1Data[2]) < bmpAltitude_Threshold){
+    bmpCorrectedData[2] = (bmp1Data[2] + bmp2Data[2] + bmp3Data[2]) / 3;
+  }
+  else if (abs(bmp1Data[2] - bmp2Data[2]) < bmpAltitude_Threshold){
+    bmpCorrectedData[2] = bmp1Data[2];
+  }
+  else if(abs(bmp2Data[2] - bmp3Data[2]) < bmpAltitude_Threshold){
+    bmpCorrectedData[2] = bmp2Data[2];
+  }
+  else if(abs(bmp3Data[2] - bmp1Data[2]) < bmpAltitude_Threshold){
+    bmpCorrectedData[2] = bmp3Data[2];
+  }
+  else{
+    //not sure what to do here (although probably won't happen. Hopefully.)
+//    int delta1 = abs(bmpCorrectedData[2] - bmp1Data[2]);
+//    int delta2 = abs(bmpCorrectedData[2] - bmp2Data[2]);
+//    int delta3 = abs(bmpCorrectedData[2] - bmp3Data[2]);
+  }
 }
 
 sensors_event_t* SensorController::getData(String type) {
@@ -86,6 +196,20 @@ void SensorController::printData(sensors_event_t* event) {
     }
   }
   Serial.println("-------------------------------------------------------");
+}
+
+void SensorController::printBMPData(){
+    Serial.print(F("Temperature = "));
+    Serial.print(bmpCorrectedData[0]);
+    Serial.println(" *C");
+
+    Serial.print(F("Pressure = "));
+    Serial.print(bmpCorrectedData[1]);
+    Serial.println(" Pa");
+
+    Serial.print(F("Approx altitude = "));
+    Serial.print(bmpCorrectedData[2]); /* Adjusted to local forecast! */
+    Serial.println(" m");
 }
 
 void SensorController::readData() {
