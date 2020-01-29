@@ -1,7 +1,3 @@
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BNO055.h>
-#include <utility/imumaths.h>
 #include "SensorController.h"
 
 SensorController* controller;
@@ -22,7 +18,10 @@ void loop(void)
   controller->printData(controller->getData("a_acceleration"));
   controller->printData(controller->getData("gyroscope"));
   controller->printData(controller->getData("magnetic"));
-  controller->printData(controller->getData("temperature"));
+  controller->printData(controller->getData("bnoTemperature"));
+  controller->printData(controller->getData("bmpTemperature"));
+  controller->printData(controller->getData("pressure"));
+  controller->printData(controller->getData("altitude"));
   
   delay(controller->refresh_delay);
 }
