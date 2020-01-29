@@ -3,26 +3,30 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 #include "SensorController.h"
+#include "ParachuteController.h"
 
-SensorController* controller;
+SensorController* sController;
+ParachuteController* pController;
 
 void setup(void)
 {
-  controller = new SensorController();
-  controller->init();
+  sController = new SensorController();
+  sController->init();
+  pController = new ParachuteController();
+  pController->init();
   
   delay(1000);
 }
 
 void loop(void)
 {
-  controller->recordData();
-  controller->printData(controller->getData("orientation"));
-  controller->printData(controller->getData("l_acceleration"));
-  controller->printData(controller->getData("a_acceleration"));
-  controller->printData(controller->getData("gyroscope"));
-  controller->printData(controller->getData("magnetic"));
-  controller->printData(controller->getData("temperature"));
+  sController->recordData();
+  sController->printData(sController->getData("orientation"));
+  sController->printData(sController->getData("l_acceleration"));
+  sController->printData(sController->getData("a_acceleration"));
+  sController->printData(sController->getData("gyroscope"));
+  sController->printData(sController->getData("magnetic"));
+  sController->printData(sController->getData("temperature"));
   
-  delay(controller->refresh_delay);
+  delay(sController->refresh_delay);
 }
