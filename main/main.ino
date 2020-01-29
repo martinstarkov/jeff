@@ -3,6 +3,8 @@
 
 SensorController* sController;
 ParachuteController* pController;
+float testAltitude = 800;
+float randNumber;
 
 void setup(void)
 {
@@ -10,23 +12,28 @@ void setup(void)
   sController->init();
   pController = new ParachuteController();
   pController->init();
-  
+  randomSeed(analogRead(0));
   delay(1000);
 }
 
 void loop(void)
 {
-
-  controller->recordData();
-  controller->printData(controller->getData("orientation"));
-  controller->printData(controller->getData("l_acceleration"));
-  controller->printData(controller->getData("a_acceleration"));
-  controller->printData(controller->getData("gyroscope"));
-  controller->printData(controller->getData("magnetic"));
-  controller->printData(controller->getData("bnoTemperature"));
-  controller->printData(controller->getData("bmpTemperature"));
-  controller->printData(controller->getData("pressure"));
-  controller->printData(controller->getData("altitude"));
+  randNumber = random(-4, 5);
+  testAltitude = testAltitude - 20;
+  //sController->recordData();
+  /*
+  sController->printData(sController->getData("orientation"));
+  sController->printData(sController->getData("l_acceleration"));
+  sController->printData(sController->getData("a_acceleration"));
+  sController->printData(sController->getData("gyroscope"));
+  sController->printData(sController->getData("magnetic"));
+  sController->printData(sController->getData("bnoTemperature"));
+  sController->printData(sController->getData("bmpTemperature"));
+  sController->printData(sController->getData("pressure"));
+  sController->printData(sController->getData("altitude"));
+  */
+  //pController->deploymentCheck(sController->getAltitude());
+  pController->deploymentCheck(testAltitude);
   
-  delay(sController->refresh_delay);
+  delay(1000);
 }

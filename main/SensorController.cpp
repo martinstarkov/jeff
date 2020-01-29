@@ -141,8 +141,18 @@ void SensorController::readData() {
 
 }
 
-float SensorController::getAltitude() {
-  return getData("")
+float SensorController::getAltitude(float standardPressure) {
+  return bmp->readAltitude(standardPressure);
+}
+
+float* SensorController::getRecentAltitudes() {
+   static float recentAltitudes[10];
+   
+   for (int i = 0; i < 10; ++i) {
+      //recentAltitudes[i] = rand();
+   }
+
+   return recentAltitudes;
 }
 
 /*

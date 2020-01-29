@@ -30,7 +30,7 @@ class SensorController {
         sensors_event_t* getData(String type);
         void printData(sensors_event_t* event);
         void readData();
-        float getAltitude();
-        
+        float getAltitude(float standardPressure=101325);
+        float* getRecentAltitudes();
         //void initBMP();
 };
