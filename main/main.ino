@@ -1,7 +1,3 @@
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BNO055.h>
-#include <utility/imumaths.h>
 #include "SensorController.h"
 #include "ParachuteController.h"
 
@@ -20,13 +16,17 @@ void setup(void)
 
 void loop(void)
 {
-  sController->recordData();
-  sController->printData(sController->getData("orientation"));
-  sController->printData(sController->getData("l_acceleration"));
-  sController->printData(sController->getData("a_acceleration"));
-  sController->printData(sController->getData("gyroscope"));
-  sController->printData(sController->getData("magnetic"));
-  sController->printData(sController->getData("temperature"));
+
+  controller->recordData();
+  controller->printData(controller->getData("orientation"));
+  controller->printData(controller->getData("l_acceleration"));
+  controller->printData(controller->getData("a_acceleration"));
+  controller->printData(controller->getData("gyroscope"));
+  controller->printData(controller->getData("magnetic"));
+  controller->printData(controller->getData("bnoTemperature"));
+  controller->printData(controller->getData("bmpTemperature"));
+  controller->printData(controller->getData("pressure"));
+  controller->printData(controller->getData("altitude"));
   
   delay(sController->refresh_delay);
 }
