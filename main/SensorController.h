@@ -19,16 +19,16 @@ class SensorController {
         Adafruit_BMP280 bmp2;
         Adafruit_BMP280 bmp3;
 
-        int bmp1Data[3] = {0};
-        int bmp2Data[3] = {0};
-        int bmp3Data[3] = {0};
-        int bmpCorrectedData[3] = {0};
+        double bmpTemp[3] = {0};
+        double bmpPressure[3] = {0};
+        double bmpAltitude[3] = {0};
+        double bmpCorrectedData[3] = {0};
 
         //Thresholds for BMP error correction 
         //TODO: change threshold values to appropriate values
-        const int bmpTemp_Threshold = 5;
-        const int bmpPressure_Threshold = 5;
-        const int bmpAltitude_Threshold = 5;
+        const double bmpTemp_Threshold = 5;
+        const double bmpPressure_Threshold = 5;
+        const double bmpAltitude_Threshold = 5;
         
     public:
         uint16_t refresh_delay = 100; // milliseconds
@@ -52,6 +52,7 @@ class SensorController {
         
         void recordData();
         void correctData();
+        double getAverage(double data[], double threshold);
         sensors_event_t* getData(String type);
         void printData(sensors_event_t* event);
         void readData();

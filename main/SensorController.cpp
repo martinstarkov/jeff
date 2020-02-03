@@ -63,82 +63,45 @@ void SensorController::recordData() {
   bno->getEvent(&gravityData, Adafruit_BNO055::VECTOR_GRAVITY);
 
   //record BMP data
-  bmp1Data[0] = bmp1.readTemperature();
-  bmp1Data[1] = bmp1.readPressure();
-  bmp1Data[2] = bmp1.readAltitude();
-  //bmp1.readAltitude(101500); Need to adjust to local forecast
-
-  bmp2Data[0] = bmp2.readTemperature();
-  bmp2Data[1] = bmp2.readPressure();
-  bmp2Data[2] = bmp2.readAltitude();
-  //bmp2.readAltitude(101500); Need to adjust to local forecast
-
-  bmp3Data[0] = bmp3.readTemperature();
-  bmp3Data[1] = bmp3.readPressure();
-  bmp3Data[2] = bmp3.readAltitude();
-  //bmp3.readAltitude(101500); Need to adjust to local forecast
+  bmpTemp[0] = bmp1.readTemperature();
+  bmpTemp[1] = bmp2.readTemperature();
+  bmpTemp[2] = bmp3.readTemperature();
+  
+  bmpPressure[0] = bmp1.readPressure();
+  bmpPressure[1] = bmp2.readPressure();
+  bmpPressure[2] = bmp3.readPressure();
+  
+  bmpAltitude[0] = bmp1.readAltitude();
+  bmpAltitude[1] = bmp2.readAltitude();
+  bmpAltitude[2] = bmp3.readAltitude();
+  //use bmp1.readAltitude(101500)? Need to adjust to local forecast
 }
 
 void SensorController::correctData(){
-  //Temperature
-  if(abs(bmp1Data[0] - bmp2Data[0]) < bmpTemp_Threshold && abs(bmp2Data[0] - bmp3Data[0]) < bmpTemp_Threshold && abs(bmp3Data[0] - bmp1Data[0]) < bmpTemp_Threshold){
-    bmpCorrectedData[0] = (bmp1Data[0] + bmp2Data[0] + bmp3Data[0]) / 3;
-  }
-  else if (abs(bmp1Data[0] - bmp2Data[0]) < bmpTemp_Threshold){
-    bmpCorrectedData[0] = (bmp1Data[0] + bmp2Data[0]) / 2;
-  }
-  else if(abs(bmp2Data[0] - bmp3Data[0]) < bmpTemp_Threshold){
-    bmpCorrectedData[0] = (bmp2Data[0] + bmp3Data[0]) / 2;
-  }
-  else if(abs(bmp3Data[0] - bmp1Data[0]) < bmpTemp_Threshold){
-    bmpCorrectedData[0] = (bmp3Data[0] + bmp1Data[0]) / 2;
-  }
-  else{
-    //not sure what to do here (although probably won't happen. Hopefully.)
-//    int delta1 = abs(bmpCorrectedData[0] - bmp1Data[0]);
-//    int delta2 = abs(bmpCorrectedData[0] - bmp2Data[0]);
-//    int delta3 = abs(bmpCorrectedData[0] - bmp3Data[0]);
+  bmpCorrectedData[0] = getAverage(bmpTemp, bmpTemp_Threshold);
+  bmpCorrectedData[1] = getAverage(bmpPressure, bmpPressure_Threshold);
+  bmpCorrectedData[2] = getAverage(bmpAltitude, bmpAltitude_Threshold);
+}
+
+double SensorController::getAverage(double data[], double threshold){
+  int count = 0;
+  double sum = 0;
+
+  int arraylength = sizeof(data)/sizeof(*data);
+
+  for(int i=0; i<arraylength; i++){
+    for(int j=0; j < arraylength; j++){
+      if(i!=j && abs(data[i] - data[j]) < threshold){
+        count ++;
+      }
+    }
+    if(count >= arraylength/2){
+      sum += data[i];
+    }
   }
 
-  //Pressure
-  if(abs(bmp1Data[1] - bmp2Data[1]) < bmpPressure_Threshold && abs(bmp2Data[1] - bmp3Data[1]) < bmpPressure_Threshold && abs(bmp3Data[1] - bmp1Data[1]) < bmpPressure_Threshold){
-    bmpCorrectedData[1] = (bmp1Data[1] + bmp2Data[1] + bmp3Data[1]) / 3;
-  }
-  else if (abs(bmp1Data[1] - bmp2Data[1]) < bmpPressure_Threshold){
-    bmpCorrectedData[1] = bmp1Data[1];
-  }
-  else if(abs(bmp2Data[1] - bmp3Data[1]) < bmpPressure_Threshold){
-    bmpCorrectedData[1] = bmp2Data[1];
-  }
-  else if(abs(bmp3Data[1] - bmp1Data[1]) < bmpPressure_Threshold){
-    bmpCorrectedData[1] = bmp3Data[1];
-  }
-  else{
-    //not sure what to do here (although probably won't happen. Hopefully.)
-//    int delta1 = abs(bmpCorrectedData[1] - bmp1Data[1]);
-//    int delta2 = abs(bmpCorrectedData[1] - bmp2Data[1]);
-//    int delta3 = abs(bmpCorrectedData[1] - bmp3Data[1]);
-  }
-
-  //Altitude
-  if(abs(bmp1Data[2] - bmp2Data[2]) < bmpAltitude_Threshold && abs(bmp2Data[2] - bmp3Data[2]) < bmpAltitude_Threshold && abs(bmp3Data[2] - bmp1Data[2]) < bmpAltitude_Threshold){
-    bmpCorrectedData[2] = (bmp1Data[2] + bmp2Data[2] + bmp3Data[2]) / 3;
-  }
-  else if (abs(bmp1Data[2] - bmp2Data[2]) < bmpAltitude_Threshold){
-    bmpCorrectedData[2] = bmp1Data[2];
-  }
-  else if(abs(bmp2Data[2] - bmp3Data[2]) < bmpAltitude_Threshold){
-    bmpCorrectedData[2] = bmp2Data[2];
-  }
-  else if(abs(bmp3Data[2] - bmp1Data[2]) < bmpAltitude_Threshold){
-    bmpCorrectedData[2] = bmp3Data[2];
-  }
-  else{
-    //not sure what to do here (although probably won't happen. Hopefully.)
-//    int delta1 = abs(bmpCorrectedData[2] - bmp1Data[2]);
-//    int delta2 = abs(bmpCorrectedData[2] - bmp2Data[2]);
-//    int delta3 = abs(bmpCorrectedData[2] - bmp3Data[2]);
-  }
+  return sum/count;
+  
 }
 
 sensors_event_t* SensorController::getData(String type) {
