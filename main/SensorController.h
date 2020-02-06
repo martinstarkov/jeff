@@ -53,6 +53,7 @@ class SensorController {
         void recordData();
         void correctData();
         double getAverage(double data[], double threshold);
+        bool getAverage(bool data[]);
         sensors_event_t* getData(String type);
         void printData(sensors_event_t* event);
         void readData();

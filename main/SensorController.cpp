@@ -1,10 +1,10 @@
 #include "SensorController.h"
-  
+
 void SensorController::init() {
-  
+
   // past midnight, this was the only way I could figure out how to make temperature compabile with the rest.
   temperatureData.type = SENSOR_TYPE_TEMPERATURE;
-  
+
   Serial.begin(115200);
   while (!Serial);
   Serial.println("Serial initalized");
@@ -20,7 +20,7 @@ void SensorController::initBNO() {
     while (1);
   }
   Serial.println("BNO sensor initalized");
-  
+
 }
 
 void SensorController::initBMPs(){
@@ -66,11 +66,11 @@ void SensorController::recordData() {
   bmpTemp[0] = bmp1.readTemperature();
   bmpTemp[1] = bmp2.readTemperature();
   bmpTemp[2] = bmp3.readTemperature();
-  
+
   bmpPressure[0] = bmp1.readPressure();
   bmpPressure[1] = bmp2.readPressure();
   bmpPressure[2] = bmp3.readPressure();
-  
+
   bmpAltitude[0] = bmp1.readAltitude();
   bmpAltitude[1] = bmp2.readAltitude();
   bmpAltitude[2] = bmp3.readAltitude();
@@ -84,23 +84,49 @@ void SensorController::correctData(){
 }
 
 double SensorController::getAverage(double data[], double threshold){
-  int count = 0;
+  int data_count = 0;
   double sum = 0;
 
   int arraylength = sizeof(data)/sizeof(*data);
 
   for(int i=0; i<arraylength; i++){
+    int count = 0;
     for(int j=0; j < arraylength; j++){
       if(i!=j && abs(data[i] - data[j]) < threshold){
         count ++;
       }
     }
-    if(count >= arraylength/2){
+    if(count >= (int)((double)arraylength+0.5)/2){
       sum += data[i];
+      data_count ++;
     }
   }
 
-  return sum/count;
+  return sum/data_count;
+
+}
+
+bool SensorController::getAverage(bool data[]){
+  int true_count = 0;
+  int false_count = 0;
+
+  int arraylength = sizeof(data)/sizeof(*data);
+
+  for (int i=0; i<arraylength; i++){
+    if (data[i] == true){
+      true_count ++;
+    }
+    else{
+      false_count ++;
+    }
+  }
+
+  if (true_count > false_count){
+    return true;
+  }
+  else{
+    return false;
+  }
   
 }
 
@@ -198,25 +224,25 @@ SENSOR_TYPE_CURRENT = (16),
 SENSOR_TYPE_COLOR = (17)
 
 typedef struct {
-  int32_t version;   // must be sizeof(struct sensors_event_t) 
-  int32_t sensor_id; // unique sensor identifier 
-  int32_t type;      // sensor type 
-  int32_t reserved0; // reserved 
-  int32_t timestamp; // time is in milliseconds 
+  int32_t version;   // must be sizeof(struct sensors_event_t)
+  int32_t sensor_id; // unique sensor identifier
+  int32_t type;      // sensor type
+  int32_t reserved0; // reserved
+  int32_t timestamp; // time is in milliseconds
   union {
     float data[4];              // Raw data
-    sensors_vec_t acceleration; // acceleration values are in meter per second per second (m/s^2) 
-    sensors_vec_t magnetic; // magnetic vector values are in micro-Tesla (uT) 
-    sensors_vec_t orientation; // orientation values are in degrees 
-    sensors_vec_t gyro;        // gyroscope values are in rad/s 
-    float temperature; // temperature is in degrees centigrade (Celsius) 
-    float distance;    // distance in centimeters 
-    float light;       // light in SI lux units 
-    float pressure;    // pressure in hectopascal (hPa) 
-    float relative_humidity; // relative humidity in percent 
-    float current;           // current in milliamps (mA) 
-    float voltage;           // voltage in volts (V) 
-    sensors_color_t color;   // color in RGB component values 
+    sensors_vec_t acceleration; // acceleration values are in meter per second per second (m/s^2)
+    sensors_vec_t magnetic; // magnetic vector values are in micro-Tesla (uT)
+    sensors_vec_t orientation; // orientation values are in degrees
+    sensors_vec_t gyro;        // gyroscope values are in rad/s
+    float temperature; // temperature is in degrees centigrade (Celsius)
+    float distance;    // distance in centimeters
+    float light;       // light in SI lux units
+    float pressure;    // pressure in hectopascal (hPa)
+    float relative_humidity; // relative humidity in percent
+    float current;           // current in milliamps (mA)
+    float voltage;           // voltage in volts (V)
+    sensors_color_t color;   // color in RGB component values
   };                         // Union for the wide ranges of data we can carry
 } sensors_event_t;
 
