@@ -9,8 +9,9 @@
         
 class ParachuteController {
     private:
-      int samples = 10;
-      Vector<float> altitudes;
+      int decreasedAltitudesThreshold = 10;
+      float previousAltitude = -99999999999999;
+      float altitudeSafetyFactor = 0.25;
     public:
       void init();
       bool deploymentCheck(float currentAltitude);

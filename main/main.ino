@@ -30,10 +30,10 @@ void loop(void)
   sController->printData(sController->getData("bnoTemperature"));
   sController->printData(sController->getData("bmpTemperature"));
   sController->printData(sController->getData("pressure"));
-  sController->printData(sController->getData("altitude"));
   */
+  Serial.println(sController->getAltitude());
   //pController->deploymentCheck(sController->getAltitude());
-  pController->deploymentCheck(testAltitude);
+  pController->deploymentCheck(sController->getAltitude());
   
   delay(1000);
 }
