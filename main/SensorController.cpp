@@ -145,17 +145,13 @@ float SensorController::getAltitude(float standardPressure) {
   return bmp->readAltitude(standardPressure);
 }
 
-float* SensorController::getRecentAltitudes() {
-   static float recentAltitudes[10];
-   
-   for (int i = 0; i < 10; ++i) {
-      //recentAltitudes[i] = rand();
-   }
-
-   return recentAltitudes;
+float SensorController::getPressure() {
+  return bmp->readPressure();
 }
 
 /*
+ Altitude units: hPa
+ Altitude inaccuracy: ±1m (±0.12 hPa)
 SENSOR_TYPE_ACCELEROMETER = (1), // Gravity + linear acceleration
 SENSOR_TYPE_MAGNETIC_FIELD = (2),
 SENSOR_TYPE_ORIENTATION = (3),

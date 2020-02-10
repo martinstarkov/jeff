@@ -5,14 +5,25 @@ void ParachuteController::init() {
 }
 
 bool ParachuteController::deploymentCheck(float currentAltitude) {
-  if (previousAltitude - currentAltitude > altitudeSafetyFactor) {
-    decreasedAltitudesThreshold--;
-    Serial.println("Decreased altitude!");
+  bool deploymentStatus = false;
+  static int decreasedAltitudes = 0;
+  static int loopIteration = altitudeLoop;
+  if (loopIteration > 0) {
+    if (previousAltitude - currentAltitude > altitudeSafetyFactor) {
+      decreasedAltitudes++;
+      Serial.println("Altitude decreased!");
+    }
+    if (decreasedAltitudes >= altitudeConfidence) {
+      Serial.println("Parachute deployed");
+      deploymentStatus = true;
+    }
+    loopIteration--;
+  } else {
+    Serial.println("Reset confidence");
+    decreasedAltitudes = 0;
+    loopIteration = altitudeLoop;
   }
   previousAltitude = currentAltitude;
-  if (decreasedAltitudesThreshold <= 0) {
-    Serial.println("Parachute deployed");
-    return true;
-  }
-  return false;
+  return deploymentStatus;
+  
 }

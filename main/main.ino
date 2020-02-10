@@ -3,8 +3,7 @@
 
 SensorController* sController;
 ParachuteController* pController;
-float testAltitude = 800;
-float randNumber;
+float initialPressure = -9999999999;
 
 void setup(void)
 {
@@ -12,15 +11,13 @@ void setup(void)
   sController->init();
   pController = new ParachuteController();
   pController->init();
-  randomSeed(analogRead(0));
+  initialPressure = sController->getPressure();
   delay(1000);
 }
 
 void loop(void)
 {
-  randNumber = random(-4, 5);
-  testAltitude = testAltitude - 20;
-  //sController->recordData();
+  sController->recordData();
   /*
   sController->printData(sController->getData("orientation"));
   sController->printData(sController->getData("l_acceleration"));
@@ -31,9 +28,9 @@ void loop(void)
   sController->printData(sController->getData("bmpTemperature"));
   sController->printData(sController->getData("pressure"));
   */
-  Serial.println(sController->getAltitude());
-  //pController->deploymentCheck(sController->getAltitude());
-  pController->deploymentCheck(sController->getAltitude());
+  Serial.println("Pressure: " + String(sController->getPressure()));
+  Serial.println("Altitude: " + String(sController->getAltitude(980)));
+  pController->deploymentCheck(sController->getAltitude(980));
   
   delay(1000);
 }
