@@ -15,7 +15,8 @@
 class SensorController {
     private:
         int32_t sensorID = 55;
-        uint8_t address = 0x29;
+        uint8_t BNOAddress = 0x29;
+        uint8_t BMPAddress = 0x76;
         Adafruit_BNO055* bno;
         Adafruit_BMP280* bmp;
         

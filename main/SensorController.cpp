@@ -18,10 +18,10 @@ void SensorController::init() {
 }
 
 void SensorController::initBNO() {
-  bno = new Adafruit_BNO055(sensorID, address);
+  bno = new Adafruit_BNO055(sensorID, BNOAddress);
   if (!bno->begin()) {
     Serial.println("BNO sensor not detected. Check wiring / I2C address.");
-    while (1) {}
+    //while (1) {}
   }
   Serial.println("BNO sensor initalized");
   
@@ -36,7 +36,7 @@ void SensorController::initBMP() {
     Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
   if (!bmp->begin()) {
     Serial.println("BMP sensor not detected. Check wiring.");
-   // while (1) {}
+    //while (1) {}
   }
   Serial.println("BMP sensor initalized");
 }

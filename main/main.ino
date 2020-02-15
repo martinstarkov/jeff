@@ -5,7 +5,7 @@ SensorController* sController;
 ParachuteController* pController;
 float initialPressure = -9999999999;
 
-void setup(void)
+void setup()
 {
   sController = new SensorController();
   sController->init();
@@ -15,12 +15,13 @@ void setup(void)
   delay(1000);
 }
 
-void loop(void)
+void loop()
 {
   sController->recordData();
   Serial.println("Pressure: " + String(sController->getPressure()));
-  Serial.println("Altitude: " + String(sController->getAltitude(985)));
-  pController->deploymentCheck(sController->getAltitude(985));
+  Serial.println(String(sController->getAltitude(985)));
+  pController->drogueDeploymentCheck(sController->getAltitude(985));
+  pController->mainChuteDeploymentCheck(sController->getAltitude(985));
   
   delay(100);
 }
