@@ -19,8 +19,8 @@ void loop(void)
 {
   sController->recordData();
   Serial.println("Pressure: " + String(sController->getPressure()));
-  Serial.println("Altitude: " + String(sController->getAltitude(980)));
-  pController->deploymentCheck(sController->getAltitude(980));
+  Serial.println("Altitude: " + String(sController->getAltitude(985)));
+  pController->deploymentCheck(sController->getAltitude(985));
   
-  delay(1000);
+  delay(100);
 }
