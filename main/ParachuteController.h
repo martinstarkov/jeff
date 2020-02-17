@@ -1,5 +1,7 @@
 #pragma once
 #include <Wire.h>
+
+#define ALTITUDE_LOOP_LENGTH 50
         
 class ParachuteController {
     private:
@@ -11,9 +13,9 @@ class ParachuteController {
       int drogueCycle = 0;
       bool drogueDeploymentStatus = false;
       int altitudeConfidence = 10;
-      int altitudeLoop = 50;
-      int previousStates[50]; // must be same as altitudeLoop
-      float altitudeSafetyFactor = 0.3; // meters
+      int altitudeLoop = ALTITUDE_LOOP_LENGTH;
+      int previousStates[ALTITUDE_LOOP_LENGTH]; // must be same as altitudeLoop
+      float altitudeSafetyFactor = 0.2; // meters
 
       // main chute variables
       int caching = 10;

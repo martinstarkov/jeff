@@ -13,7 +13,10 @@ void SensorController::init() {
   while (!Serial);
   Serial.println("Serial initalized");
   initBNO();
-  initBMP();
+  for (int i = 0; i < sizeof(addresses) / sizeof(uint8_t); i++) {
+    initBMP(&Wire1, addresses[i]);
+    initBMP(&Wire, addresses[i]);
+  }
   Serial.println("Sensor controller fully initalized");
 }
 
@@ -27,17 +30,19 @@ void SensorController::initBNO() {
   
 }
 
-void SensorController::initBMP() {
-  bmp = new Adafruit_BMP280();
+void SensorController::initBMP(TwoWire *theWire, uint8_t address) {
+  Adafruit_BMP280* bmp = new Adafruit_BMP280(theWire);
     bmp->setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
     Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
     Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
     Adafruit_BMP280::FILTER_X16,      /* Filtering. */
     Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
-  if (!bmp->begin()) {
+  if (!bmp->begin(address)) {
     Serial.println("BMP sensor not detected. Check wiring.");
     //while (1) {}
   }
+  bmps[initalizedBmps] = bmp;
+  initalizedBmps++;
   Serial.println("BMP sensor initalized");
 }
 
@@ -107,7 +112,6 @@ void SensorController::printData(sensors_event_t* event) {
     }
     case SENSOR_TYPE_TEMPERATURE_BMP: {
       Serial.println("BMP TEMPERATURE (Celsius)");
-      Serial.println(String(bmp->readTemperature()));
       break;
     }
     /*case SENSOR_TYPE_TEMPERATURE_BNO: {
@@ -117,14 +121,12 @@ void SensorController::printData(sensors_event_t* event) {
     }*/
     case SENSOR_TYPE_PRESSURE: {
       Serial.println("PRESSURE (Pa)");
-      Serial.println(String(bmp->readPressure()));
       break;
     }
     case SENSOR_TYPE_ALTITUDE: {
       // Calculate altitude assuming 'standard' barometric
       // pressure of 1013.25 millibar = 101325 Pascal
       Serial.println("ALTITUDE (m)");
-      Serial.println(String(bmp->readAltitude(103520)));
       break;
     }
     case SENSOR_TYPE_ROTATION_VECTOR:
@@ -141,12 +143,21 @@ void SensorController::readData() {
 
 }
 
+float SensorController::getAverageAltitude(float standardPressure) {
+  float sum = 0;
+  for (int i = 0; i < BMP_AMOUNT; i++) {
+    sum += bmps[i]->readAltitude(standardPressure);
+    //Serial.println("BMP" + String(i) + ": " + String(bmps[i]->readAltitude(standardPressure)));
+  }
+  return sum / BMP_AMOUNT;
+}
+
 float SensorController::getAltitude(float standardPressure) {
-  return bmp->readAltitude(standardPressure);
+  return getAverageAltitude(standardPressure);
 }
 
 float SensorController::getPressure() {
-  return bmp->readPressure();
+  return 0;
 }
 
 /*
