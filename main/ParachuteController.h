@@ -6,7 +6,7 @@
 class ParachuteController {
     private:
       // initalize
-      float previousAltitude = -9999999999;
+      float previousAltitude;
 
       // drogue chute variables
       int decreasedAltitudes = 0;

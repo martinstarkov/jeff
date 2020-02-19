@@ -68,13 +68,10 @@ bool ParachuteController::drogueDeploymentCheck(float currentAltitude) {
   }
   previousStates[drogueCycle % altitudeLoop] = 0; // update tile state each loop iteration
   if (decreasedAltitudes > altitudeConfidence) {
-    //Serial.println("Parachute Deployed!");
-    for (int i = 0; i < 10; i++) {
-      Serial.println("1000");
-    }
+    Serial.println("Parachute Deployed!");
     drogueDeploymentStatus = true;
     decreasedAltitudes = 0;
-    //while (1); // Stop printing
+    while (1); // Stop printing
   }
   if (previousAltitude - currentAltitude > altitudeSafetyFactor) { // altitude decreased
     previousStates[drogueCycle % altitudeLoop] = 1; // update tile state

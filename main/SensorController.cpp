@@ -1,27 +1,31 @@
-#include "SensorController.h"
+#include "SensorController.h" 
 
 void SensorController::init() {
   
-  // past midnight, this was the only way I could figure out how to make temperature compabile with the rest.
-  bnoTemperatureData.type = SENSOR_TYPE_TEMPERATURE_BNO;
-  bmpTemperatureData.type = SENSOR_TYPE_TEMPERATURE_BMP;
-  pressureData.type = SENSOR_TYPE_PRESSURE;
-  altitudeData.type = SENSOR_TYPE_ALTITUDE;
-  seaPressureData.type = SENSOR_TYPE_SEA_PRESSURE;
-  
-  Serial.begin(115200);
-  while (!Serial);
+  Serial.begin(SERIAL_BAUD_RATE);
+  //while (!Serial); // HAHA THIS WAS THE BLUETOOTH ISSUE ALL ALONG
   Serial.println("Serial initalized");
+  
+  BT = new SoftwareSerial(BLUETOOTH_RX, BLUETOOTH_TX); // RX, TX
+  BT->begin(BLUETOOTH_BAUD_RATE);
+  BTPrint("Bluetooth initalized");
+  
   initBNO();
-  for (int i = 0; i < sizeof(addresses) / sizeof(uint8_t); i++) {
-    initBMP(&Wire1, addresses[i]);
-    initBMP(&Wire, addresses[i]);
+  
+  for (uint8_t i = 0; i < sizeof(BMPAddresses) / sizeof(uint8_t); i++) { // initalize all BMPs
+    initBMP(&Wire1, BMPAddresses[i]);
+    initBMP(&Wire, BMPAddresses[i]);
   }
+  
   Serial.println("Sensor controller fully initalized");
 }
 
+void SensorController::BTPrint(String text) {
+    BT->println(text);
+}
+
 void SensorController::initBNO() {
-  bno = new Adafruit_BNO055(sensorID, BNOAddress);
+  bno = new Adafruit_BNO055(BNO_ID, BNO_ADDRESS);
   if (!bno->begin()) {
     Serial.println("BNO sensor not detected. Check wiring / I2C address.");
     //while (1) {}
@@ -31,18 +35,23 @@ void SensorController::initBNO() {
 }
 
 void SensorController::initBMP(TwoWire *theWire, uint8_t address) {
+  
   Adafruit_BMP280* bmp = new Adafruit_BMP280(theWire);
-    bmp->setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
-    Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
-    Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
-    Adafruit_BMP280::FILTER_X16,      /* Filtering. */
-    Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+  
+  bmp->setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+  
   if (!bmp->begin(address)) {
     Serial.println("BMP sensor not detected. Check wiring.");
     //while (1) {}
   }
+  
   bmps[initalizedBmps] = bmp;
   initalizedBmps++;
+  
   Serial.println("BMP sensor initalized");
 }
 
@@ -55,109 +64,85 @@ void SensorController::recordData() {
   bno->getEvent(&gravityData, Adafruit_BNO055::VECTOR_GRAVITY);
 }
 
-sensors_event_t* SensorController::getData(String type) {
-  sensors_event_t* event = nullptr;
-  if (type == "orientation") {
-    event = &orientationData;
-  } else if (type == "gyroscope") {
-    event = &angVelocityData;
-  } else if (type == "a_acceleration") {
-    event = &linearAccelData;
-  } else if (type == "l_acceleration") {
-    event = &accelerometerData;
-  } else if (type == "magnetic") {
-    event = &magnetometerData;
-  } else if (type == "gravity") {
-    event = &gravityData;
-  } else if (type == "bnoTemperature") {
-    event = &bnoTemperatureData;
-  } else if (type == "bmpTemperature") {
-    event = &bmpTemperatureData;
-  } else if (type == "pressure") {
-    event = &pressureData;
-  } else if (type == "sea_pressure") {
-    event = &seaPressureData;
-  } else if (type == "altitude") {
-    event = &altitudeData;
-  }
-  return event;
-}
-
-void SensorController::printData(sensors_event_t* event) {
-  switch (event->type) {
-    case SENSOR_TYPE_ORIENTATION: {
-      Serial.println("ORIENTATION (degrees)");
-      Serial.println("x = " + String(event->orientation.x) + ", y = " + String(event->orientation.y) + ", z = " + event->orientation.z);
-      break;
-    }
-    case SENSOR_TYPE_ACCELEROMETER: {
-      Serial.println("ACCELEROMETER (gravity) (m/s^2)");
-      Serial.println("x = " + String(event->acceleration.x) + ", y = " + String(event->acceleration.y) + ", z = " + event->acceleration.z);
-      break;
-    }
-    case SENSOR_TYPE_LINEAR_ACCELERATION: {
-      Serial.println("LINEAR ACCELERATION (no gravity) (m/s^2)");
-      Serial.println("x = " + String(event->acceleration.x) + ", y = " + String(event->acceleration.y) + ", z = " + event->acceleration.z);
-      break;
-    }
-    case SENSOR_TYPE_MAGNETIC_FIELD: {
-      Serial.println("MAGNETIC FIELD (uT)");
-      Serial.println("x = " + String(event->magnetic.x) + ", y = " + String(event->magnetic.y) + ", z = " + event->magnetic.z);
-      break;
-    }
-    case SENSOR_TYPE_TEMPERATURE_BNO: {
-      Serial.println("TEMPERATURE (Celsius)");
-      Serial.println(String(bno->getTemp()));
-      break;
-    }
-    case SENSOR_TYPE_TEMPERATURE_BMP: {
-      Serial.println("BMP TEMPERATURE (Celsius)");
-      break;
-    }
-    /*case SENSOR_TYPE_TEMPERATURE_BNO: {
-      Serial.println("BNO TEMPERATURE (Celsius)");
-      Serial.println(String(bno->getTemp()));
-      break;
-    }*/
-    case SENSOR_TYPE_PRESSURE: {
-      Serial.println("PRESSURE (Pa)");
-      break;
-    }
-    case SENSOR_TYPE_ALTITUDE: {
-      // Calculate altitude assuming 'standard' barometric
-      // pressure of 1013.25 millibar = 101325 Pascal
-      Serial.println("ALTITUDE (m)");
-      break;
-    }
-    case SENSOR_TYPE_ROTATION_VECTOR:
-    case SENSOR_TYPE_GYROSCOPE: {
-      Serial.println("GYROSCOPE / ROTATION (rad/s)");
-      Serial.println("x = " + String(event->gyro.x) + ", y = " + String(event->gyro.y) + ", z = " + event->gyro.z);
-      break;
-    }
-  }
-  Serial.println("-------------------------------------------------------");
-}
-
-void SensorController::readData() {
-
-}
-
-float SensorController::getAverageAltitude(float standardPressure) {
+float SensorController::getAverageAltitude() {
   float sum = 0;
   for (int i = 0; i < BMP_AMOUNT; i++) {
-    sum += bmps[i]->readAltitude(standardPressure);
-    //Serial.println("BMP" + String(i) + ": " + String(bmps[i]->readAltitude(standardPressure)));
+    float altitude = bmps[i]->readAltitude(STANDARD_PRESSURE);
+    sum += altitude; // add error correction here
   }
   return sum / BMP_AMOUNT;
 }
 
-float SensorController::getAltitude(float standardPressure) {
-  return getAverageAltitude(standardPressure);
+float SensorController::getAltitude() {
+  return getAverageAltitude();
+}
+
+float SensorController::getAveragePressure() {
+  float sum = 0;
+  for (int i = 0; i < BMP_AMOUNT; i++) {
+    float pressure = bmps[i]->readPressure();
+    sum += pressure; // add error correction here
+  }
+  return sum / BMP_AMOUNT;
 }
 
 float SensorController::getPressure() {
-  return 0;
+  return getAveragePressure();
+}
+
+float SensorController::getAverageTemperature() {
+  float sum = 0;
+  for (int i = 0; i < BMP_AMOUNT; i++) {
+    float temperature = bmps[i]->readTemperature();
+    sum += temperature; // add error correction here
+  }
+  return sum / BMP_AMOUNT;
+}
+
+float SensorController::getTemperature() {
+  return getAverageTemperature();
+}
+
+void SensorController::bluetoothListener() {
+  //BTPrint("Transmitting"); // show that bluetooth is transmitting
+  char userInput = BT->read();
+  if (BT->available()) { // if text has arrived from bluetooth serial user input
+    lastUserInput = userInput;
+  }
+  if (lastUserInput == 'p' && !bmpDebugPressure) {
+      bmpDebugPressure = true;
+  } else if (lastUserInput == 'p' && bmpDebugPressure) {
+      bmpDebugPressure = false;
+  } else if (lastUserInput == 'a' && !bmpDebugAltitude) {
+      bmpDebugAltitude = true;
+  } else if (lastUserInput == 'a' && bmpDebugAltitude) {
+      bmpDebugAltitude = false;
+  } else if (lastUserInput == 't' && !bmpDebugTemperature) {
+      bmpDebugTemperature = true;
+  } else if (lastUserInput == 't' && bmpDebugTemperature) {
+      bmpDebugTemperature = false;
+  }
+  BTPrint(debugPrints());
+}
+
+String SensorController::debugPrints() {
+  String debugMsg = "";
+  if (bmpDebugAltitude || bmpDebugPressure || bmpDebugTemperature) {
+    for (int i = 0; i < BMP_AMOUNT; i++) {
+      // print individual sensor readings for debugging
+      debugMsg = "BMP" + String(i) + " |";
+      if (bmpDebugAltitude) {
+        debugMsg += " Altitude: " + String(bmps[i]->readAltitude(STANDARD_PRESSURE)) + " |";
+      }
+      if (bmpDebugPressure) {
+        debugMsg += " Pressure: " + String(bmps[i]->readPressure()) + " |";
+      }
+      if (bmpDebugTemperature) {
+        debugMsg += " Temperature: " + String(bmps[i]->readTemperature()) + " |";
+      }
+    }
+  }
+  return debugMsg;
 }
 
 /*
