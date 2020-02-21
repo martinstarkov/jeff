@@ -1,7 +1,7 @@
 #include "ParachuteController.h"
 
 void ParachuteController::init() {
-  Serial.println("Parachute controller fully initalized");
+  sensorController->BTPrint("Parachute controller fully initalized");
   for (int i = 0; i < altitudeLoop; i++) {
     previousStates[i] = 0;
   }
@@ -25,41 +25,40 @@ bool ParachuteController::mainChuteDeploymentCheck(float currentAltitude) {
   if (belowThresholdAltitudes >= caching) {
     mainChuteDeploymentStatus = true;
   }
-  printMainChuteStatus();
+  sensorController->BTPrint("Altitude Threshold Confidence: " + String(100 * belowThresholdAltitudes / caching) + "%");
+  //printMainChuteStatus();
   mainCycle++;
   return mainChuteDeploymentStatus;
 }
 
 void ParachuteController::printMainChuteStatus() {
-  Serial.println("Altitude Threshold Confidence: " + String(100 * belowThresholdAltitudes / caching) + "%");
   for (int i = 0; i < caching; i++) {
     if (i == mainCycle % caching) {
-      Serial.print("#");
+      sensorController->BTPrint("#", false);
     } else {
-      Serial.print("_");
+      sensorController->BTPrint("_", false);
     }
   }
-  Serial.println();
+  sensorController->BTPrint("");
   for (int i = 0; i < caching; i++) {
-    Serial.print(String(altitudeCache[i]));
+    sensorController->BTPrint(String(altitudeCache[i]), false);
   }
-  Serial.println();
+  sensorController->BTPrint("");
 }
 
 void ParachuteController::printDrogueStatus() {
-  Serial.println("Altitude Decrease Confidence: " + String(100 * decreasedAltitudes / altitudeConfidence) + "%");
   for (int i = 0; i < altitudeLoop; i++) {
     if (i == drogueCycle % altitudeLoop) {
-      Serial.print("#");
+      sensorController->BTPrint("#", false);
     } else {
-      Serial.print("_");
+      sensorController->BTPrint("_", false);
     }
   }
-  Serial.println();
+  sensorController->BTPrint("");
   for (int i = 0; i < altitudeLoop; i++) {
-    Serial.print(String(previousStates[i]));
+    sensorController->BTPrint(String(previousStates[i]), false);
   }
-  Serial.println();
+  sensorController->BTPrint("");
 }
 
 bool ParachuteController::drogueDeploymentCheck(float currentAltitude) {
@@ -68,7 +67,7 @@ bool ParachuteController::drogueDeploymentCheck(float currentAltitude) {
   }
   previousStates[drogueCycle % altitudeLoop] = 0; // update tile state each loop iteration
   if (decreasedAltitudes > altitudeConfidence) {
-    Serial.println("Parachute Deployed!");
+    sensorController->BTPrint("Parachute Deployed!");
     drogueDeploymentStatus = true;
     decreasedAltitudes = 0;
     while (1); // Stop printing
@@ -77,7 +76,8 @@ bool ParachuteController::drogueDeploymentCheck(float currentAltitude) {
     previousStates[drogueCycle % altitudeLoop] = 1; // update tile state
     decreasedAltitudes++;
   }
-  printDrogueStatus();
+  sensorController->BTPrint("Altitude Decrease Confidence: " + String(100 * decreasedAltitudes / altitudeConfidence) + "%");
+  //printDrogueStatus();
   previousAltitude = currentAltitude;
   drogueCycle++;
   return drogueDeploymentStatus;

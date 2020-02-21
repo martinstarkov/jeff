@@ -1,5 +1,6 @@
 #pragma once
 #include <Wire.h>
+#include "SensorController.h"
 
 #define ALTITUDE_LOOP_LENGTH 50
         
@@ -24,7 +25,11 @@ class ParachuteController {
       int altitudeCache[10];
       bool mainChuteDeploymentStatus = false;
       float mainDeployAltitude = 179; // 457.2 according to competition rules
+      SensorController* sensorController;
     public:
+      ParachuteController(SensorController* controller) {
+        sensorController = controller;
+      }
       void init();
       bool drogueDeploymentCheck(float currentAltitude);
       bool mainChuteDeploymentCheck(float currentAltitude);

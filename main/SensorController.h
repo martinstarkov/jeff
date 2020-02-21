@@ -37,23 +37,24 @@ class SensorController {
         float getAverageAltitude();
         float getAveragePressure();
         float getAverageTemperature();
-        String debugPrints();
-        char lastUserInput;
+        void debugPrints();
+        bool bmpDebugTemperature = false;
+        bool bmpDebugPressure = false;
+        bool bmpDebugAltitude = false;
         SoftwareSerial* BT;
+        SoftwareSerial* GPS;
+
 
         sensors_event_t orientationData, angVelocityData, linearAccelData, accelerometerData, magnetometerData, gravityData; 
     public:
-        void BTPrint(String text);
+        void BTPrint(String text, bool newline=true);
         void init();
         void initBNO();
         void initBMP(TwoWire *theWire, uint8_t address);
         void recordData();
         void bluetoothListener();
+        void gpsListener();
         float getAltitude();
         float getPressure();
         float getTemperature();
-
-        bool bmpDebugTemperature = false;
-        bool bmpDebugPressure = false;
-        bool bmpDebugAltitude = false;
 };

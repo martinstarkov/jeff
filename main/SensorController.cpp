@@ -2,13 +2,17 @@
 
 void SensorController::init() {
   
-  Serial.begin(SERIAL_BAUD_RATE);
-  //while (!Serial); // HAHA THIS WAS THE BLUETOOTH ISSUE ALL ALONG
-  Serial.println("Serial initalized");
   
   BT = new SoftwareSerial(BLUETOOTH_RX, BLUETOOTH_TX); // RX, TX
+  GPS = new SoftwareSerial(7, 8);
   BT->begin(BLUETOOTH_BAUD_RATE);
   BTPrint("Bluetooth initalized");
+  GPS->begin(9600);
+  BTPrint("GPS initalized");
+  
+  //Serial.begin(SERIAL_BAUD_RATE);
+  //while (!Serial); // HAHA THIS WAS THE BLUETOOTH ISSUE ALL ALONG
+  //Serial.println("Serial initalized");
   
   initBNO();
   
@@ -17,20 +21,24 @@ void SensorController::init() {
     initBMP(&Wire, BMPAddresses[i]);
   }
   
-  Serial.println("Sensor controller fully initalized");
+  BTPrint("Sensor controller fully initalized");
 }
 
-void SensorController::BTPrint(String text) {
+void SensorController::BTPrint(String text, bool newline) {
+  if (newline) {
     BT->println(text);
+  } else {
+    BT->print(text);
+  }
 }
 
 void SensorController::initBNO() {
   bno = new Adafruit_BNO055(BNO_ID, BNO_ADDRESS);
   if (!bno->begin()) {
-    Serial.println("BNO sensor not detected. Check wiring / I2C address.");
+    BTPrint("BNO sensor not detected. Check wiring / I2C address.");
     //while (1) {}
   }
-  Serial.println("BNO sensor initalized");
+  BTPrint("BNO sensor initalized");
   
 }
 
@@ -45,14 +53,14 @@ void SensorController::initBMP(TwoWire *theWire, uint8_t address) {
   Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
   
   if (!bmp->begin(address)) {
-    Serial.println("BMP sensor not detected. Check wiring.");
+    BTPrint("BMP sensor not detected. Check wiring.");
     //while (1) {}
   }
   
   bmps[initalizedBmps] = bmp;
   initalizedBmps++;
   
-  Serial.println("BMP sensor initalized");
+  BTPrint("BMP sensor initalized");
 }
 
 void SensorController::recordData() {
@@ -103,34 +111,40 @@ float SensorController::getTemperature() {
   return getAverageTemperature();
 }
 
-void SensorController::bluetoothListener() {
-  //BTPrint("Transmitting"); // show that bluetooth is transmitting
-  char userInput = BT->read();
-  if (BT->available()) { // if text has arrived from bluetooth serial user input
-    lastUserInput = userInput;
+void SensorController::gpsListener() {
+  if (GPS->available()) {
+    String gpsInput = GPS->readString();
+    BTPrint(gpsInput);
   }
-  if (lastUserInput == 'p' && !bmpDebugPressure) {
-      bmpDebugPressure = true;
-  } else if (lastUserInput == 'p' && bmpDebugPressure) {
-      bmpDebugPressure = false;
-  } else if (lastUserInput == 'a' && !bmpDebugAltitude) {
-      bmpDebugAltitude = true;
-  } else if (lastUserInput == 'a' && bmpDebugAltitude) {
-      bmpDebugAltitude = false;
-  } else if (lastUserInput == 't' && !bmpDebugTemperature) {
-      bmpDebugTemperature = true;
-  } else if (lastUserInput == 't' && bmpDebugTemperature) {
-      bmpDebugTemperature = false;
-  }
-  BTPrint(debugPrints());
 }
 
-String SensorController::debugPrints() {
-  String debugMsg = "";
+void SensorController::bluetoothListener() {
+  //BTPrint("Transmitting"); // show that bluetooth is transmitting
+  if (BT->available()) { // if text has arrived from bluetooth serial user input¨
+    char userInput = BT->read();
+    if (userInput == 'p' && !bmpDebugPressure) {
+        bmpDebugPressure = true;
+    } else if (userInput == 'p' && bmpDebugPressure) {
+        bmpDebugPressure = false;
+    } else if (userInput == 'a' && !bmpDebugAltitude) {
+        bmpDebugAltitude = true;
+    } else if (userInput == 'a' && bmpDebugAltitude) {
+        bmpDebugAltitude = false;
+    } else if (userInput == 't' && !bmpDebugTemperature) {
+        bmpDebugTemperature = true;
+    } else if (userInput == 't' && bmpDebugTemperature) {
+        bmpDebugTemperature = false;
+    }
+  }
+  debugPrints();
+}
+
+void SensorController::debugPrints() {
   if (bmpDebugAltitude || bmpDebugPressure || bmpDebugTemperature) {
+    String debugMsg = "";
     for (int i = 0; i < BMP_AMOUNT; i++) {
-      // print individual sensor readings for debugging
       debugMsg = "BMP" + String(i) + " |";
+      // print individual sensor readings for debugging
       if (bmpDebugAltitude) {
         debugMsg += " Altitude: " + String(bmps[i]->readAltitude(STANDARD_PRESSURE)) + " |";
       }
@@ -140,9 +154,9 @@ String SensorController::debugPrints() {
       if (bmpDebugTemperature) {
         debugMsg += " Temperature: " + String(bmps[i]->readTemperature()) + " |";
       }
+      BTPrint(debugMsg);
     }
   }
-  return debugMsg;
 }
 
 /*
