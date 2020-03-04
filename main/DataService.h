@@ -1,4 +1,5 @@
 #pragma once
+#include "Bluetooth.h"
         
 class DataService {
     private:
@@ -8,6 +9,9 @@ class DataService {
       static float currentAltitude;
     public:
       static void init();
+
+      static void printData();
+      
       static float getAltitude();
       static void setAltitude(float altitude);
       static float getTemperature();
