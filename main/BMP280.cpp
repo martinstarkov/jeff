@@ -1,9 +1,12 @@
 #include "BMP280.h"
 
-BMP280::BMP280(TwoWire* theWire, uint8_t address, float standardPressure) {
+BMP280::BMP280(TwoWire* wire, uint8_t address, float standardPressure) {
   
-  sPressure = standardPressure;
-  instance = new Adafruit_BMP280(theWire);
+  wire = wire;
+  address = address;
+  standardPressure = standardPressure;
+  
+  instance = new Adafruit_BMP280(wire);
   
   instance->setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating mode */
   Adafruit_BMP280::SAMPLING_X2,                           /* Temperature oversampling */
@@ -22,7 +25,7 @@ float BMP280::getPressure() {
 }
 
 float BMP280::getAltitude() {
-  return instance->readAltitude(sPressure);
+  return instance->readAltitude(standardPressure);
 }
 
 float BMP280::getTemperature() {
