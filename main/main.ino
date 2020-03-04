@@ -12,8 +12,8 @@ ParachuteController* pController;
 
 void setup()
 {
-  DataService::init();
   Bluetooth::init(BLUETOOTH_RX, BLUETOOTH_TX, BLUETOOTH_BAUD_RATE);
+  DataService::init();
   sController = new SensorController();
   sController->init();
   pController = new ParachuteController(sController);
