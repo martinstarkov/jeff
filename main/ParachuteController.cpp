@@ -25,7 +25,7 @@ bool ParachuteController::mainChuteDeploymentCheck(float currentAltitude) {
   if (belowThresholdAltitudes >= caching) {
     mainChuteDeploymentStatus = true;
   }
-  Bluetooth::print("Altitude Threshold Confidence: " + String(100 * belowThresholdAltitudes / caching) + "%");
+  //Bluetooth::print("Altitude Threshold Confidence: " + String(100 * belowThresholdAltitudes / caching) + "%");
   //printMainChuteStatus();
   mainCycle++;
   return mainChuteDeploymentStatus;
@@ -76,7 +76,7 @@ bool ParachuteController::drogueDeploymentCheck(float currentAltitude) {
     previousStates[drogueCycle % altitudeLoop] = 1; // update tile state
     decreasedAltitudes++;
   }
-  Bluetooth::print("Altitude Decrease Confidence: " + String(100 * decreasedAltitudes / altitudeConfidence) + "%");
+  //Bluetooth::print("Altitude Decrease Confidence: " + String(100 * decreasedAltitudes / altitudeConfidence) + "%");
   //printDrogueStatus();
   previousAltitude = currentAltitude;
   drogueCycle++;
