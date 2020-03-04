@@ -3,14 +3,14 @@
         
 class BMP280 {
     private:
-      float standardPressure;
+      float sPressure;
       float pressure;
       float temperature;
       float altitude;
+      Adafruit_BMP280* instance;
     public:
-      BMP280(TwoWire* theWire, uint8_t address, );
-      void setStandardPressure(float pressure);
+      BMP280(TwoWire* theWire, uint8_t address, float standardPressure);
       float getPressure();
       float getTemperature();
-      float getAltitude()
+      float getAltitude();
 };
