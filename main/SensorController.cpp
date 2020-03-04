@@ -31,6 +31,12 @@ void SensorController::initBNO() {
   Bluetooth::print("BNO sensor initalized");
 }
 
+void SensorController::update() {
+  DataService::setPressure(getAveragePressure());
+  DataService::setAltitude(getAverageAltitude());
+  DataService::setTemperature(getAverageTemperature());
+}
+
 void SensorController::recordData() {
   bno->getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
   bno->getEvent(&angVelocityData, Adafruit_BNO055::VECTOR_GYROSCOPE);

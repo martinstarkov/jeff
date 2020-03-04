@@ -6,6 +6,7 @@
 #include <SPI.h>
 #include "BMP280.h"
 #include "Bluetooth.h"
+#include "DataService.h"
 
 #define SENSOR_TYPE_TEMPERATURE_BNO 69420
 #define SENSOR_TYPE_TEMPERATURE_BMP 69422
@@ -44,6 +45,7 @@ class SensorController {
         sensors_event_t orientationData, angVelocityData, linearAccelData, accelerometerData, magnetometerData, gravityData; 
     public:
         void init();
+        void update();
         void initBNO();
         void recordData();
         float getAltitude();
