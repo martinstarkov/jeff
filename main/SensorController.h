@@ -2,10 +2,10 @@
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
-#include <Adafruit_BMP280.h>
 #include <utility/imumaths.h>
-#include <SoftwareSerial.h>
 #include <SPI.h>
+#include "BMP280.h"
+#include "Bluetooth.h"
 
 #define SENSOR_TYPE_TEMPERATURE_BNO 69420
 #define SENSOR_TYPE_TEMPERATURE_BMP 69422
@@ -14,10 +14,6 @@
 #define SENSOR_TYPE_SEA_PRESSURE 69428
   
 #define BMP_AMOUNT 4 // amount of BMPs attached to teensy ports
-
-#define BLUETOOTH_RX 0 // (TX on bluetooth module)
-#define BLUETOOTH_TX 1 // (RX on bluetooth module)
-#define BLUETOOTH_BAUD_RATE 9600 // data mode: 9600, command mode: 38400
 
 #define SERIAL_BAUD_RATE 9600 // 115200 / 9600
 
@@ -32,7 +28,7 @@ class SensorController {
     private:
         uint8_t BMPAddresses[2] = { 0x76, 0x77 };
         Adafruit_BNO055* bno;
-        Adafruit_BMP280* bmps[BMP_AMOUNT];
+        BMP280* bmps[BMP_AMOUNT];
         int initalizedBmps = 0;
         float getAverageAltitude();
         float getAveragePressure();
@@ -43,17 +39,13 @@ class SensorController {
         bool bmpDebugAltitude = false;
         SoftwareSerial* BT;
         SoftwareSerial* GPS;
-
+        void initBMPs();
 
         sensors_event_t orientationData, angVelocityData, linearAccelData, accelerometerData, magnetometerData, gravityData; 
     public:
-        void BTPrint(String text, bool newline=true);
         void init();
         void initBNO();
-        void initBMP(TwoWire *theWire, uint8_t address);
         void recordData();
-        void bluetoothListener();
-        void gpsListener();
         float getAltitude();
         float getPressure();
         float getTemperature();

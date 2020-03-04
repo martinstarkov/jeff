@@ -2,65 +2,33 @@
 
 void SensorController::init() {
   
-  
-  BT = new SoftwareSerial(BLUETOOTH_RX, BLUETOOTH_TX); // RX, TX
-  GPS = new SoftwareSerial(7, 8);
-  BT->begin(BLUETOOTH_BAUD_RATE);
-  BTPrint("Bluetooth initalized");
-  GPS->begin(9600);
-  BTPrint("GPS initalized");
-  
-  //Serial.begin(SERIAL_BAUD_RATE);
-  //while (!Serial); // HAHA THIS WAS THE BLUETOOTH ISSUE ALL ALONG
-  //Serial.println("Serial initalized");
+  Bluetooth::print("Bluetooth initalized");
+  Bluetooth::print("GPS initalized");
   
   initBNO();
   
-  for (uint8_t i = 0; i < sizeof(BMPAddresses) / sizeof(uint8_t); i++) { // initalize all BMPs
-    initBMP(&Wire1, BMPAddresses[i]);
-    initBMP(&Wire, BMPAddresses[i]);
-  }
+  initBMPs();
   
-  BTPrint("Sensor controller fully initalized");
+  Bluetooth::print("Sensor controller fully initalized");
 }
 
-void SensorController::BTPrint(String text, bool newline) {
-  if (newline) {
-    BT->println(text);
-  } else {
-    BT->print(text);
+void SensorController::initBMPs() {
+  for (uint8_t i = 0; i < sizeof(BMPAddresses) / sizeof(uint8_t); i++) { // initalize all BMPs
+    BMP280* bmp1 = new BMP280(&Wire, BMPAddresses[i], 1005);
+    BMP280* bmp2 = new BMP280(&Wire1, BMPAddresses[i], 1005);
+    bmps[initalizedBmps] = bmp1;
+    bmps[(initalizedBmps + 1)] = bmp2;
+    initalizedBmps++;
   }
 }
 
 void SensorController::initBNO() {
   bno = new Adafruit_BNO055(BNO_ID, BNO_ADDRESS);
   if (!bno->begin()) {
-    BTPrint("BNO sensor not detected. Check wiring / I2C address.");
+    Bluetooth::print("BNO sensor not detected. Check wiring / I2C address.");
     //while (1) {}
   }
-  BTPrint("BNO sensor initalized");
-  
-}
-
-void SensorController::initBMP(TwoWire *theWire, uint8_t address) {
-  
-  Adafruit_BMP280* bmp = new Adafruit_BMP280(theWire);
-  
-  bmp->setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
-  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
-  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
-  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
-  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
-  
-  if (!bmp->begin(address)) {
-    BTPrint("BMP sensor not detected. Check wiring.");
-    //while (1) {}
-  }
-  
-  bmps[initalizedBmps] = bmp;
-  initalizedBmps++;
-  
-  BTPrint("BMP sensor initalized");
+  Bluetooth::print("BNO sensor initalized");
 }
 
 void SensorController::recordData() {
@@ -75,7 +43,7 @@ void SensorController::recordData() {
 float SensorController::getAverageAltitude() {
   float sum = 0;
   for (int i = 0; i < BMP_AMOUNT; i++) {
-    float altitude = bmps[i]->readAltitude(STANDARD_PRESSURE);
+    float altitude = bmps[i]->getAltitude();
     sum += altitude; // add error correction here
   }
   return sum / BMP_AMOUNT;
@@ -88,7 +56,7 @@ float SensorController::getAltitude() {
 float SensorController::getAveragePressure() {
   float sum = 0;
   for (int i = 0; i < BMP_AMOUNT; i++) {
-    float pressure = bmps[i]->readPressure();
+    float pressure = bmps[i]->getPressure();
     sum += pressure; // add error correction here
   }
   return sum / BMP_AMOUNT;
@@ -101,7 +69,7 @@ float SensorController::getPressure() {
 float SensorController::getAverageTemperature() {
   float sum = 0;
   for (int i = 0; i < BMP_AMOUNT; i++) {
-    float temperature = bmps[i]->readTemperature();
+    float temperature = bmps[i]->getTemperature();
     sum += temperature; // add error correction here
   }
   return sum / BMP_AMOUNT;
@@ -109,54 +77,6 @@ float SensorController::getAverageTemperature() {
 
 float SensorController::getTemperature() {
   return getAverageTemperature();
-}
-
-void SensorController::gpsListener() {
-  if (GPS->available()) {
-    String gpsInput = GPS->readString();
-    BTPrint(gpsInput);
-  }
-}
-
-void SensorController::bluetoothListener() {
-  //BTPrint("Transmitting"); // show that bluetooth is transmitting
-  if (BT->available()) { // if text has arrived from bluetooth serial user input¨
-    char userInput = BT->read();
-    if (userInput == 'p' && !bmpDebugPressure) {
-        bmpDebugPressure = true;
-    } else if (userInput == 'p' && bmpDebugPressure) {
-        bmpDebugPressure = false;
-    } else if (userInput == 'a' && !bmpDebugAltitude) {
-        bmpDebugAltitude = true;
-    } else if (userInput == 'a' && bmpDebugAltitude) {
-        bmpDebugAltitude = false;
-    } else if (userInput == 't' && !bmpDebugTemperature) {
-        bmpDebugTemperature = true;
-    } else if (userInput == 't' && bmpDebugTemperature) {
-        bmpDebugTemperature = false;
-    }
-  }
-  debugPrints();
-}
-
-void SensorController::debugPrints() {
-  if (bmpDebugAltitude || bmpDebugPressure || bmpDebugTemperature) {
-    String debugMsg = "";
-    for (int i = 0; i < BMP_AMOUNT; i++) {
-      debugMsg = "BMP" + String(i) + " |";
-      // print individual sensor readings for debugging
-      if (bmpDebugAltitude) {
-        debugMsg += " Altitude: " + String(bmps[i]->readAltitude(STANDARD_PRESSURE)) + " |";
-      }
-      if (bmpDebugPressure) {
-        debugMsg += " Pressure: " + String(bmps[i]->readPressure()) + " |";
-      }
-      if (bmpDebugTemperature) {
-        debugMsg += " Temperature: " + String(bmps[i]->readTemperature()) + " |";
-      }
-      BTPrint(debugMsg);
-    }
-  }
 }
 
 /*

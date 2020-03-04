@@ -1,5 +1,4 @@
 #pragma once
-#include <Wire.h>
 #include "SensorController.h"
 
 #define ALTITUDE_LOOP_LENGTH 50
