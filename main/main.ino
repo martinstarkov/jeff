@@ -24,6 +24,6 @@ void loop()
 {
   sController->recordData();
   sController->update();
-  DataService::printData();
+  //DataService::printData();
   
 }
