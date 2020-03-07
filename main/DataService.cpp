@@ -1,9 +1,9 @@
 #include "DataService.h"
 
-DataService* DataService::instance;
-float DataService::currentPressure;
-float DataService::currentTemperature;
-float DataService::currentAltitude;
+DataService* DataService::instance = nullptr;
+float DataService::currentPressure = 0;
+float DataService::currentTemperature = 0;
+float DataService::currentAltitude = 0;
 
 void DataService::init() { // make sure DataService is only able to initialize once
   if (instance == 0) {

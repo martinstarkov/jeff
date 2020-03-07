@@ -7,4 +7,6 @@ class Bluetooth {
     public:
       static void init(int RX, int TX, int baud);
       static void print(String text, bool newline=true);
+      static bool available();
+      static String read();
 };

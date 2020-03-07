@@ -24,6 +24,9 @@ void loop()
 {
   sController->recordData();
   sController->update();
-  //DataService::printData();
+  if (Bluetooth::available()) {
+    Bluetooth::print(Bluetooth::read());
+  }
+  //Bluetooth::print("test123");
   
 }
