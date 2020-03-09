@@ -10,7 +10,6 @@ void setup()
   sController->init();
   pController = new ParachuteController(sController);
   pController->init();
-  //delay(1000);
 }
 
 void loop()
