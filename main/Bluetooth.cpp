@@ -1,32 +1,42 @@
 #include "Bluetooth.h"
 
-SoftwareSerial* Bluetooth::ss;
+Bluetooth* Bluetooth::bt;
+int Bluetooth::baud;
 
-void Bluetooth::init(int RX, int TX, int baud) {
-  if (ss == 0) {
-    ss = new SoftwareSerial(RX, TX);
-    ss->begin(baud);
-    if (!ss) {
-      while (1);
+void Bluetooth::init(int baudRate) {
+  if (bt == 0) {
+    
+    bt = new Bluetooth();
+    baud = baudRate;
+    Serial2.begin(baud);
+    
+    while (!Serial2) {
+      print(NEUTRAL + "Initializing Bluetooth Serial...");
     }
+    
+    print(SUCCESS + "Bluetooth Serial initialized");
   }
 }
 
-bool Bluetooth::available() {
-  if (ss->available() > 0) {
-    return true;
+void serialEvent2() {
+  String userInput = Bluetooth::read().trim().toLowerCase();
+  
+  if (userInput == "jonah sucks") {
+    Bluetooth::print("Yes he does");
   }
-  return false;
 }
 
 String Bluetooth::read() {
-  return ss->read();
+  if (Serial2.available() > 0) {
+    return Serial2.readString();
+  }
+  return "";
 }
 
 void Bluetooth::print(String text, bool newline) {
   if (newline) {
-    ss->println(text);
+    Serial2.println(text);
   } else {
-    ss->print(text);
+    Serial2.print(text);
   }
 }
