@@ -11,7 +11,7 @@ void setup(void)
   pController = new ParachuteController();
   pController->init();
   
-  delay(1000);
+  delay(500);
 }
 
 void loop(void)
