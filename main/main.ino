@@ -8,7 +8,7 @@ ParachuteController* pController;
 
 #define BLUETOOTH_BAUD_RATE 9600 // data mode: 9600, command mode: 38400
 
-#define REFRESH_DELAY 1000 // milliseconds
+#define REFRESH_DELAY 100 // milliseconds
 
 void setup()
 {
