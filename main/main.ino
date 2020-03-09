@@ -1,32 +1,30 @@
 #include "SensorController.h"
 #include "ParachuteController.h"
+#include "Bluetooth.h"
+#include "DataService.h"
 
 SensorController* sController;
 ParachuteController* pController;
 
-void setup(void)
+#define BLUETOOTH_BAUD_RATE 9600 // data mode: 9600, command mode: 38400
+
+#define REFRESH_DELAY 100 // milliseconds
+
+void setup()
 {
+  Bluetooth::init(BLUETOOTH_BAUD_RATE);
+  DataService::init();
   sController = new SensorController();
   sController->init();
   pController = new ParachuteController();
   pController->init();
-  
-  delay(500);
 }
 
-void loop(void)
+void loop()
 {
-
-  controller->recordData();
-  controller->printData(controller->getData("orientation"));
-  controller->printData(controller->getData("l_acceleration"));
-  controller->printData(controller->getData("a_acceleration"));
-  controller->printData(controller->getData("gyroscope"));
-  controller->printData(controller->getData("magnetic"));
-  controller->printData(controller->getData("bnoTemperature"));
-  controller->printData(controller->getData("bmpTemperature"));
-  controller->printData(controller->getData("pressure"));
-  controller->printData(controller->getData("altitude"));
-  
-  delay(sController->refresh_delay);
+  sController->update();
+  String data = DataService::processData();
+  Bluetooth::print("avg-pressure;avg-bmp-temp;avg-altitude;(x-orient,y-orient,z-orient)"); // temporary format debug msg
+  Bluetooth::print(data);
+  delay(REFRESH_DELAY);
 }
