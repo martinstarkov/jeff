@@ -1,6 +1,6 @@
 #pragma once
-#include "Bluetooth.h"
 #include <Adafruit_BMP280.h>
+#include "Bluetooth.h"
         
 class BMP280 {
     private:
