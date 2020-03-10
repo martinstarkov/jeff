@@ -6,32 +6,27 @@ class DataService {
     private:
     
       static DataService* instance;
-
-      // BMP
-      static float currentPressure;
-      static float currentTemperature;
-      static float currentAltitude;
-
-      // BNO
-      static Vector3D currentOrientation;
       
     public:
     
       static void init();
 
+      // BMP
+      static float BMPTemperature;
+      static float pressure;
+      static float altitude;
+
+      // BNO
+      static float BNOTemperature;
+      static Vector3D orientation;
+      static Vector3D angularVelocity;
+      static Vector3D linearAcceleration;
+      static Vector3D netAcceleration;
+      static Vector3D gravity;
+      static Vector3D magneticField;
+
       static String processData();
       static void printData();
       
-      static float getAltitude();
-      static void setAltitude(float altitude);
-      
-      static float getTemperature();
-      static void setTemperature(float temperature);
-      
-      static float getPressure();
-      static void setPressure(float pressure);
-      
-      static Vector3D getOrientation();
-      static void setOrientation(Vector3D orientation);
       
 };

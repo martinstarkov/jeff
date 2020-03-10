@@ -36,18 +36,14 @@ void SensorController::initBMPs() {
 
 void SensorController::initBNOs() {
   bnoCount = 0;
-
   if (BMP_AMOUNT > 0) {
     for (uint8_t i = 0; i < sizeof(BNOAddresses) / sizeof(uint8_t); i++) {
-       
       BNO055* bno = new BNO055(&Wire, BNOAddresses[i], BNOIds[i]);
       if (bno->initialized()) {
         bnos[bnoCount] = bno;
         bnoCount++;
       }
-      
     }
-    
     if (bnoCount == BMP_AMOUNT) {
       Bluetooth::print(SUCCESS + String(bnoCount) + "/" + String(BNO_AMOUNT) + " BNO sensor(s) initialized");
     } else if (bnoCount == 0) {
@@ -59,58 +55,28 @@ void SensorController::initBNOs() {
 }
 
 void SensorController::update() {
-  DataService::setPressure(getAveragePressure());
-  DataService::setAltitude(getAverageAltitude());
-  DataService::setTemperature(getAverageBMPTemperature());
-  DataService::setOrientation(getAverageOrientation());
+  DataService::pressure = average(bmps, bmpCount, &BMP280::getPressure);
+  DataService::altitude = average(bmps, bmpCount, &BMP280::getAltitude);
+  DataService::BMPTemperature = average(bmps, bmpCount, &BMP280::getTemperature);
+  DataService::BNOTemperature = average(bnos, bnoCount, &BNO055::getTemperature);
+  DataService::orientation = average(bnos, bnoCount, &BNO055::getOrientation);
+  DataService::angularVelocity = average(bnos, bnoCount, &BNO055::getAngularVelocity);
+  DataService::linearAcceleration = average(bnos, bnoCount, &BNO055::getLinearAcceleration);
+  DataService::netAcceleration = average(bnos, bnoCount, &BNO055::getNetAcceleration);
+  DataService::gravity = average(bnos, bnoCount, &BNO055::getGravity);
+  DataService::magneticField = average(bnos, bnoCount, &BNO055::getMagneticField);
 }
 
-Vector3D SensorController::getAverageOrientation() {
-  Vector3D sum(0, 0, 0);
-  for (int i = 0; i < bnoCount; i++) {
-    sum = sum + bnos[i]->getOrientation(); // add error correction here
-  }
-  if (bnoCount > 0) {
-    return sum / bnoCount;
-  } else {
-    return sum;
-  }
-}
-
-float SensorController::getAverageAltitude() {
-  float sum = 0;
-  for (int i = 0; i < bmpCount; i++) {
-    float altitude = bmps[i]->getAltitude();
-    sum += altitude; // add error correction here
-  }
-  if (bmpCount > 0) {
-    return sum / bmpCount;
-  } else {
-    return sum;
-  }
-}
-
-float SensorController::getAveragePressure() {
-  float sum = 0;
-  for (int i = 0; i < bmpCount; i++) {
-    float pressure = bmps[i]->getPressure();
-    sum += pressure; // add error correction here
-  }
-  if (bmpCount > 0) {
-    return sum / bmpCount;
-  } else {
-    return sum;
-  }
-}
-
-float SensorController::getAverageBMPTemperature() {
-  float sum = 0;
-  for (int i = 0; i < bmpCount; i++) {
-    float temperature = bmps[i]->getTemperature();
-    sum += temperature; // add error correction here
-  }
-  if (bmpCount > 0) {
-    return sum / bmpCount;
+template <typename Array, typename Data, typename Sensor>
+Data SensorController::average(Array sensorArray, int count, Data (Sensor::*functionPointer)()) {
+  Data sum = *(new Data()); // initialize data type so compiler doesn't complain
+  if (count > 0) {
+    for (int i = 0; i < count; i++) {
+      Data value = (sensorArray[i]->*functionPointer)(); // call function pointer parameter for array parameter
+      // pass value through error correction here (check that it isn't crazy)
+      sum = sum + value; 
+    }
+    return sum / count;
   } else {
     return sum;
   }
