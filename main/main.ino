@@ -10,8 +10,7 @@ ParachuteController* pController;
 
 #define REFRESH_DELAY 100 // milliseconds
 
-void setup()
-{
+void setup() {
   Bluetooth::init(BLUETOOTH_BAUD_RATE);
   DataService::init();
   sController = new SensorController();
@@ -20,11 +19,10 @@ void setup()
   pController->init();
 }
 
-void loop()
-{
+void loop() {
   sController->update();
   String data = DataService::processData();
-  Bluetooth::print("avg-pressure;avg-bmp-temp;avg-altitude;(x-orient,y-orient,z-orient)"); // temporary format debug msg
+  //Bluetooth::print("averages: pressure;bmp-temp;altitude;bno-temp;(x-orient,y-orient,z-orient);(x-angVel,y-angVel,z-angVel);(x-,y-,z-);(x-linAccel,y-linAccel,z-linAccel);(x-netAccel,y-netAccel,z-netAccel);(x-grav,y-grav,z-grav);(x-magn,y-magn,z-magn);"); // temporary format debug msg
   Bluetooth::print(data);
   delay(REFRESH_DELAY);
 }
