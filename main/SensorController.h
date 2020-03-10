@@ -33,10 +33,9 @@ class SensorController {
         uint8_t BNOAddresses[1] = { 0x29 };
         int BNOIds[1] = { 55 };
         BNO055* bnos[BNO_AMOUNT];
+
+        template <typename Array, typename Data, typename Sensor> Data average(Array sensorArray, int count, Data (Sensor::*functionPointer)());
         
-        float getAverageAltitude();
-        float getAveragePressure();
-        float getAverageBMPTemperature();
         Vector3D getAverageOrientation();
 
     public:
