@@ -36,7 +36,7 @@ void SensorController::initBMPs() {
 
 void SensorController::initBNOs() {
   bnoCount = 0;
-  if (BMP_AMOUNT > 0) {
+  if (BNO_AMOUNT > 0) {
     for (uint8_t i = 0; i < sizeof(BNOAddresses) / sizeof(uint8_t); i++) {
       BNO055* bno = new BNO055(&Wire, BNOAddresses[i], BNOIds[i]);
       if (bno->initialized()) {
@@ -44,7 +44,7 @@ void SensorController::initBNOs() {
         bnoCount++;
       }
     }
-    if (bnoCount == BMP_AMOUNT) {
+    if (bnoCount == BNO_AMOUNT) {
       Bluetooth::print(SUCCESS + String(bnoCount) + "/" + String(BNO_AMOUNT) + " BNO sensor(s) initialized");
     } else if (bnoCount == 0) {
       Bluetooth::print(FAILURE + "No BNO sensor(s) detected");
