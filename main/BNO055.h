@@ -16,8 +16,6 @@ class BNO055 {
       int id;
       bool status = false;
       
-      sensors_event_t angVelocity, linearAccel, accelerometer, magnetometer, gravity;
-      
     public:
     
       BNO055(TwoWire* wire, uint8_t address, int id);
@@ -25,4 +23,9 @@ class BNO055 {
       
       float getTemperature();
       Vector3D getOrientation();
+      Vector3D getAngularVelocity();
+      Vector3D getLinearAcceleration();
+      Vector3D getNetAcceleration();
+      Vector3D getGravity();
+      Vector3D getMagneticField();
 };

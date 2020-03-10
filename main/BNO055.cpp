@@ -20,18 +20,42 @@ bool BNO055::initialized() {
   return status;
 }
 
-//bnos[i]->getEvent(&angVelocityData, Adafruit_BNO055::VECTOR_GYROSCOPE);
-//bnos[i]->getEvent(&linearAccelData, Adafruit_BNO055::VECTOR_LINEARACCEL);
-//bnos[i]->getEvent(&accelerometerData, Adafruit_BNO055::VECTOR_ACCELEROMETER);
-//bnos[i]->getEvent(&magnetometerData, Adafruit_BNO055::VECTOR_MAGNETOMETER);
-//bnos[i]->getEvent(&gravityData, Adafruit_BNO055::VECTOR_GRAVITY);
-
-float BNO055::getTemperature() {
+float BNO055::getTemperature() { // Ambient temperature (Celsius)
   return instance->getTemp();
 }
 
-Vector3D BNO055::getOrientation() {
+Vector3D BNO055::getOrientation() { // 3d Euler Angles (degrees)
   sensors_event_t data;
   instance->getEvent(&data, Adafruit_BNO055::VECTOR_EULER);
   return Vector3D(data.orientation.x, data.orientation.y, data.orientation.z);
+}
+
+Vector3D BNO055::getAngularVelocity() { // Gyroscope, rotation speed (rad / s)
+  sensors_event_t data;
+  instance->getEvent(&data, Adafruit_BNO055::VECTOR_GYROSCOPE);
+  return Vector3D(data.gyro.x, data.gyro.y, data.gyro.z);
+}
+
+Vector3D BNO055::getLinearAcceleration() { // Acceleration without gravity (m / s^2)
+  sensors_event_t data;
+  instance->getEvent(&data, Adafruit_BNO055::VECTOR_LINEARACCEL);
+  return Vector3D(data.acceleration.x, data.acceleration.y, data.acceleration.z);
+}
+
+Vector3D BNO055::getNetAcceleration() { // Acceleration with gravity (m / s^2)
+  sensors_event_t data;
+  instance->getEvent(&data, Adafruit_BNO055::VECTOR_ACCELEROMETER);
+  return Vector3D(data.acceleration.x, data.acceleration.y, data.acceleration.z);
+}
+
+Vector3D BNO055::getGravity() { // Gravity (m / s^2)
+  sensors_event_t data;
+  instance->getEvent(&data, Adafruit_BNO055::VECTOR_GRAVITY);
+  return Vector3D(data.acceleration.x, data.acceleration.y, data.acceleration.z);
+}
+
+Vector3D BNO055::getMagneticField() { // Magnetometer (uT)
+  sensors_event_t data;
+  instance->getEvent(&data, Adafruit_BNO055::VECTOR_MAGNETOMETER);
+  return Vector3D(data.magnetic.x, data.magnetic.y, data.magnetic.z);
 }
