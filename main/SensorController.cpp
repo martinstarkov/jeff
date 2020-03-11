@@ -69,7 +69,7 @@ void SensorController::update() {
 
 template <typename Array, typename Data, typename Sensor>
 Data SensorController::average(Array sensorArray, int count, Data (Sensor::*functionPointer)()) {
-  Data sum = *(new Data()); // initialize data type so compiler doesn't complain
+  Data sum = Data(); // initialize data type so compiler doesn't complain
   if (count > 0) {
     for (int i = 0; i < count; i++) {
       Data value = (sensorArray[i]->*functionPointer)(); // call function pointer parameter for array parameter
