@@ -1,13 +1,10 @@
 #include "BNO055.h"
 
 BNO055::BNO055(TwoWire* wire, uint8_t address, int id) {
-  
   wire = wire;
   id = id;
   address = address;
-  
   instance = new Adafruit_BNO055(id, address, wire);
-  
   if (!instance->begin()) {
     Bluetooth::print(FAILURE + "BNO sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + ", id=" + String(id) + " not detected. Check wiring / I2C address");
   } else {

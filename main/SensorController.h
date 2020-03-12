@@ -22,12 +22,12 @@
         
 class SensorController {
     private:
-
+        // BMP
         int bmpCount;
         void initBMPs();
         uint8_t BMPAddresses[2] = { 0x76, 0x77 };
         BMP280* bmps[BMP_AMOUNT];
-
+        // BNO
         int bnoCount;
         void initBNOs();
         uint8_t BNOAddresses[1] = { 0x29 };
@@ -35,11 +35,7 @@ class SensorController {
         BNO055* bnos[BNO_AMOUNT];
 
         template <typename Array, typename Data, typename Sensor> Data average(Array sensorArray, int count, Data (Sensor::*functionPointer)());
-        
-        Vector3D getAverageOrientation();
-
     public:
-    
         void init();
         void update();
 };

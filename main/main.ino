@@ -6,12 +6,12 @@
 SensorController* sController;
 ParachuteController* pController;
 
-#define BLUETOOTH_BAUD_RATE 9600 // data mode: 9600, command mode: 38400
+#define BLUETOOTH_BAUD 9600 // data mode: 9600, command mode: 38400
 
-#define REFRESH_DELAY 100 // milliseconds
+#define READ_REFRESH_DELAY 100 // milliseconds
 
 void setup() {
-  Bluetooth::init(BLUETOOTH_BAUD_RATE);
+  Bluetooth::init(BLUETOOTH_BAUD);
   DataService::init();
   sController = new SensorController();
   sController->init();
@@ -21,8 +21,6 @@ void setup() {
 
 void loop() {
   sController->update();
-  String data = DataService::processData();
-  //Bluetooth::print("averages: pressure;bmp-temp;altitude;bno-temp;(x-orient,y-orient,z-orient);(x-angVel,y-angVel,z-angVel);(x-,y-,z-);(x-linAccel,y-linAccel,z-linAccel);(x-netAccel,y-netAccel,z-netAccel);(x-grav,y-grav,z-grav);(x-magn,y-magn,z-magn);"); // temporary format debug msg
-  Bluetooth::print(data);
-  delay(REFRESH_DELAY);
+  Bluetooth::print(DataService::processData());
+  delay(READ_REFRESH_DELAY);
 }
