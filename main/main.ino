@@ -21,8 +21,6 @@ void setup() {
 
 void loop() {
   sController->update();
-  String data = DataService::processData();
-  //Bluetooth::print("averages: pressure;bmp-temp;altitude;bno-temp;(x-orient,y-orient,z-orient);(x-angVel,y-angVel,z-angVel);(x-,y-,z-);(x-linAccel,y-linAccel,z-linAccel);(x-netAccel,y-netAccel,z-netAccel);(x-grav,y-grav,z-grav);(x-magn,y-magn,z-magn);"); // temporary format debug msg
-  Bluetooth::print(data);
+  Bluetooth::print(DataService::processData());
   delay(REFRESH_DELAY);
 }
