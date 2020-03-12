@@ -1,36 +1,16 @@
 #include "Bluetooth.h"
 
 Bluetooth* Bluetooth::bt;
-int Bluetooth::baud;
 
-void Bluetooth::init(int baudRate) {
+void Bluetooth::init(int baud) {
   if (bt == 0) {
-    
     bt = new Bluetooth();
-    baud = baudRate;
     Serial2.begin(baud);
-    
     while (!Serial2) {
       print(NEUTRAL + "Initializing Bluetooth Serial...");
     }
-    
     print(SUCCESS + "Bluetooth Serial initialized");
   }
-}
-
-void serialEvent2() {
-  String userInput = Bluetooth::read().trim().toLowerCase();
-  
-  if (userInput == "jonah sucks") {
-    Bluetooth::print("Yes he does");
-  }
-}
-
-String Bluetooth::read() {
-  if (Serial2.available() > 0) {
-    return Serial2.readString();
-  }
-  return "";
 }
 
 void Bluetooth::print(String text, bool newline) {
@@ -38,5 +18,20 @@ void Bluetooth::print(String text, bool newline) {
     Serial2.println(text);
   } else {
     Serial2.print(text);
+  }
+}
+
+void serialEvent2() {
+  if (Serial2.available()) {
+    Bluetooth::inputHandler(Serial2.readString());
+  }
+}
+
+void Bluetooth::inputHandler(String input) {
+  String lc = input.toLowerCase();
+  if (lc == "jonah sucks") {
+    Bluetooth::print("Yes he does");
+  } else {
+    
   }
 }

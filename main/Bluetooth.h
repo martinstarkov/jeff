@@ -8,15 +8,9 @@
 
 class Bluetooth {
     private:
-    
       static Bluetooth* bt;
-      
     public:
-    
-      static int baud;
-      static void init(int baudRate);
-      static void reinit(int baudRate);
+      static void init(int baud);
       static void print(String text, bool newline=true);
-      static String read();
-      
+      static void inputHandler(String input);
 };
