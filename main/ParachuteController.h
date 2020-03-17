@@ -1,7 +1,7 @@
 #pragma once
-#include "SensorController.h"
-
-#define ALTITUDE_LOOP_LENGTH 50
+#include "Defines.h"
+#include "Bluetooth.h"
+#include "Data.h"
         
 class ParachuteController {
     private:
@@ -10,20 +10,16 @@ class ParachuteController {
       // drogue chute variables
       int decreasedAltitudes = 0;
       int drogueCycle = 0;
+      int altitudeDifferences[DROGUE_LOOP_LENGTH]; // must be same as altitudeLoop
       bool drogueDeploymentStatus = false;
-      int altitudeConfidence = 10;
-      int altitudeLoop = ALTITUDE_LOOP_LENGTH;
-      int previousStates[ALTITUDE_LOOP_LENGTH]; // must be same as altitudeLoop
-      float altitudeSafetyFactor = 0.2; // meters
       // main chute variables
-      int caching = 10;
       int mainCycle = 0;
       int belowThresholdAltitudes = 0;
-      int altitudeCache[10];
+      int altitudeCache[MAIN_LOOP_LENGTH];
       bool mainChuteDeploymentStatus = false;
-      float mainDeployAltitude = 179; // 457.2 according to competition rules
     public:
-      void init();
+      ParachuteController();
+      void check(ProcessedData data);
       bool drogueDeploymentCheck(float currentAltitude);
       bool mainChuteDeploymentCheck(float currentAltitude);
       void printMainChuteStatus();
