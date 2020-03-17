@@ -29,5 +29,4 @@ class SensorController {
         SensorController();
         ProcessedData getProcessedData();
         RawData getRawData();
-        void init();
 };
