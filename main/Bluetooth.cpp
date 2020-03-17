@@ -2,7 +2,7 @@
 
 Bluetooth* Bluetooth::bt;
 
-void Bluetooth::init(int baud) {
+Bluetooth* Bluetooth::init(int baud) {
   if (bt == 0) {
     bt = new Bluetooth();
     Serial2.begin(baud);
@@ -11,6 +11,7 @@ void Bluetooth::init(int baud) {
     }
     print(SUCCESS + "Bluetooth Serial initialized");
   }
+  return bt;
 }
 
 void Bluetooth::print(String text, bool newline) {
