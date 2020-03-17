@@ -1,29 +1,22 @@
 #pragma once
 #include <Wire.h>
 #include "Vector3D.h"
+#include "SensorController.h"
+#include "Data.h"
+#include "Bluetooth.h"
 
 class DataService {
     private:
-      static DataService* instance;
-      // General
-      static String rawData;
+      SensorController* sensorController;
+      RawData rawData;
+      ProcessedData data;
     public:
-      // BMP
-      static float BMPTemperature;
-      static float pressure;
-      static float altitude;
-      // BNO
-      static float BNOTemperature;
-      static Vector3D orientation;
-      static Vector3D angularVelocity;
-      static Vector3D linearAcceleration;
-      static Vector3D netAcceleration;
-      static Vector3D gravity;
-      static Vector3D magneticField;
-
-      static void init();
-      static String getRawData();
-      template <typename Type> static void addRawData(Type newData);
-      static void resetRawData();
-      static String processData();
+      DataService() {
+        sensorController = new SensorController();
+      }
+      void update();
+      RawData getRawData();
+      ProcessedData getProcessedData();
+      void printRawData();
+      void printProcessedData();
 };

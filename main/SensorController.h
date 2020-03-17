@@ -7,19 +7,9 @@
 #include "BMP280.h"
 #include "BNO055.h"
 #include "Bluetooth.h"
-#include "DataService.h"
-
-#define SENSOR_TYPE_TEMPERATURE_BNO 69420
-#define SENSOR_TYPE_TEMPERATURE_BMP 69422
-#define SENSOR_TYPE_PRESSURE 69424
-#define SENSOR_TYPE_ALTITUDE 69426
-#define SENSOR_TYPE_SEA_PRESSURE 69428
+#include "Data.h"
+#include "Defines.h"
   
-#define BMP_AMOUNT 4 // amount of BMPs attached to teensy
-#define BNO_AMOUNT 1 // amount of BNOs attached to teensy
-
-#define STANDARD_PRESSURE 1005 // hPa (obtained from local weather forecast: https://www.worldweatheronline.com/edinburgh-weather/city-of-edinburgh/gb.aspx)
-        
 class SensorController {
     private:
         // BMP
@@ -36,6 +26,8 @@ class SensorController {
 
         template <typename Array, typename Data, typename Sensor> Data average(Array sensorArray, int count, Data (Sensor::*functionPointer)());
     public:
+        SensorController();
+        ProcessedData getProcessedData();
+        RawData getRawData();
         void init();
-        void update();
 };

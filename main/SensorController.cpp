@@ -1,6 +1,6 @@
 #include "SensorController.h" 
 
-void SensorController::init() {
+SensorController::SensorController() {
   initBNOs();
   initBMPs();
   Bluetooth::print(SUCCESS + "Sensor Controller initialized");
@@ -51,17 +51,37 @@ void SensorController::initBNOs() {
   }
 }
 
-void SensorController::update() {
-  DataService::pressure = average(bmps, bmpCount, &BMP280::getPressure);
-  DataService::altitude = average(bmps, bmpCount, &BMP280::getAltitude);
-  DataService::BMPTemperature = average(bmps, bmpCount, &BMP280::getTemperature);
-  DataService::BNOTemperature = average(bnos, bnoCount, &BNO055::getTemperature);
-  DataService::orientation = average(bnos, bnoCount, &BNO055::getOrientation);
-  DataService::angularVelocity = average(bnos, bnoCount, &BNO055::getAngularVelocity);
-  DataService::linearAcceleration = average(bnos, bnoCount, &BNO055::getLinearAcceleration);
-  DataService::netAcceleration = average(bnos, bnoCount, &BNO055::getNetAcceleration);
-  DataService::gravity = average(bnos, bnoCount, &BNO055::getGravity);
-  DataService::magneticField = average(bnos, bnoCount, &BNO055::getMagneticField);
+RawData SensorController::getRawData() {
+  RawData d = {
+    .BMPTemperature1 = bmps[0]->getTemperature(), .BMPTemperature2 = bmps[1]->getTemperature(), .BMPTemperature3 = bmps[2]->getTemperature(),
+    .pressure1 = bmps[0]->getPressure(), .pressure2 = bmps[1]->getPressure(), .pressure3 = bmps[2]->getPressure(),
+    .altitude1 = bmps[0]->getAltitude(), .altitude2 = bmps[1]->getAltitude(), .altitude3 = bmps[2]->getAltitude(),
+    .BNOTemperature = bnos[0]->getTemperature(),
+    .orientation = bnos[0]->getOrientation(),
+    .angularVelocity = bnos[0]->getAngularVelocity(),
+    .linearAcceleration = bnos[0]->getLinearAcceleration(),
+    .netAcceleration = bnos[0]->getNetAcceleration(),
+    .gravity = bnos[0]->getGravity(),
+    .magneticField = bnos[0]->getMagneticField()
+  };
+  return d;
+}
+
+ProcessedData SensorController::getProcessedData() {
+  ProcessedData d = {
+    .BMPTemperature = average(bmps, bmpCount, &BMP280::getTemperature),
+    .pressure = average(bmps, bmpCount, &BMP280::getPressure),
+    .altitude = average(bmps, bmpCount, &BMP280::getAltitude),
+    .BNOTemperature = average(bnos, bnoCount, &BNO055::getTemperature),
+    .orientation = average(bnos, bnoCount, &BNO055::getOrientation),
+    .angularVelocity = average(bnos, bnoCount, &BNO055::getAngularVelocity),
+    .linearAcceleration = average(bnos, bnoCount, &BNO055::getLinearAcceleration),
+    .netAcceleration = average(bnos, bnoCount, &BNO055::getNetAcceleration),
+    .gravity = average(bnos, bnoCount, &BNO055::getGravity),
+    .magneticField = average(bnos, bnoCount, &BNO055::getMagneticField)
+  };
+  return d;
+
 }
 
 template <typename Array, typename Data, typename Sensor>
@@ -99,6 +119,12 @@ SENSOR_TYPE_OBJECT_TEMPERATURE = (14)
 SENSOR_TYPE_VOLTAGE = (15)
 SENSOR_TYPE_CURRENT = (16)
 SENSOR_TYPE_COLOR = (17)
+
+SENSOR_TYPE_TEMPERATURE_BNO 69420
+SENSOR_TYPE_TEMPERATURE_BMP 69422
+SENSOR_TYPE_PRESSURE 69424
+SENSOR_TYPE_ALTITUDE 69426
+SENSOR_TYPE_SEA_PRESSURE 69428
 
 typedef struct {
 int32_t version;   // must be sizeof(struct sensors_event_t) 
