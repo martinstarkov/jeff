@@ -1,6 +1,6 @@
 #include "ParachuteController.h"
 
-ParachuteController::ParachuteController() {
+ParachuteController::ParachuteController() : altitudeDifferences(), altitudeCache() {
   for (int i = 0; i < DROGUE_LOOP_LENGTH; i++) {
     altitudeDifferences[i] = 0;
   }
@@ -14,14 +14,15 @@ void ParachuteController::check(ProcessedData data) {
   float currentAltitude = data.altitude;
   drogueDeploymentCheck(currentAltitude);
   mainChuteDeploymentCheck(currentAltitude);
+  cycle++;
 }
 
 bool ParachuteController::mainChuteDeploymentCheck(float currentAltitude) {
   belowThresholdAltitudes = 0;
   if (abs(currentAltitude - MAIN_SAFETY_FACTOR) < MAIN_DEPLOY_ALTITUDE) {
-    altitudeCache[mainCycle % MAIN_LOOP_LENGTH] = 1;
+    altitudeCache[cycle % MAIN_LOOP_LENGTH] = 1;
   } else {
-    altitudeCache[mainCycle % MAIN_LOOP_LENGTH] = 0;
+    altitudeCache[cycle % MAIN_LOOP_LENGTH] = 0;
   }
   for (int i = 0; i < MAIN_LOOP_LENGTH; i++) {
     if (altitudeCache[i % MAIN_LOOP_LENGTH] == 1) {
@@ -32,46 +33,32 @@ bool ParachuteController::mainChuteDeploymentCheck(float currentAltitude) {
     mainChuteDeploymentStatus = true;
   }
   //Bluetooth::print("Altitude Threshold Confidence: " + String(100 * belowThresholdAltitudes / MAIN_LOOP_LENGTH) + "%");
-  //printMainChuteStatus();
-  mainCycle++;
+  //printChuteCheck(altitudeCache, MAIN_LOOP_LENGTH);
   return mainChuteDeploymentStatus;
 }
 
-void ParachuteController::printMainChuteStatus() {
-  for (int i = 0; i < MAIN_LOOP_LENGTH; i++) {
-    if (i == mainCycle % MAIN_LOOP_LENGTH) {
+void ParachuteController::printChuteCheck(int* array, int length) {
+  // _______#____________ display state of cycle in the given caching array
+  for (int i = 0; i < length; i++) {
+    if (i == cycle % length) {
       Bluetooth::print("#", false);
     } else {
       Bluetooth::print("_", false);
     }
   }
-  Bluetooth::print("");
-  for (int i = 0; i < MAIN_LOOP_LENGTH; i++) {
-    Bluetooth::print(String(altitudeCache[i]), false);
+  Bluetooth::print(""); // newline
+  // 0000100000010000001 display altitude behavior that is desired for specific deployment as 1s
+  for (int i = 0; i < length; i++) {
+    Bluetooth::print(String(array[i]), false);
   }
-  Bluetooth::print("");
-}
-
-void ParachuteController::printDrogueStatus() {
-  for (int i = 0; i < DROGUE_LOOP_LENGTH; i++) {
-    if (i == drogueCycle % DROGUE_LOOP_LENGTH) {
-      Bluetooth::print("#", false);
-    } else {
-      Bluetooth::print("_", false);
-    }
-  }
-  Bluetooth::print("");
-  for (int i = 0; i < DROGUE_LOOP_LENGTH; i++) {
-    Bluetooth::print(String(altitudeDifferences[i]), false);
-  }
-  Bluetooth::print("");
+  Bluetooth::print(""); // newline
 }
 
 bool ParachuteController::drogueDeploymentCheck(float currentAltitude) {
-  if (altitudeDifferences[drogueCycle % DROGUE_LOOP_LENGTH] == 1) {
+  if (altitudeDifferences[cycle % DROGUE_LOOP_LENGTH] == 1) {
     decreasedAltitudes--;
   }
-  altitudeDifferences[drogueCycle % DROGUE_LOOP_LENGTH] = 0; // reset tile state each loop iteration
+  altitudeDifferences[cycle % DROGUE_LOOP_LENGTH] = 0; // reset tile state each loop iteration
   if (decreasedAltitudes > DROGUE_CONFIDENCE) {
     Bluetooth::print("Parachute Deployed!");
     drogueDeploymentStatus = true;
@@ -79,12 +66,11 @@ bool ParachuteController::drogueDeploymentCheck(float currentAltitude) {
     while (1); // Stop printing
   }
   if (previousAltitude - currentAltitude > DROGUE_SAFETY_FACTOR) { // altitude decreased
-    altitudeDifferences[drogueCycle % DROGUE_LOOP_LENGTH] = 1; // update tile state
+    altitudeDifferences[cycle % DROGUE_LOOP_LENGTH] = 1; // update tile state
     decreasedAltitudes++;
   }
   //Bluetooth::print("Altitude Decrease Confidence: " + String(100 * decreasedAltitudes / DROGUE_CONFIDENCE) + "%");
-  //printDrogueStatus();
+  //printChuteCheck(altitudeDifferences, DROGUE_LOOP_LENGTH);
   previousAltitude = currentAltitude;
-  drogueCycle++;
   return drogueDeploymentStatus;
 }
