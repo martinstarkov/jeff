@@ -11,9 +11,7 @@ class DataService {
       RawData rawData;
       ProcessedData data;
     public:
-      DataService() {
-        sensorController = new SensorController();
-      }
+      DataService();
       void update();
       RawData getRawData();
       ProcessedData getProcessedData();

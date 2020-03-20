@@ -1,5 +1,9 @@
 #include "DataService.h"
 
+DataService::DataService() {
+  sensorController = new SensorController();
+}
+
 void DataService::update() {
   rawData = sensorController->getRawData();
   data = sensorController->getProcessedData();
