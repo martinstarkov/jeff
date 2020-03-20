@@ -6,7 +6,7 @@
 
 // Bluetooth
 
-#define BLUETOOTH_BAUD 9600 // data mode: 9600, command mode: 38400#define NEUTRAL String("NEUTRAL: ")
+#define BLUETOOTH_BAUD 9600 // data mode: 9600, command mode: 38400
 #define FAILURE String("FAILURE: ") // String conversion required because Arduino interprets "" as char*
 #define SUCCESS String("SUCCESS: ")
 #define WARNING String("WARNING: ")
@@ -18,6 +18,22 @@
 #define BNO_AMOUNT 1 // amount of BNOs attached to teensy
 
 #define STANDARD_PRESSURE 1005 // hPa (obtained from local weather forecast: https://www.worldweatheronline.com/edinburgh-weather/city-of-edinburgh/gb.aspx)
+
+// Airbrakes
+
+#define AIRBRAKE_SERVO_PIN 23
+
+  // PID
+  
+  #define PID_PROPORTIONAL_GAIN -5.0
+  #define PID_INTEGRAL_GAIN 0.0
+  #define PID_DERIVATIVE_GAIN -5.0
+  #define PID_REFERENCE_ALTITUDE 3048.0 // target altitude for rocket
+  #define PID_CONTROLLER_DIRECTION 0
+  #define PID_MODE 1
+  #define PID_SAMPLE_TIME 10
+  #define PID_MIN_OUTPUT 0.0
+  #define PID_MAX_OUTPUT 0.25
 
 // Parachute
 
