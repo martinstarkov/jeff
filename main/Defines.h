@@ -13,7 +13,7 @@
 #define NEUTRAL String("NEUTRAL: ")
 
 // Sensors
-  
+
 #define BMP_AMOUNT 4 // amount of BMPs attached to teensy
 #define BNO_AMOUNT 1 // amount of BNOs attached to teensy
 
