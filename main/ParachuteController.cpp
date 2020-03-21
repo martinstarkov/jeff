@@ -1,6 +1,6 @@
 #include "ParachuteController.h"
 
-ParachuteController::ParachuteController() : altitudeDifferences(), altitudeCache() {
+ParachuteController::ParachuteController() {
   for (int i = 0; i < DROGUE_LOOP_LENGTH; i++) {
     altitudeDifferences[i] = 0;
   }

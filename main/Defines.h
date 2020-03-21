@@ -6,7 +6,7 @@
 
 // Bluetooth
 
-#define BLUETOOTH_BAUD 9600 // data mode: 9600, command mode: 38400
+#define BLUETOOTH_BAUD 9600 // data mode: 9600 / 115200, command mode: 38400
 #define FAILURE String("FAILURE: ") // String conversion required because Arduino interprets "" as char*
 #define SUCCESS String("SUCCESS: ")
 #define WARNING String("WARNING: ")
