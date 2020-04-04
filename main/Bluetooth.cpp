@@ -1,10 +1,12 @@
 #include "Bluetooth.h"
 
 Bluetooth* Bluetooth::bt;
+bool Bluetooth::printData = false;
 
 Bluetooth* Bluetooth::init(int baud) {
   if (bt == 0) {
     bt = new Bluetooth();
+    printData = false;
     Serial2.begin(baud);
     while (!Serial2) {
       print(NEUTRAL + "Initializing Bluetooth Serial...");
@@ -30,9 +32,12 @@ void serialEvent2() {
 
 void Bluetooth::inputHandler(String input) {
   String lc = input.toLowerCase();
-  if (lc == "jonah sucks") {
-    Bluetooth::print("Yes he does");
-  } else {
-    
+  if (lc == "i") {
+    Bluetooth::print("Initializing JEFF");
+  } else if (lc == "d") { // toggle data printing
+    if (!printData) {
+      Bluetooth::print("Beginning data printing");
+      printData = true;
+    }
   }
 }

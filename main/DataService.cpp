@@ -19,11 +19,9 @@ ProcessedData DataService::getProcessedData() {
 
 void DataService::printRawData() {
   String line;
-  // Format:
-  // BMPTemperature1;BMPTemperature2;BMPTemperature3;pressure1;pressure2;pressure3;altitude1;altitude2;altitude3;BNOTemperature;orientation;angularVelocity;linearAcceleration;netAcceleration;gravity;magneticField;
-  line += String(rawData.BMPTemperature1) + ";" + String(rawData.BMPTemperature2) + ";" + String(rawData.BMPTemperature3) + ";";
-  line += String(rawData.pressure1) + ";" + String(rawData.pressure2) + ";" + String(rawData.pressure3) + ";";
   line += String(rawData.altitude1) + ";" + String(rawData.altitude2) + ";" + String(rawData.altitude3) + ";";
+  line += String(rawData.pressure1) + ";" + String(rawData.pressure2) + ";" + String(rawData.pressure3) + ";";
+  line += String(rawData.BMPTemperature1) + ";" + String(rawData.BMPTemperature2) + ";" + String(rawData.BMPTemperature3) + ";";
   line += String(rawData.BNOTemperature) + ";";
   line += String(rawData.orientation) + ";";
   line += String(rawData.angularVelocity) + ";";
