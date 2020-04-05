@@ -31,13 +31,13 @@ void serialEvent2() {
 }
 
 void Bluetooth::inputHandler(String input) {
-  String lc = input.toLowerCase();
-  if (lc == "i") {
-    Bluetooth::print("Initializing JEFF");
-  } else if (lc == "d") { // toggle data printing
-    if (!printData) {
-      Bluetooth::print("Beginning data printing");
-      printData = true;
-    }
+  if (input == "init") {
+    Bluetooth::print("Initializing Jeff...");
+  } else if (input == "startData") {
+    Bluetooth::print("Starting data printing");
+    printData = true;
+  } else if (input == "stopData") {
+    Bluetooth::print("Stopping data printing");
+    printData = false;
   }
 }

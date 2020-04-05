@@ -139,7 +139,7 @@ bt_status = False
 bt_complete = False
 bt_read = ""
 cycle = 0
-print_delay = 1 # 0.5 # print output delay, seconds
+print_delay = 2 # 0.5 # print output delay, seconds
 arming_delay = 0.05 # 0.05 # slow down arming speed, seconds
 raw_data_points = 16 # amount of raw data points being sent by teensy data output
 bt_fake_signal = "1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20"
@@ -150,10 +150,14 @@ baud = 9600
 bt = None
 
 def determine_action(c):
-    global stop, data, jeff
+    global stop, data, jeff, bt
     if c == "start data":
+        if bt != None:
+            bt.write("startData".encode("utf-8"))
         data = True
     elif c == "stop data":
+        if bt != None:
+            bt.write("stopData".encode("utf-8"))
         data = False
     elif c == "jeff":
         jeff = True
@@ -193,14 +197,14 @@ def process_data_packet():
         raw_data = [null_data_message] * raw_data_points
     else:
         data_packet = data_packet.strip(";").split(";")
-        difference = abs(len(data_packet) - raw_data_points)
-        if difference > 0:
+        difference = len(data_packet) - raw_data_points
+        if difference >= 0:
             raw_data = data_packet
             for i in range(difference):
                 raw_data.append(undefined_data_message)
         elif difference < 0:
             raw_data = []
-            for i in range(raw_data_points):
+            for i in range(0, raw_data_points - 1):
                 raw_data.append(data_packet[i])
     return raw_data
 
@@ -208,7 +212,6 @@ def print_data():
     global cycle, bt_read
     raw_data = process_data_packet()
     data_string = "Cycle #" + str(cycle) + "\n----------------------------\n"
-    data_string += "Raw Bluetooth Read: " + bt_read + "\n"
     data_string += "Altitude (BMP1): " + raw_data[0] + "\n"
     data_string += "Altitude (BMP2): " + raw_data[1] + "\n"
     data_string += "Altitude (BMP3): " + raw_data[2] + "\n"
@@ -237,7 +240,7 @@ def f_output():
                 clear()
                 if arming_status:
                     print("---------------------------- \nDarwin Connection Successful")
-                print("----------------------------\n'i' for input, 'q' for quit \n----------------------------")
+                print("----------------------------\n'i' for input, 'q' for quit \n---------------------------- \nBT: " + bt_read + "\n----------------------------")
                 if data and not lock.locked():
                     print_data()
                 if jeff and not lock.locked():
@@ -290,11 +293,11 @@ def f_bluetooth():
         elif bt_complete and bt_usage:
             try:
                 response = ""
-                while True:
+                while not stop:
                     c = bt.read(1)
                     if c != b'':
                         response = str(c).strip("b").strip("'")
-                        while True:
+                        while not stop:
                             char = bt.read(1)
                             if char == b'\n':
                                 break
