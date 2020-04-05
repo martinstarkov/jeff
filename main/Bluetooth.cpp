@@ -1,16 +1,19 @@
 #include "Bluetooth.h"
 
 Bluetooth* Bluetooth::bt;
+bool Bluetooth::printData = false;
 
-void Bluetooth::init(int baud) {
+Bluetooth* Bluetooth::init(int baud) {
   if (bt == 0) {
     bt = new Bluetooth();
+    printData = false;
     Serial2.begin(baud);
     while (!Serial2) {
       print(NEUTRAL + "Initializing Bluetooth Serial...");
     }
     print(SUCCESS + "Bluetooth Serial initialized");
   }
+  return bt;
 }
 
 void Bluetooth::print(String text, bool newline) {
@@ -28,10 +31,13 @@ void serialEvent2() {
 }
 
 void Bluetooth::inputHandler(String input) {
-  String lc = input.toLowerCase();
-  if (lc == "jonah sucks") {
-    Bluetooth::print("Yes he does");
-  } else {
-    
+  if (input == "init") {
+    Bluetooth::print("Initializing Jeff...");
+  } else if (input == "startData") {
+    Bluetooth::print("Starting data printing");
+    printData = true;
+  } else if (input == "stopData") {
+    Bluetooth::print("Stopping data printing");
+    printData = false;
   }
 }

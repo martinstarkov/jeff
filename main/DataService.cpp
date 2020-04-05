@@ -1,49 +1,50 @@
 #include "DataService.h"
 
-DataService* DataService::instance;
-float DataService::pressure;
-float DataService::BMPTemperature;
-float DataService::altitude;
-float DataService::BNOTemperature;
-Vector3D DataService::orientation;
-Vector3D DataService::angularVelocity;
-Vector3D DataService::linearAcceleration;
-Vector3D DataService::netAcceleration;
-Vector3D DataService::gravity;
-Vector3D DataService::magneticField;
-String DataService::rawData;
-    
-void DataService::init() { // make sure DataService is only able to initialize once
-  if (instance == 0) {
-    instance = new DataService();
-  }
+DataService::DataService() {
+  sensorController = new SensorController();
 }
 
-String DataService::getRawData() {
+void DataService::update() {
+  rawData = sensorController->getRawData();
+  data = sensorController->getProcessedData();
+}
+
+RawData DataService::getRawData() {
   return rawData;
 }
 
-template <typename Type> void DataService::addRawData(Type newData) {
-  rawData += String(newData);
-}
-
-void DataService::resetRawData() {
-  rawData = "";
-}
-
-String DataService::processData() {
-  String data;
-  // Format (averages): pressure;bmp-temp;altitude;bno-temp;(x-orient,y-orient,z-orient);(x-angVel,y-angVel,z-angVel);(x-linAccel,y-linAccel,z-linAccel);(x-netAccel,y-netAccel,z-netAccel);(x-grav,y-grav,z-grav);(x-magn,y-magn,z-magn);
-  data += String(pressure) + ";";
-  data += String(BMPTemperature) + ";";
-  data += String(altitude) + ";";
-  data += String(BNOTemperature) + ";";
-  data += String(orientation) + ";";
-  data += String(angularVelocity) + ";";
-  data += String(linearAcceleration) + ";";
-  data += String(netAcceleration) + ";";
-  data += String(gravity) + ";";
-  data += String(magneticField) + ";";
-  
+ProcessedData DataService::getProcessedData() {
   return data;
+}
+
+void DataService::printRawData() {
+  String line;
+  line += String(rawData.altitude1) + ";" + String(rawData.altitude2) + ";" + String(rawData.altitude3) + ";";
+  line += String(rawData.pressure1) + ";" + String(rawData.pressure2) + ";" + String(rawData.pressure3) + ";";
+  line += String(rawData.BMPTemperature1) + ";" + String(rawData.BMPTemperature2) + ";" + String(rawData.BMPTemperature3) + ";";
+  line += String(rawData.BNOTemperature) + ";";
+  line += String(rawData.orientation) + ";";
+  line += String(rawData.angularVelocity) + ";";
+  line += String(rawData.linearAcceleration) + ";";
+  line += String(rawData.netAcceleration) + ";";
+  line += String(rawData.gravity) + ";";
+  line += String(rawData.magneticField) + ";";
+  Bluetooth::print(line);
+}
+
+void DataService::printProcessedData() {
+  String line;
+  // Format:
+  // BMPTemperature;pressure;altitude;BNOTemperature;orientation;angularVelocity;linearAcceleration;netAcceleration;gravity;magneticField;
+  line += String(data.BMPTemperature) + ";";
+  line += String(data.pressure) + ";";
+  line += String(data.altitude) + ";";
+  line += String(data.BNOTemperature) + ";";
+  line += String(data.orientation) + ";";
+  line += String(data.angularVelocity) + ";";
+  line += String(data.linearAcceleration) + ";";
+  line += String(data.netAcceleration) + ";";
+  line += String(data.gravity) + ";";
+  line += String(data.magneticField) + ";";
+  Bluetooth::print(line);
 }
