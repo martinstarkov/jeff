@@ -6,6 +6,8 @@ import sys
 import serial
 import json
 
+import random
+
 def clear(): # clear console command
     if os.name == 'nt':
         os.system('CLS')
@@ -86,31 +88,42 @@ class _GetchWindows: # windows getch implementation
         return msvcrt.getwch()
 
 class Darwin(object): # arming object
-    def __init__(self, com): # variable initalization
+    def __init__(self, com): 
+        # variable initalization
         self.running = True
+
+        # bt variable initialization
         self.port = com
         self.baud = 9600
         self.bt_line = '{ \
-                        "debug": ["SUCCESS: This happened", "FAILURE: This other thing happened", "NEUTRAL: Idc"], \
-                        "data": \
-                        { \
-                            "pressure": [1, 2, 3], \
-                            "temperature": [2, 3, 4] \
-                        }, \
-                        "statuses": \
-                        { \
-                            "airbrakes_work": true, \
-                            "main_chutes_work": true, \
-                            "drogue_chutes_work": true \
-                        } \
+                        "debug": [], \
+                        "data": {}, \
+                        "statuses":  {} \
                         }'
         self.bt_json = json.loads(self.bt_line)
+
+        # json objects
         self.debug_json = None
+        self.data_json = None
+        self.statuses_json = None
+
+        # print history
         self.debug_message = ""
+        self.data_message = ""
+        self.statuses_message = ""
+
+        # command variables
+        self.debug_printing = True
+        self.data_printing = True
+        self.statuses_printing = True
+        self.init = False
+
+        # printing defines
         self.separator = "-----------------------------------------"
         self.commands = ["init darwin", "sensor data", "statuses"]
         self.getch_commands = ['i', 'q']
-        self.data = True
+
+        # threading and input object initialization
         self.getch = _Getch() # getch object
         self.getch_thread = threading.Thread(target=self.getch_threading, daemon=True)
         self.bluetooth_thread = threading.Thread(target=self.bluetooth_threading, daemon=True)
@@ -123,26 +136,93 @@ class Darwin(object): # arming object
         self.cycle()
 
     def quit(self):
-        print("Termination program")
+        print("Script termination")
         self.running = False
 
     def cycle(self):
         self.cycle = 0
         self.getch_thread.start()
+        counter = 0
         while self.running:
             try:
                 clear()
+                if not self.bt and self.init:
+                    self.bt_line = '{ \
+                            "debug": ["SUCCESS: Initialized sensor controller"], \
+                            "data": {}, \
+                            "statuses": {} \
+                            }'
+                    if counter > 30:
+                        self.bt_line = '{ \
+                                "debug": ["SUCCESS: Initialized sensor controller", "SUCCESS: Bluetooth output started"], \
+                                "data": \
+                                { \
+                                    "pressure": [' + str(random.randint(101000,101325)) + ',' + str(random.randint(101000,101325)) + ',' + str(random.randint(101000,101325)) + '], \
+                                    "temperature": [' + str(random.randint(25,27)) + ',' + str(random.randint(25,27)) + ',' + str(random.randint(25,27)) + '] \
+                                }, \
+                                "statuses": \
+                                { \
+                                    "airbrakes_work": true, \
+                                    "main_chutes_work": true, \
+                                    "drogue_chutes_work": true \
+                                } \
+                                }'
+                    if counter > 60:
+                        self.bt_line = '{ \
+                                "debug": ["SUCCESS: Initialized sensor controller", "SUCCESS: Bluetooth output started", "NEUTRAL: Preparing for routine test"], \
+                                "data": \
+                                { \
+                                    "pressure": [' + str(random.randint(101000,101325)) + ',' + str(random.randint(101000,101325)) + ',' + str(random.randint(101000,101325)) + '], \
+                                    "temperature": [' + str(random.randint(25,27)) + ',' + str(random.randint(25,27)) + ',' + str(random.randint(25,27)) + '] \
+                                }, \
+                                "statuses": \
+                                { \
+                                    "airbrakes_work": true, \
+                                    "main_chutes_work": true, \
+                                    "drogue_chutes_work": true \
+                                } \
+                                }'
+                    if counter > 100:
+                        self.bt_line = '{ \
+                                "debug": ["SUCCESS: Initialized sensor controller", "SUCCESS: Bluetooth output started", "NEUTRAL: Preparing for routine test", "WARNING: Airbrake Failure"], \
+                                "data": \
+                                { \
+                                    "pressure": [' + str(random.randint(101000,101325)) + ',' + str(random.randint(101000,101325)) + ',' + str(random.randint(101000,101325)) + '], \
+                                    "temperature": [' + str(random.randint(25,27)) + ',' + str(random.randint(25,27)) + ',' + str(random.randint(25,27)) + '] \
+                                }, \
+                                "statuses": \
+                                { \
+                                    "airbrakes_work": false, \
+                                    "main_chutes_work": true, \
+                                    "drogue_chutes_work": true \
+                                } \
+                                }'
+                    counter += 1
+                self.bt_json = json.loads(self.bt_line)
                 print("'i' for input, 'q' to quit")
-                if self.data:
+                print(self.separator)
+                print("Cycle: #" + str(self.cycle))
+                self.update_statuses()
+                if self.statuses_printing:
+                    print(self.separator)
+                    print("System Statuses:")
+                    print(self.separator)
+                    if self.statuses_message != "":
+                        print(self.statuses_message)
+                self.update_data()
+                if self.data_printing:
                     print(self.separator)
                     print("Data Output:")
                     print(self.separator)
-                    print("BMP: 1")
+                    if self.data_message != "":
+                        print(self.data_message)
                 self.update_debug()
-                print(self.separator)
-                print("Bluetooth Debug:")
-                print(self.separator)
-                print(self.debug_message)
+                if self.debug_printing:
+                    print(self.separator)
+                    print("Bluetooth Debug:")
+                    print(self.separator)
+                    if self.debug_message != "":
+                        print(self.debug_message)
                 print(self.separator)
                 if self.pressed_key == 'q':
                     self.quit()
@@ -156,21 +236,36 @@ class Darwin(object): # arming object
                                         "Command Input: \n"
                                         + self.separator + "\n")
                     if self.command in self.commands:
-                        if self.command == "sensor data":
-                            if self.data:
-                                self.data = False
+                        # toggle variables
+                        if self.command == "init darwin":
+                            self.init = True
+                        elif self.command == "sensor data":
+                            if self.data_printing:
+                                self.data_printing = False
                             else:
-                                self.data = True
-                        if self.bt:
+                                self.data_printing = True
+                        elif self.command == "statuses": 
+                            if self.statuses_printing:
+                                self.statuses_printing = False
+                            else:
+                                self.statuses_printing = True
+                        # write commands bluetooth module
+                        if self.bt: 
                             if self.command == "init darwin":
-                                pass # write to bluetooth
+                                self.bt.write("init".encode("utf-8"))
+                            elif self.command == "sensor data":
+                                self.bt.write("toggleData".encode("utf-8"))
+                            elif self.command == "statuses":
+                                self.bt.write("toggleStatuses".encode("utf-8"))
                         clear()
                         self.pressed_key = ''
                 if self.bt: # real bluetooth connection
                     if self.bt_line:
-                        print("bt: " + self.bt_line)
+                        print("BT: " + self.bt_line)
                 self.cycle += 1
                 self.debug_json = self.bt_json["debug"]
+                self.data_json = self.bt_json["data"]
+                self.statuses_json = self.bt_json["statuses"]
                 time.sleep(0.1)
             except KeyboardInterrupt:
                 print("Ctrl+C termination")
@@ -218,13 +313,43 @@ class Darwin(object): # arming object
             if self.debug_json != self.bt_json["debug"]:
                 self.debug_message = ""
                 for num, entry in enumerate(self.bt_json["debug"]):
-                    if num == len(self.bt_json["debug"]) - 1: # no newline for last element of array
-                        self.debug_message += entry
-                    else:
-                        self.debug_message += entry + "\n"
+                    self.debug_message += entry
+                    if num != len(self.bt_json["debug"]) - 1: # add newline for each element except the last
+                        self.debug_message += "\n"
         except Exception as e:
             print(e)
-            print("JSON reader failure - exception occured")
+            print("JSON debug reader failure - exception occured")
+            self.running = False
+
+    def update_data(self):
+        try:
+            if self.data_json != self.bt_json["data"]:
+                self.data_message = ""
+                for type_num, type in enumerate(self.bt_json["data"]):
+                    for num, entry in enumerate(self.bt_json["data"][type]):
+                        self.data_message += type + ": " # add tag type
+                        if num == len(self.bt_json["data"][type]) - 1: # no newline for last element of array
+                            self.data_message += str(entry)
+                        else:
+                            self.data_message += str(entry) + "\n"
+                    if type_num != len(self.bt_json["data"]) - 1:
+                        self.data_message += "\n"
+        except Exception as e:
+            print(e)
+            print("JSON data reader failure - exception occured")
+            self.running = False
+
+    def update_statuses(self):
+        try:
+            if self.statuses_json != self.bt_json["statuses"]:
+                self.statuses_message = ""
+                for status_num, type in enumerate(self.bt_json["statuses"]):
+                    self.statuses_message += type + ": " + str(self.bt_json["statuses"][type])
+                    if status_num != len(self.bt_json["statuses"]) - 1: # add newline for each element except the last
+                        self.statuses_message += "\n"
+        except Exception as e:
+            print(e)
+            print("JSON status reader failure - exception occured")
             self.running = False
 
     def bluetooth_threading(self):
