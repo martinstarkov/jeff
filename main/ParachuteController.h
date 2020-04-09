@@ -1,7 +1,6 @@
 #pragma once
 #include "Defines.h"
 #include "Bluetooth.h"
-#include "Data.h"
         
 class ParachuteController {
     private:
@@ -18,7 +17,7 @@ class ParachuteController {
       bool mainChuteDeploymentStatus = false;
     public:
       ParachuteController();
-      void check(ProcessedData data);
+      void check(float altitude);
       bool drogueDeploymentCheck(float currentAltitude);
       bool mainChuteDeploymentCheck(float currentAltitude);
       void printChuteCheck(int* array, int length); // array refers to altitudeDifferences / altitudeCache and length is that of those arrays

@@ -14,8 +14,14 @@
 
 // Sensors
 
-#define BMP_AMOUNT 4 // amount of BMPs attached to teensy
-#define BNO_AMOUNT 1 // amount of BNOs attached to teensy
+#define BMPS 4 // amount of BMPs attached to teensy
+#define BNOS 1 // amount of BNOs attached to teensy
+#define BNO_ID 55
+// I2C Addresses
+#define BMP_I2C_1 0x77
+#define BMP_I2C_2 0x76
+#define BNO_I2C_1 0x29
+#define BNO_I2C_2 0x28
 
 #define STANDARD_PRESSURE 1005 // hPa (obtained from local weather forecast: https://www.worldweatheronline.com/edinburgh-weather/city-of-edinburgh/gb.aspx)
 

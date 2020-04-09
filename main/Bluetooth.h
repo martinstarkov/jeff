@@ -8,6 +8,7 @@ class Bluetooth {
       static String history;
     public:
       static void init(int baud);
+      static void end();
       static void inputHandler(String input);
       static String getLog();
       static void log(String s);

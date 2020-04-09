@@ -10,8 +10,8 @@ ParachuteController::ParachuteController() {
   Bluetooth::log(SUCCESS + "Parachute Controller initalized");
 }
 
-void ParachuteController::check(ProcessedData data) {
-  float currentAltitude = data.altitude;
+void ParachuteController::check(float altitude) {
+  float currentAltitude = altitude;
   drogueDeploymentCheck(currentAltitude);
   mainChuteDeploymentCheck(currentAltitude);
   cycle++;
