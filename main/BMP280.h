@@ -8,8 +8,10 @@ class BMP280 {
     private:
       Adafruit_BMP280* instance;
       bool status = false;
-      String name = "";
+      String name = "BMP280";
+      String id = "";
     public:
+      BMP280() {}
       BMP280(TwoWire* wire, uint8_t address) {
         instance = new Adafruit_BMP280(wire);
         instance->setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating mode */
@@ -18,11 +20,11 @@ class BMP280 {
         Adafruit_BMP280::FILTER_X16,                            /* Filtering */
         Adafruit_BMP280::STANDBY_MS_500);                       /* Standby time */
         if (!instance->begin(address)) {
-          Bluetooth::print(FAILURE + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " not detected. Check wiring / I2C address");
+          Bluetooth::log(FAILURE + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " not detected. Check wiring / I2C address");
         } else {
-          name = "BMP280-" + String(address, HEX) + "-" + String(int(wire));
+          id = "BMP280-" + String(address, HEX) + "-" + String(int(wire));
           status = true;
-          Bluetooth::print(SUCCESS + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized. Example data (temperature): " + String(instance->readTemperature()));
+          Bluetooth::log(SUCCESS + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized. Example data (temperature): " + String(instance->readTemperature()));
         }
       }
 
@@ -31,7 +33,7 @@ class BMP280 {
       }
       
       bool initialized() {
-        return status;
+        return status && id != "";
       }
       
       float getPressure() {
