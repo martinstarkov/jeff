@@ -6,13 +6,13 @@ AirbrakeController::AirbrakeController() {
   // Pulse width modulation
   //servo = new PWMServo();
   //servo->attach(AIRBRAKE_SERVO_PIN);
-  //Bluetooth::log(SUCCESS + "Airbrake Servo initialized");
+  Bluetooth::log(SUCCESS + "Airbrake servo initialized");
   //referenceAltitude = new double(PID_REFERENCE_ALTITUDE);
   //pid = new PID(inputData, servoData, referenceAltitude, PID_PROPORTIONAL_GAIN, PID_INTEGRAL_GAIN, PID_DERIVATIVE_GAIN, PID_CONTROLLER_DIRECTION);
   //pid->SetSampleTime(PID_SAMPLE_TIME);
   //pid->SetOutputLimits(PID_MIN_OUTPUT, PID_MAX_OUTPUT);
   //pid->SetMode(PID_MODE);
-  //Bluetooth::log(SUCCESS + "PID Contrller initialized");
+  Bluetooth::log(SUCCESS + "PID controller initialized");
 }
 
 float AirbrakeController::getServoOutput() {
