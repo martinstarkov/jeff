@@ -54,3 +54,11 @@
   #define MAIN_LOOP_LENGTH 10
   #define MAIN_DEPLOY_ALTITUDE 179 // 457.2 according to competition rules
   #define MAIN_SAFETY_FACTOR 0 // meters, distance above MAIN_DEPLOY_ALTITUDE for main chutes to activate
+
+// StateMachine
+#define LIFTOFF_LOOP_LENGTH 10
+#define BURNOUT_LOOP_LENGTH 10
+#define FREEFALL_LOOP_LENGTH 10
+#define LIFTOFF_THRESHOLD 1
+#define BURNOUT_THRESHOLD 2
+#define FREEFALL_THRESHOLD 10
