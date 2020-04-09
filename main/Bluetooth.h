@@ -5,8 +5,13 @@
 class Bluetooth {
     private:
       static Bluetooth* bt;
+      static String history;
     public:
-      static Bluetooth* init(int baud);
-      static void print(String text, bool newline=true);
+      static void init(int baud);
       static void inputHandler(String input);
+      static String getLog();
+      static void log(String s);
+      static void resetLog();
+      static bool printData;
+      static void print(String text, bool newline=true);
 };

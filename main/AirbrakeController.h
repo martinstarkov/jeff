@@ -9,7 +9,8 @@ class AirbrakeController {
     private:
       PID* pid;
       // Input
-      double* inputData;
+      double altitude = 0;
+      double* inputData = &altitude;
       double* referenceAltitude;
       // Output
       PWMServo* servo;
@@ -18,7 +19,7 @@ class AirbrakeController {
       float getServoOutput();
     public:
       AirbrakeController();
-      void loop(float altitude);
+      void controlLoop(float altitude);
       void deployFlaps();
       
 };

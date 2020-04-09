@@ -3,7 +3,7 @@
 SensorController::SensorController() {
   initBNOs();
   initBMPs();
-  Bluetooth::print(SUCCESS + "Sensor Controller initialized");
+  Bluetooth::log(SUCCESS + "Sensor Controller initialized");
 }
 
 void SensorController::initBMPs() {
@@ -22,11 +22,11 @@ void SensorController::initBMPs() {
       }
     }
     if (bmpCount == BMP_AMOUNT) {
-      Bluetooth::print(SUCCESS + String(bmpCount) + "/" + String(BMP_AMOUNT) + " BMP sensor(s) initialized");
+      Bluetooth::log(SUCCESS + String(bmpCount) + "/" + String(BMP_AMOUNT) + " BMP sensor(s) initialized");
     } else if (bmpCount == 0) {
-      Bluetooth::print(FAILURE + "No BMP sensor(s) detected");
+      Bluetooth::log(FAILURE + "No BMP sensor(s) detected");
     } else { // some sensors but not all have initialized correctly
-      Bluetooth::print(WARNING + String(bmpCount) + "/" + String(BMP_AMOUNT) + " BMP sensor(s) initialized");
+      Bluetooth::log(WARNING + String(bmpCount) + "/" + String(BMP_AMOUNT) + " BMP sensor(s) initialized");
     }
   }
 }
@@ -42,11 +42,11 @@ void SensorController::initBNOs() {
       }
     }
     if (bnoCount == BNO_AMOUNT) {
-      Bluetooth::print(SUCCESS + String(bnoCount) + "/" + String(BNO_AMOUNT) + " BNO sensor(s) initialized");
+      Bluetooth::log(SUCCESS + String(bnoCount) + "/" + String(BNO_AMOUNT) + " BNO sensor(s) initialized");
     } else if (bnoCount == 0) {
-      Bluetooth::print(FAILURE + "No BNO sensor(s) detected");
+      Bluetooth::log(FAILURE + "No BNO sensor(s) detected");
     } else { // some sensors but not all have initialized correctly
-      Bluetooth::print(WARNING + String(bnoCount) + "/" + String(BNO_AMOUNT) + " BNO sensor(s) initialized");
+      Bluetooth::log(WARNING + String(bnoCount) + "/" + String(BNO_AMOUNT) + " BNO sensor(s) initialized");
     }
   }
 }
