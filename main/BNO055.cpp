@@ -6,10 +6,10 @@ BNO055::BNO055(TwoWire* wire, uint8_t address, int id) {
   address = address;
   instance = new Adafruit_BNO055(id, address, wire);
   if (!instance->begin()) {
-    Bluetooth::print(FAILURE + "BNO sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + ", id=" + String(id) + " not detected. Check wiring / I2C address");
+    Bluetooth::log(FAILURE + "BNO sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + ", id=" + String(id) + " not detected. Check wiring / I2C address");
   } else {
     status = true;
-    Bluetooth::print(SUCCESS + "BNO sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized");
+    Bluetooth::log(SUCCESS + "BNO sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized");
   }
 }
 

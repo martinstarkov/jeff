@@ -1,19 +1,20 @@
 #include "Bluetooth.h"
 
+// Singleton variable declarations
 Bluetooth* Bluetooth::bt;
-bool Bluetooth::printData = false;
+String Bluetooth::history;
+bool Bluetooth::printData;
 
-Bluetooth* Bluetooth::init(int baud) {
+void Bluetooth::init(int baud) {
   if (bt == 0) {
+    // Initialize singleton and static variables
     bt = new Bluetooth();
+    history = "";
     printData = false;
     Serial2.begin(baud);
-    while (!Serial2) {
-      print(NEUTRAL + "Initializing Bluetooth Serial...");
-    }
-    print(SUCCESS + "Bluetooth Serial initialized");
+    while (!Serial2) {} // Initializing Bluetooth Serial...
+    log(SUCCESS + "Bluetooth Serial Initialized");
   }
-  return bt;
 }
 
 void Bluetooth::print(String text, bool newline) {
@@ -24,6 +25,18 @@ void Bluetooth::print(String text, bool newline) {
   }
 }
 
+String Bluetooth::getLog() {
+  return history;
+}
+
+void Bluetooth::resetLog() {
+  history = "";
+}
+
+void Bluetooth::log(String s) {
+  history += s + ";";
+}
+
 void serialEvent2() {
   if (Serial2.available()) {
     Bluetooth::inputHandler(Serial2.readString());
@@ -32,12 +45,12 @@ void serialEvent2() {
 
 void Bluetooth::inputHandler(String input) {
   if (input == "init") {
-    Bluetooth::print("Initializing Jeff...");
+    log(NEUTRAL + "Initializing Jeff...");
   } else if (input == "startData") {
-    Bluetooth::print("Starting data printing");
+    log(NEUTRAL + "Starting data printing");
     printData = true;
   } else if (input == "stopData") {
-    Bluetooth::print("Stopping data printing");
+    log(NEUTRAL + "Stopping data printing");
     printData = false;
   }
 }

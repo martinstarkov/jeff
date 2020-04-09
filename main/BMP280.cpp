@@ -11,10 +11,10 @@ BMP280::BMP280(TwoWire* wire, uint8_t address, float sp) {
   Adafruit_BMP280::FILTER_X16,                            /* Filtering */
   Adafruit_BMP280::STANDBY_MS_500);                       /* Standby time */
   if (!instance->begin(address)) {
-    Bluetooth::print(FAILURE + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " not detected. Check wiring / I2C address");
+    Bluetooth::log(FAILURE + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " not detected. Check wiring / I2C address");
   } else {
     status = true;
-    Bluetooth::print(SUCCESS + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized");
+    Bluetooth::log(SUCCESS + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized");
   }
 }
 

@@ -7,7 +7,7 @@ ParachuteController::ParachuteController() {
   for (int i = 0; i < MAIN_LOOP_LENGTH; i++) {
     altitudeCache[i] = 0;
   }
-  Bluetooth::print(SUCCESS + "Parachute Controller initalized");
+  Bluetooth::log(SUCCESS + "Parachute Controller initalized");
 }
 
 void ParachuteController::check(ProcessedData data) {

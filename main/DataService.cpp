@@ -29,7 +29,7 @@ void DataService::printRawData() {
   line += String(rawData.netAcceleration) + ";";
   line += String(rawData.gravity) + ";";
   line += String(rawData.magneticField) + ";";
-  Bluetooth::print(line);
+  //Bluetooth::print(line);
 }
 
 void DataService::printProcessedData() {
@@ -46,5 +46,5 @@ void DataService::printProcessedData() {
   line += String(data.netAcceleration) + ";";
   line += String(data.gravity) + ";";
   line += String(data.magneticField) + ";";
-  Bluetooth::print(line);
+  //Bluetooth::print(line);
 }
