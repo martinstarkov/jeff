@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include "Defines.h"
 
 enum class State{
@@ -22,4 +22,4 @@ class StateMachine{
     public:
         initStateMachine();
         runStateMachine();
-};
+};*/

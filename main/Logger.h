@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <SD.h>
 #include <SPI.h>
 #include <EEPROM.h>
@@ -14,4 +14,4 @@ class Logger {
     ~Logger();
     void init();
     void log(String type, int data);
-};
+};*/

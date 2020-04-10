@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 //#include "NoiseFiltering.h"
 #include <stdlib.h>
 
@@ -10,4 +10,4 @@ class ErrorCorrection {
         float getAverage(float data[]);
         bool getAverage(bool data[]);
         float correctData(float data[]);
-};
+};*/

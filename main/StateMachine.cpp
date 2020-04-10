@@ -1,4 +1,4 @@
-#include "StateMachine.h"
+/*#include "StateMachine.h"
 #include "Bluetooth.h"
 #include "Data.h"
 #include "DataService.h"
@@ -115,4 +115,4 @@ StateMachine::runStateMachine(){
         default:
             Bluetooth::print("STATE MACHINE ERROR: Invalid State");
     }
-}
+}*/

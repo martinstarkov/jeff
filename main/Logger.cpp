@@ -1,4 +1,4 @@
-#include "Logger.h"
+/*#include "Logger.h"
 
 void Logger::init() {
   if(!SD.begin(chipSelect)) {
@@ -34,4 +34,4 @@ void Logger::log(String type, int data) {
     logFile.println(log_data);
     Serial.println(log_data);
   }
-}
+}*/

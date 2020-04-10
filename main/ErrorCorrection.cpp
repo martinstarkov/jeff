@@ -1,4 +1,4 @@
-//#include "ErrorCorrection.h" 
+/*//#include "ErrorCorrection.h" 
 #include <stdlib.h>
 
 //TODO: previous value for threshold, compare each data point with prev to decide if it should be disregarded
@@ -71,4 +71,4 @@ bool ErrorCorrection::getAverage(bool data[]){
   else{
     return false;
   }
-}
+}*/
