@@ -2,7 +2,7 @@
 
 SensorController::SensorController() {
   init();
-  Bluetooth::log(SUCCESS + "Sensor controller initialized");
+  //Bluetooth::log(SUCCESS + "Sensor controller initialized");
 }
 
 template <typename Sensor>
@@ -21,9 +21,9 @@ void SensorController::initI2C(int count, Sensor* sensors[], uint8_t addresses[]
     }
   }
   if (num == count) {
-    Bluetooth::log(SUCCESS + "Initialized " + String(num) + " " + String(s->getName()) + " sensor(s)");
+    //Bluetooth::log(SUCCESS + "Initialized " + String(num) + " " + String(s->getName()) + " sensor(s)");
   } else {
-    Bluetooth::log(WARNING + "Only initialized " + String(num) + "/" + String(count) + " " + String(s->getName()) + " sensor(s)");
+    //Bluetooth::log(WARNING + "Only initialized " + String(num) + "/" + String(count) + " " + String(s->getName()) + " sensor(s)");
     // Bluetooth::promptConfirmation();
   }
 }

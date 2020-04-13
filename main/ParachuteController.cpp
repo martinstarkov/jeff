@@ -7,7 +7,7 @@ ParachuteController::ParachuteController() {
   for (int i = 0; i < MAIN_LOOP_LENGTH; i++) {
     altitudeCache[i] = 0;
   }
-  Bluetooth::log(SUCCESS + "Parachute controller initalized");
+  //Bluetooth::log(SUCCESS + "Parachute controller initalized");
 }
 
 void ParachuteController::check(float altitude) {
@@ -41,17 +41,17 @@ void ParachuteController::printChuteCheck(int* array, int length) {
   // _______#____________ display state of cycle in the given caching array
   for (int i = 0; i < length; i++) {
     if (i == cycle % length) {
-      Bluetooth::print("#", false);
+      //Bluetooth::print("#", false);
     } else {
-      Bluetooth::print("_", false);
+      //Bluetooth::print("_", false);
     }
   }
-  Bluetooth::print(""); // newline
+  //Bluetooth::print(""); // newline
   // 0000100000010000001 display altitude behavior that is desired for specific deployment as 1s
   for (int i = 0; i < length; i++) {
-    Bluetooth::print(String(array[i]), false);
+    //Bluetooth::print(String(array[i]), false);
   }
-  Bluetooth::print(""); // newline
+  //Bluetooth::print(""); // newline
 }
 
 bool ParachuteController::drogueDeploymentCheck(float currentAltitude) {
@@ -60,7 +60,7 @@ bool ParachuteController::drogueDeploymentCheck(float currentAltitude) {
   }
   altitudeDifferences[cycle % DROGUE_LOOP_LENGTH] = 0; // reset tile state each loop iteration
   if (decreasedAltitudes > DROGUE_CONFIDENCE) {
-    Bluetooth::print("Parachute Deployed!");
+    //Bluetooth::print("Parachute Deployed!");
     drogueDeploymentStatus = true;
     decreasedAltitudes = 0;
     while (1); // Stop printing

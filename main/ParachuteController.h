@@ -1,6 +1,6 @@
 #pragma once
+#include <Wire.h>
 #include "Defines.h"
-#include "Bluetooth.h"
         
 class ParachuteController {
     private:
