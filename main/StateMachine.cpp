@@ -1,20 +1,17 @@
 #include "StateMachine.h"
 
 StateMachine::StateMachine() {
-  dc = new DataController();
+  cc = new CommunicationController(SERIAL_BAUD);
   pc = new ParachuteController();
   ac = new AirbrakeController();
 }
 
 void StateMachine::update() {
-  dc->update();
-  pc->update();
-  ac->update();
+  //pc->update();
+  //ac->update();
+  //cc->update();
 }
 
-void StateMachine::stateCheck(Data d) {
-  
-}
 /*
 //Initial State
 StateMachine::initStateMachine(){

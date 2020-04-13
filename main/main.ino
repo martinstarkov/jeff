@@ -4,7 +4,7 @@
 FlightController* fc;
 
 void setup() {
-  fc = new FlightController();
+  fc = FlightController::getInstance();
 }
 
 void loop() {

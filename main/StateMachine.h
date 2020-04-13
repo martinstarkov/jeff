@@ -1,18 +1,17 @@
 #pragma once
 #include "ParachuteController.h"
 #include "AirbrakeController.h"
-#include "DataController.h"
+#include "CommunicationController.h"
 #include "Defines.h"
 
 class StateMachine {
   private:
-    DataController* dc;
     ParachuteController* pc;
     AirbrakeController* ac;
+    CommunicationController* cc;
   public:
     StateMachine();
     void update();
-    void stateCheck(Data d);
 };
 
 /*
