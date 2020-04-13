@@ -1,10 +1,21 @@
-/*#include "StateMachine.h"
-#include "Bluetooth.h"
-#include "Data.h"
-#include "DataService.h"
-#include "ParachuteController.h"
-#include "Defines.h"
+#include "StateMachine.h"
 
+StateMachine::StateMachine() {
+  dc = new DataController();
+  pc = new ParachuteController();
+  ac = new AirbrakeController();
+}
+
+void StateMachine::update() {
+  dc->update();
+  pc->update();
+  ac->update();
+}
+
+void StateMachine::stateCheck(Data d) {
+  
+}
+/*
 //Initial State
 StateMachine::initStateMachine(){
     State currentState = State::STANDBY;

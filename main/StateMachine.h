@@ -1,6 +1,21 @@
-/*#pragma once
+#pragma once
+#include "ParachuteController.h"
+#include "AirbrakeController.h"
+#include "DataController.h"
 #include "Defines.h"
 
+class StateMachine {
+  private:
+    DataController* dc;
+    ParachuteController* pc;
+    AirbrakeController* ac;
+  public:
+    StateMachine();
+    void update();
+    void stateCheck(Data d);
+};
+
+/*
 enum class State{
     STANDBY,
     BOOSTING,
