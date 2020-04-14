@@ -1,16 +1,38 @@
 #pragma once
+#include "Data.h"
 
 // General
 
-#define READ_REFRESH_DELAY 1000 // milliseconds
+#define READ_REFRESH_DELAY 0 // milliseconds
 
 // JSON
 
-#define JSON_ALLOCATION 200 // bytes in the RAM
+#define JSON_ALLOCATION 131072 // bytes in the RAM
 
 // Serials
 
 #define SERIAL_BAUD 9600 // data mode: 9600, command mode: 38400
+#define RAW "raw_data"
+#define PROCESSED "processed_data"
+#define FILTERED "filtered_data"
+#define STATUS "statuses"
+#define DEBUG "debug"
+
+#define debug(message) { Data::set(DEBUG, message); }
+
+#define BMP_PRESSURE "bmp_pressure"
+#define BMP_ALTITUDE "bmp_altitude"
+#define BMP_TEMPERATURE "bmp_temperature"
+#define BNO_TEMPERATURE "bno_temperature"
+#define BNO_ORIENTATION "bno_orientation"
+#define BNO_ANGULAR_VELOCITY "bno_angular_velocity"
+#define BNO_LINEAR_ACCELERATION "bno_linear_acceleration"
+#define BNO_NET_ACCELERATION "bno_net_acceleration"
+#define BNO_GRAVITY "bno_gravity"
+#define BNO_MAGNETIC_FIELD "bno_magnetic_field"
+  
+// Debug
+
 #define FAILURE String("FAILURE: ") // String conversion required because Arduino interprets "" as char*
 #define SUCCESS String("SUCCESS: ")
 #define WARNING String("WARNING: ")
@@ -27,7 +49,7 @@
 #define BNO_I2C_1 0x29
 #define BNO_I2C_2 0x28
 
-#define STANDARD_PRESSURE 1005 // hPa (obtained from local weather forecast: https://www.worldweatheronline.com/edinburgh-weather/city-of-edinburgh/gb.aspx)
+#define STANDARD_PRESSURE 1025 // hPa (obtained from local weather forecast: https://www.worldweatheronline.com/edinburgh-weather/city-of-edinburgh/gb.aspx)
 
 // Airbrakes
 
@@ -60,6 +82,7 @@
   #define MAIN_SAFETY_FACTOR 0 // meters, distance above MAIN_DEPLOY_ALTITUDE for main chutes to activate
 
 // StateMachine
+
 #define LIFTOFF_LOOP_LENGTH 10
 #define BURNOUT_LOOP_LENGTH 10
 #define FREEFALL_LOOP_LENGTH 10
