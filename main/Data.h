@@ -1,31 +1,23 @@
 #pragma once
 #include <ArduinoJson.h>
+#include "Vector3D.h"
 #include "Defines.h"
-
-enum JsonTypes {
-  PRESSURE,
-  TEMPERATURE,
-  ALTITUDE,
-  ORIENTATION
-};
-
 
 class Data {
   private:
     static Data* instance;
-    static DynamicJsonDocument* data;
-    static DynamicJsonDocument* statuses;
-    static DynamicJsonDocument* debug;
-    static void combine(JsonDocument* dst, const JsonDocument* src) {
-      for (auto p : src->as<JsonObject>()) {
-          (*dst)[p.key()] = p.value();
-      }
-    }
+    static DynamicJsonDocument document;
     Data();
   public:
     static Data* getInstance();
-    static void add();
-    static void print(Stream& serial);
-    static void clear(String type);
-    static void populate(String type);
+    static String getString(bool pretty=false);
+    static void set(String format, String type, int value);
+    static void set(String format, String type, float value);
+    static void set(String format, String type, double value);
+    static void set(String format, String type, float values[], int length);
+    static void set(String format, String type, bool value);
+    static void set(String format, String type, Vector3D value);
+    static void set(String format, String value);
+    static void clear(String format);
+    static void clearData();
 };
