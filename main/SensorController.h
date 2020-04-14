@@ -10,26 +10,23 @@
 #include "Vector3D.h"
 #include "Defines.h"
 
-class SensorInterface {
-  public:
-//    virtual float getPressure() = 0;
-//    virtual float getAltitude() = 0;
-//    virtual float getTemperature() = 0;
-};
-
-class SensorController : public SensorInterface {
+class SensorController {
     private:
+      int bmpCount = 0;
       BMP280* bmps[BMPS];
+      int bnoCount = 0;
       BNO055* bnos[BNOS];
-      uint8_t bmpAddresses[2] = { BMP_I2C_1, BMP_I2C_2 };
-      uint8_t bnoAddresses[1] = { BNO_I2C_1 };
-      template <typename Sensor> 
-      void initI2C(int count, Sensor* sensors[], uint8_t* addresses);
+      uint8_t BMPAddresses[2] = { BMP_I2C_1, BMP_I2C_2 };
+      uint8_t BNOAddresses[1] = { BNO_I2C_1 };
+      void logRawValues();
       template <typename Data, typename Sensor>
       Data average(int count, Sensor* sensors[], Data (Sensor::*functionPointer)());
+//      template <typename Sensor> 
+//      void initI2C(int count, Sensor* sensors[], uint8_t* addresses);
     public:
       SensorController();
       void init();
-      float getAltitude();
-      Vector3D getOrientation();
+      void initBMPs();
+      void initBNOs();
+      void update();
 };
