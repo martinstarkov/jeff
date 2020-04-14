@@ -1,6 +1,7 @@
 #include "FlightController.h"
 
 FlightController* FlightController::instance = 0;
+int FlightController::cycle = 0;
 
 FlightController* FlightController::getInstance() {
   if (!instance) {
@@ -20,7 +21,11 @@ void FlightController::restart() { // Restart teensy programmatically
   SCB_AIRCR = 0x05FA0004; // write value for restart
 }
 
-void FlightController::cycle() { // update every flight component for each microcontroller cycle
-  //ds->update();
-  //sm->update();
+void FlightController::update() { // update every flight component for each microcontroller cycle
+  ds->update();
+  sm->update();
+  if (cycle == 5) {
+    Data::clear(DEBUG);
+  }
+  cycle++;
 }

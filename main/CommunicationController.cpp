@@ -5,75 +5,41 @@ CommunicationController::CommunicationController(int baud) {
   // USB
   Serial.begin(baud);
   while (!Serial);
-  Serial.println("Initialized USB serial.");
   // Bluetooth
   Serial2.begin(baud);
   while (!Serial2);
-  Serial.println("Initialized Bluetooth serial.");
   // GPS
   Serial3.begin(baud);
   while (!Serial3);
-  Serial.println("Initialized GPS serial.");
   Data::getInstance();
-  Data::print(Serial);
-  Data::clear("debug");
-  Data::clear("statuses");
-  Data::clear("data");
-  Data::print(Serial);
-  Data::populate("debug");
-  Data::populate("data");
-  Data::print(Serial);
+  debug(SUCCESS + "Initialized serials (USB, Bluetooth, GPS)");
+}
+
+void CommunicationController::print(String string, bool newline) {
+  if (newline) {
+    Serial.println(string);
+    Serial2.println(string);
+    Serial3.println(string);
+  } else {
+    Serial.print(string);
+    Serial2.print(string);
+    Serial3.print(string);
+  }
+}
+
+void CommunicationController::send() {
+  print(Data::getString(true));
+  Data::clearData();
+}
+
+void CommunicationController::update() {
+  send();
 }
 
 /*
-// Singleton variable declarations
-Bluetooth* Bluetooth::bt;
-String Bluetooth::logHistory;
-bool Bluetooth::printData;
-
-void Bluetooth::init(int baud) {
-  if (bt == 0) {
-    // Initialize singleton and static variables
-    bt = new Bluetooth();
-    logHistory = "";
-    printData = false;
-    Serial.begin(baud);
-    Serial2.begin(baud);
-    while (!Serial) {} // Initializing Regular Serial...
-    while (!Serial2) {} // Initializing Bluetooth Serial...
-    print(SUCCESS + "Bluetooth serial initialized");
-  }
-}
-
 void Bluetooth::end() {
   Serial.end();
   Serial2.end();
-}
-
-void Bluetooth::print(String text, bool newline) {
-  if (newline) {
-    Serial.println(text);
-    Serial2.println(text);
-  } else {
-    Serial.print(text);
-    Serial2.print(text);
-  }
-}
-
-String Bluetooth::getLog() {
-  return logHistory;
-}
-
-void Bluetooth::printLog() {
-  print(logHistory);
-}
-
-void Bluetooth::resetLog() {
-  logHistory = "";
-}
-
-void Bluetooth::log(String s) {
-  logHistory += s + ";" + "\n";
 }
 
 void serialEvent() {
@@ -104,9 +70,9 @@ void Bluetooth::inputHandler(String input) {
     printLog();
   }
 }
-
 */
-/*#pragma once
+/*
+#pragma once
 #include <SD.h>
 #include <SPI.h>
 #include <EEPROM.h>

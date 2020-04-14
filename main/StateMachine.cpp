@@ -9,7 +9,7 @@ StateMachine::StateMachine() {
 void StateMachine::update() {
   //pc->update();
   //ac->update();
-  //cc->update();
+  cc->update();
 }
 
 /*

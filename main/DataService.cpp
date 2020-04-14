@@ -1,5 +1,10 @@
 #include "DataService.h"
 
 DataService::DataService() {
-  //Bluetooth::log(SUCCESS + "Data controller initialized");
+  sc = new SensorController();
+  debug(SUCCESS + "Data controller initialized");
+}
+
+void DataService::update() {
+  sc->update();
 }

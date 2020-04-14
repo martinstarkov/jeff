@@ -8,6 +8,6 @@ void setup() {
 }
 
 void loop() {
-  fc->cycle();
+  fc->update();
   delay(READ_REFRESH_DELAY);
 }

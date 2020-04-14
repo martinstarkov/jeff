@@ -1,8 +1,11 @@
 #pragma once
+#include "SensorController.h"
 #include "Defines.h"
 
 class DataService {
-    private:
-    public:
-      DataService();
+  private:
+    SensorController* sc;
+  public:
+    DataService();
+    void update();
 };

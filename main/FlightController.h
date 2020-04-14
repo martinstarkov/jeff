@@ -7,11 +7,12 @@
 class FlightController {
     private:
       static FlightController* instance;
+      static int cycle;
       FlightController();
       DataService* ds;
       StateMachine* sm;
     public:
       static FlightController* getInstance();
-      void cycle();
+      void update();
       void restart();
 };
