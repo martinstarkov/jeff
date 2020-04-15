@@ -28,7 +28,7 @@ void CommunicationController::print(String string, bool newline) {
 }
 
 void CommunicationController::send() {
-  print(Data::getString(true));
+  print(Data::getString(true)); // change to false if you wish to print compacated version of json / true = prettified
   Data::clearData();
 }
 
@@ -69,6 +69,8 @@ void Bluetooth::inputHandler(String input) {
   } else if (input == "print") {
     printLog();
   }
+  // remember to clear debug after finished with task
+  // Data::clear(DEBUG);
 }
 */
 /*

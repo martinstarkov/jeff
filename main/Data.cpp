@@ -16,6 +16,7 @@ Data::Data() {
   document.createNestedObject(FILTERED);
   document.createNestedObject(STATUS);
   document.createNestedArray(DEBUG);
+  set(STATUS, "airbrake_usage", false);
 }
 
 String Data::getString(bool pretty) {
@@ -53,12 +54,12 @@ void Data::set(String format, String type, bool value) {
 
 void Data::set(String format, String type, Vector3D value) {
   // Vector string
-  document[format][type] = String(value);
-//  // JSON array alternative
-//  JsonArray d = document[format].createNestedArray(type);
-//  d.add(value.x);
-//  d.add(value.y);
-//  d.add(value.z);
+  //document[format][type] = String(value);
+  // JSON array alternative
+  JsonArray d = document[format].createNestedArray(type);
+  d.add(value.x);
+  d.add(value.y);
+  d.add(value.z);
 }
 
 void Data::set(String format, String value) {

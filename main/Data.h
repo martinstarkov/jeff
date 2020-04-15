@@ -11,6 +11,12 @@ class Data {
   public:
     static Data* getInstance();
     static String getString(bool pretty=false);
+    static JsonVariant get(String format, String type="") {
+      if (type == "") { // debug
+        return document[format].as<JsonVariant>();
+      }
+      return document[format][type]; // everything else (ints, floats, bools
+    }
     static void set(String format, String type, int value);
     static void set(String format, String type, float value);
     static void set(String format, String type, double value);
