@@ -16,11 +16,6 @@ FlightController::FlightController() {
   ds = new DataService();
 }
 
-void FlightController::restart() { // Restart teensy programmatically
-  //Bluetooth::clear();
-  SCB_AIRCR = 0x05FA0004; // write value for restart
-}
-
 void FlightController::update() { // update every flight component for each microcontroller cycle
   ds->update();
   sm->update();
