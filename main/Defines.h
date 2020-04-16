@@ -4,32 +4,59 @@
 // General
 
 #define READ_REFRESH_DELAY 0 // milliseconds
+#define SCB_AIRCR (*(volatile uint32_t *)0xE000ED0C) // Teensy interruption and reset control location
 
 // JSON
 
-#define JSON_ALLOCATION 131072 // bytes in the RAM
+#define JSON_ALLOCATION 262144 // bytes in the RAM
 
-// Serials
+// Serials / SD
 
 #define SERIAL_BAUD 9600 // data mode: 9600, command mode: 38400
-#define RAW "raw_data"
-#define PROCESSED "processed_data"
-#define FILTERED "filtered_data"
-#define STATUS "statuses"
-#define DEBUG "debug"
+#define SD_CHIP_SELECT 4 // SD card chip select
+#define FLIGHT_NUMBER_ADDRESS 0 // initial counter value for SD card file names (using EEPROM)
+#define SD_FILE_FORMAT "_flight_log.txt"
 
-#define debug(message) { Data::set(DEBUG, message); }
+#define debug(message) { Data::set(DEBUG, message); } // debug function
 
-#define BMP_PRESSURE "bmp_pressure"
-#define BMP_ALTITUDE "bmp_altitude"
-#define BMP_TEMPERATURE "bmp_temperature"
-#define BNO_TEMPERATURE "bno_temperature"
-#define BNO_ORIENTATION "bno_orientation"
-#define BNO_ANGULAR_VELOCITY "bno_angular_velocity"
-#define BNO_LINEAR_ACCELERATION "bno_linear_acceleration"
-#define BNO_NET_ACCELERATION "bno_net_acceleration"
-#define BNO_GRAVITY "bno_gravity"
-#define BNO_MAGNETIC_FIELD "bno_magnetic_field"
+  // Data formats
+  #define RAW "raw_data"
+  #define PROCESSED "processed_data"
+  #define FILTERED "filtered_data"
+  #define STATUS "statuses"
+  #define DEBUG "debug"
+
+  // Data types
+  #define BMP_PRESSURE "bmp_pressure"
+  #define BMP_ALTITUDE "bmp_altitude"
+  #define BMP_TEMPERATURE "bmp_temperature"
+  #define BNO_TEMPERATURE "bno_temperature"
+  #define BNO_ORIENTATION "bno_orientation"
+  #define BNO_ANGULAR_VELOCITY "bno_angular_velocity"
+  #define BNO_LINEAR_ACCELERATION "bno_linear_acceleration"
+  #define BNO_NET_ACCELERATION "bno_net_acceleration"
+  #define BNO_GRAVITY "bno_gravity"
+  #define BNO_MAGNETIC_FIELD "bno_magnetic_field"
+
+  // Stages
+  #define STANDBY "standby"
+  #define BOOSTING "powered_ascent"
+  #define COASTING "coasting"
+  #define DROGUE_DESCENT "drogue_descent"
+  #define MAIN_DESCENT "main_descent"
+  #define LANDED "landed"
+
+  // Statuses
+  #define TRANSMISSION_TIME "time_since_startup"
+  #define MAIN_CHUTE "main_chute_deployed"
+  #define DROGUE_CHUTE "drogue_chute_deployed"
+  #define AIRBRAKES_DEPLOYED "airbrakes_deployed"
+  #define ENGINE_FIRING "engine_firing"
+  #define AIRBRAKE_EXTENSION "airbrake_extension"
+  #define ROLL_RANGE "safe_roll_range"
+  #define PRESSURE_RANGE "safe_pressure_range"
+  #define TEMPERATURE_RANGE "safe_temperature_range"
+  #define ACCELERATION_RANGE "acceleration_tolerance"
   
 // Debug
 
