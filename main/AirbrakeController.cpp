@@ -24,7 +24,7 @@ void AirbrakeController::controlLoop(float altitude) {
   //pid->Compute();
 }
 
-void AirbrakeController::deployFlaps() {
+void AirbrakeController::deployAirbrakes() {
   // take getServoOutput() distance value and turn it into angle the servo needs to rotate
   //rotateAngle = 0; // replace later with calculated value from above ^
   //servo->write(rotateAngle);

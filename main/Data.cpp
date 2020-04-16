@@ -16,10 +16,9 @@ Data::Data() {
   document.createNestedObject(FILTERED);
   document.createNestedObject(STATUS);
   document.createNestedArray(DEBUG);
-  set(STATUS, "airbrake_usage", false);
 }
 
-String Data::getString(bool pretty) {
+String Data::getString(bool pretty) { // false = compact json, true = prettified json
   String output = "";
   if (pretty) {
     serializeJsonPretty(document, output);

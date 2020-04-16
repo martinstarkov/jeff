@@ -1,7 +1,7 @@
 #include "StateMachine.h"
 
 StateMachine::StateMachine() {
-  cc = new CommunicationController(SERIAL_BAUD);
+  cc = new CommunicationController();
   pc = new ParachuteController();
   ac = new AirbrakeController();
 }
