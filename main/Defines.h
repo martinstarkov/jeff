@@ -39,12 +39,13 @@
   #define BNO_MAGNETIC_FIELD "bno_magnetic_field"
 
   // Stages
-  #define STANDBY "standby"
-  #define BOOSTING "powered_ascent"
-  #define COASTING "coasting"
-  #define DROGUE_DESCENT "drogue_descent"
-  #define MAIN_DESCENT "main_descent"
-  #define LANDED "landed"
+  #define STAGE "stage"
+  #define STAGE_STANDBY "standby"
+  #define STAGE_BOOSTING "powered_ascent"
+  #define STAGE_COASTING "coasting"
+  #define STAGE_DROGUE_DESCENT "drogue_descent"
+  #define STAGE_MAIN_DESCENT "main_descent"
+  #define STAGE_LANDED "landed"
 
   // Statuses
   #define TRANSMISSION_TIME "time_since_startup"

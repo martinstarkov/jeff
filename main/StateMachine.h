@@ -4,25 +4,29 @@
 #include "CommunicationController.h"
 #include "Defines.h"
 
+enum Stage {
+  STANDBY,
+  POWERED_ASCENT,
+  COASTING,
+  DROGUE_DESCENT,
+  MAIN_DESCENT,
+  LANDED
+};
+
 class StateMachine {
   private:
     ParachuteController* pc;
     AirbrakeController* ac;
     CommunicationController* cc;
+    Stage currentStage;
+    void determineStage();
+    void stageChecks();
   public:
     StateMachine();
     void update();
 };
 
 /*
-enum class State{
-    STANDBY,
-    BOOSTING,
-    COASTING,
-    FALLING_DROGUE,
-    FALLING_MAIN,
-    LANDED
-};
 
 class StateMachine{
     private:

@@ -64,7 +64,7 @@ void CommunicationController::log(String string, bool newline) {
 
 void CommunicationController::send() {
   Data::set(STATUS, TRANSMISSION_TIME, double(millis() / 1000.0000L)); // add time since start signature to data packet
-  print(Data::getString(true)); 
+  print(Data::getString(true));
   log(Data::getString(false));
   Data::clearData(); // clear RAW, PROCESSED, FILTERED data after each cycle
 }

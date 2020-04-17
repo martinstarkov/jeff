@@ -4,12 +4,70 @@ StateMachine::StateMachine() {
   cc = new CommunicationController();
   pc = new ParachuteController();
   ac = new AirbrakeController();
+  // initial state set to standby
+  currentStage = STANDBY;
+  debug(SUCCESS + "State machine initialized");
 }
 
 void StateMachine::update() {
-  //pc->update();
-  //ac->update();
+  
+  determineStage();
+
+  stageChecks();
+  
+  // Send everything via serials at the end of the cycle
   cc->update();
+}
+//  STANDBY,
+//  POWERED_ASCENT,
+//  COASTING,
+//  DROGUE_DESCENT,
+//  MAIN_DESCENT,
+//  LANDED
+void StateMachine::determineStage() {
+  switch (currentStage) { // switch statement because stage transition can only occur incrementally
+    case Stage::STANDBY:
+      // check if criteria for powered ascent are met
+      break;
+    case Stage::POWERED_ASCENT:
+      // check if criteria for coasting are met
+      break;
+    case Stage::COASTING:
+      // check if criteria for drogue chute deploy are met
+      break;
+    case Stage::DROGUE_DESCENT:
+      // check if criteria for main chute deploy are met
+      break;
+    case Stage::MAIN_DESCENT:
+      // check if criteria for sufficient still time (i.e. landing) are met
+      break;
+    case Stage::LANDED:
+      // turn off data logging after X seconds
+      break;
+    default:
+      // error
+      break;
+  }
+}
+
+void StateMachine::stageChecks() {
+  switch (currentStage) { // switch statement because stage transition can only occur incrementally
+    case Stage::STANDBY:
+      break;
+    case Stage::POWERED_ASCENT:
+      break;
+    case Stage::COASTING:
+      break;
+    case Stage::DROGUE_DESCENT:
+      break;
+    case Stage::MAIN_DESCENT:
+      break;
+    case Stage::LANDED:
+      break;
+    default:
+      // error
+      break;
+  }
 }
 
 /*
