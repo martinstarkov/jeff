@@ -79,9 +79,15 @@ void SensorController::init() {
 
 void SensorController::update() {
   logRawValues();
+
+  // Temporary, move to error controller update function once that exists
   Data::set(PROCESSED, BMP_PRESSURE, average(bmpCount, bmps, &BMP280::getPressure));
   Data::set(PROCESSED, BMP_TEMPERATURE, average(bmpCount, bmps, &BMP280::getTemperature));
   Data::set(PROCESSED, BMP_ALTITUDE, average(bmpCount, bmps, &BMP280::getAltitude));
+  
+  // Temporary, move to noise controller update function once that exists
+  Data::set(FILTERED, BMP_ALTITUDE, average(bmpCount, bmps, &BMP280::getAltitude));
+
   Data::set(PROCESSED, BNO_TEMPERATURE, average(bnoCount, bnos, &BNO055::getTemperature));
   Data::set(PROCESSED, BNO_ORIENTATION, average(bnoCount, bnos, &BNO055::getOrientation));
   Data::set(PROCESSED, BNO_ANGULAR_VELOCITY, average(bnoCount, bnos, &BNO055::getAngularVelocity));
@@ -92,6 +98,7 @@ void SensorController::update() {
 }
 
 void SensorController::logRawValues() {
+  // BMP
   float pressures[BMPS];
   float temperatures[BMPS];
   float altitudes[BMPS];
