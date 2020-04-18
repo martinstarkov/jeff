@@ -1,8 +1,15 @@
 #pragma once
 #include <Wire.h>
 #include "Defines.h"
-        
-class ParachuteController {
+#include "Data.h"
+
+class ParachuteInterface {
+  public:
+    virtual bool drogueDescentCheck() = 0;
+    virtual bool mainDescentCheck() = 0;
+};
+
+class ParachuteController : public ParachuteInterface {
     private:
       // initalize
       float previousAltitude;
@@ -17,8 +24,7 @@ class ParachuteController {
       bool mainChuteDeploymentStatus = false;
     public:
       ParachuteController();
-      void check(float altitude);
-      bool drogueDeploymentCheck(float currentAltitude);
-      bool mainChuteDeploymentCheck(float currentAltitude);
+      bool drogueDescentCheck();
+      bool mainDescentCheck();
       void printChuteCheck(int* array, int length); // array refers to altitudeDifferences / altitudeCache and length is that of those arrays
 };
