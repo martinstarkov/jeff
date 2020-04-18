@@ -28,6 +28,13 @@ String Data::getString(bool pretty) { // false = compact json, true = prettified
   return output;
 }
 
+JsonVariant Data::get(String format, String type) {
+  if (type == "") { // debug
+    return document[format].as<JsonVariant>();
+  }
+  return document[format][type]; // everything else (ints, floats, bools
+}
+
 void Data::set(String format, String type, int value) {
   document[format][type] = value;
 }
@@ -40,15 +47,23 @@ void Data::set(String format, String type, double value) {
   document[format][type] = value;
 }
 
+void Data::set(String format, String type, bool value) {
+  document[format][type] = value;
+}
+
+void Data::set(String format, String type, String value) {
+  document[format][type] = value;
+}
+
+void Data::set(String format, String type, const char* value) {
+  document[format][type] = value;
+}
+
 void Data::set(String format, String type, float values[], int length) {
   JsonArray d = document[format].createNestedArray(type);
   for (int i = 0; i < length; i++) {
     d.add(values[i]);
   }
-}
-
-void Data::set(String format, String type, bool value) {
-  document[format][type] = value;
 }
 
 void Data::set(String format, String type, Vector3D value) {

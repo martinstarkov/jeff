@@ -1,9 +1,9 @@
 #pragma once
-#include "Data.h"
-#include "Defines.h"
 #include <SD.h>
 #include <SPI.h>
 #include <EEPROM.h>
+#include "Data.h"
+#include "Defines.h"
 
 class CommunicationController {
   private:
