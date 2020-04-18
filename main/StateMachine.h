@@ -20,7 +20,9 @@ class StateMachine {
     CommunicationController* cc;
     Stage currentStage;
     void determineStage();
-    void stageChecks();
+    bool poweredAscentCheck();
+    bool coastingCheck();
+    bool landingCheck();
   public:
     StateMachine();
     void update();

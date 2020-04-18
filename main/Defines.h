@@ -41,7 +41,7 @@
   // Stages
   #define STAGE "stage"
   #define STAGE_STANDBY "standby"
-  #define STAGE_BOOSTING "powered_ascent"
+  #define STAGE_POWERED_ASCENT "powered_ascent"
   #define STAGE_COASTING "coasting"
   #define STAGE_DROGUE_DESCENT "drogue_descent"
   #define STAGE_MAIN_DESCENT "main_descent"

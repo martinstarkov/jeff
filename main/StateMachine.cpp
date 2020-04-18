@@ -6,42 +6,56 @@ StateMachine::StateMachine() {
   ac = new AirbrakeController();
   // initial state set to standby
   currentStage = STANDBY;
+  Data::set(STATUS, STAGE, STAGE_STANDBY);
   debug(SUCCESS + "State machine initialized");
 }
 
 void StateMachine::update() {
   
   determineStage();
-
-  stageChecks();
   
   // Send everything via serials at the end of the cycle
   cc->update();
 }
-//  STANDBY,
-//  POWERED_ASCENT,
-//  COASTING,
-//  DROGUE_DESCENT,
-//  MAIN_DESCENT,
-//  LANDED
+
 void StateMachine::determineStage() {
   switch (currentStage) { // switch statement because stage transition can only occur incrementally
-    case Stage::STANDBY:
+    case STANDBY:
       // check if criteria for powered ascent are met
+      if (poweredAscentCheck()) {
+        currentStage = POWERED_ASCENT;
+        Data::set(STATUS, STAGE, STAGE_POWERED_ASCENT);
+      }
       break;
-    case Stage::POWERED_ASCENT:
+    case POWERED_ASCENT:
       // check if criteria for coasting are met
+      if (coastingCheck()) {
+        currentStage = COASTING;
+        Data::set(STATUS, STAGE, STAGE_COASTING);
+      }
       break;
-    case Stage::COASTING:
+    case COASTING:
       // check if criteria for drogue chute deploy are met
+      if (pc->drogueDescentCheck()) {
+        currentStage = DROGUE_DESCENT;
+        Data::set(STATUS, STAGE, STAGE_DROGUE_DESCENT);
+      }
       break;
-    case Stage::DROGUE_DESCENT:
+    case DROGUE_DESCENT:
       // check if criteria for main chute deploy are met
+      if (pc->mainDescentCheck()) {
+        currentStage = MAIN_DESCENT;
+        Data::set(STATUS, STAGE, STAGE_MAIN_DESCENT);
+      }
       break;
-    case Stage::MAIN_DESCENT:
+    case MAIN_DESCENT:
       // check if criteria for sufficient still time (i.e. landing) are met
+      if (landingCheck()) {
+        currentStage = LANDED;
+        Data::set(STATUS, STAGE, STAGE_LANDED);
+      }
       break;
-    case Stage::LANDED:
+    case LANDED:
       // turn off data logging after X seconds
       break;
     default:
@@ -50,24 +64,16 @@ void StateMachine::determineStage() {
   }
 }
 
-void StateMachine::stageChecks() {
-  switch (currentStage) { // switch statement because stage transition can only occur incrementally
-    case Stage::STANDBY:
-      break;
-    case Stage::POWERED_ASCENT:
-      break;
-    case Stage::COASTING:
-      break;
-    case Stage::DROGUE_DESCENT:
-      break;
-    case Stage::MAIN_DESCENT:
-      break;
-    case Stage::LANDED:
-      break;
-    default:
-      // error
-      break;
-  }
+bool StateMachine::poweredAscentCheck() {
+  return false;
+}
+
+bool StateMachine::coastingCheck() {
+  return false;
+}
+
+bool StateMachine::landingCheck() {
+  return false;
 }
 
 /*
