@@ -7,7 +7,7 @@ class FlightComputer {
     static FlightComputer* instance;
     FlightComputer();
     DataService* ds;
-    StateMachine* sm;
+    //StateMachine* sm;
   public:
     static FlightComputer* getInstance();
     void update();
