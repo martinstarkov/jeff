@@ -19,11 +19,11 @@ class BMP280 {
       Adafruit_BMP280::FILTER_X16,                            /* Filtering */
       Adafruit_BMP280::STANDBY_MS_500);                       /* Standby time */
       if (!instance->begin(address)) {
-        debug(FAILURE + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " not detected, check wiring / I2C address");
+        //debug(FAILURE + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " not detected, check wiring / I2C address");
       } else {
         id = "BMP280-" + String(address, HEX) + "-" + String(int(wire));
         status = true;
-        debug(SUCCESS + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized");
+        //debug(SUCCESS + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized");
       }
     }
     String getId() {

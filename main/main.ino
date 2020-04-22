@@ -1,13 +1,16 @@
-#include "FlightController.h"
-#include "Defines.h"
+#include "FlightComputer.h"
+#include "Serials.h"
 
-FlightController* fc;
+#define REFRESH_DELAY 0
+
+FlightComputer* fc;
 
 void setup() {
-  fc = FlightController::getInstance();
+  Serials::begin();
+  fc = FlightComputer::getInstance();
 }
 
 void loop() {
   fc->update();
-  delay(READ_REFRESH_DELAY);
+  delay(REFRESH_DELAY);
 }

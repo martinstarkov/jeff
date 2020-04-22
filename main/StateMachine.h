@@ -1,8 +1,10 @@
 #pragma once
 #include "ParachuteController.h"
 #include "AirbrakeController.h"
-#include "CommunicationController.h"
+#include "Data.h"
+#include "Serials.h"
 #include "Defines.h"
+#include "Vector3D.h"
 
 enum Stage {
   STANDBY,
@@ -15,31 +17,20 @@ enum Stage {
 
 class StateMachine {
   private:
+    int cycle = 0;
     ParachuteController* pc;
     AirbrakeController* ac;
-    CommunicationController* cc;
+    //CommunicationController* cc;
     Stage currentStage;
     void determineStage();
     bool poweredAscentCheck();
+    int liftoffCache[LIFTOFF_LOOP_LENGTH];
+    int liftoffCount = 0;
     bool coastingCheck();
+    int burnoutCache[BURNOUT_LOOP_LENGTH];
+    int burnoutCount = 0;
     bool landingCheck();
   public:
     StateMachine();
     void update();
 };
-
-/*
-
-class StateMachine{
-    private:
-        State currentState;
-        int liftoffCache[LIFTOFF_LOOP_LENGTH];
-        // bool liftoffStatus = false;
-        int burnoutCache[BURNOUT_LOOP_LENGTH];
-        // bool burnoutStatus = false;
-        int freefallCache[FREEFALL_LOOP_LENGTH];
-        // bool freefallStatus = false;
-    public:
-        initStateMachine();
-        runStateMachine();
-};*/

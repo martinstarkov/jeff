@@ -1,101 +1,55 @@
 #include "Data.h"
 
-Data* Data::instance = 0;
-DynamicJsonDocument Data::document(JSON_ALLOCATION);
+String Data::debug = "";
+String Data::raw = "";
+String Data::processed = "";
+String Data::filtered = "";
+String Data::status = "";
+String Data::combined = "";
+String Data::command = "";
 
-Data* Data::getInstance() {
-  if (instance == 0) {
-    instance = new Data();
+String& Data::getString(String format) {
+  if (format == PROCESSED) {
+    return processed;
+  } else if (format == FILTERED) {
+    return filtered;
+  } else if (format == STATUS) {
+    return status;
+  } else if (format == DEBUG) {
+    return debug;
+  } else if (format == RAW) {
+    return raw;
   }
-  return instance;
+  combined = processed + raw + filtered + status + debug;
+  return combined;
 }
 
-Data::Data() {
-  document.createNestedObject(RAW);
-  document.createNestedObject(PROCESSED);
-  document.createNestedObject(FILTERED);
-  document.createNestedObject(STATUS);
-  document.createNestedArray(DEBUG);
-}
-
-String Data::getString(bool pretty) { // false = compact json, true = prettified json
-  String output = "";
-  if (pretty) {
-    serializeJsonPretty(document, output);
-  } else {
-    serializeJson(document, output);
-  }
-  return output;
-}
-
-JsonVariant Data::get(String format, String type) {
-  if (type == "") { // debug
-    return document[format].as<JsonVariant>();
-  }
-  return document[format][type]; // everything else (ints, floats, bools
-}
-
-void Data::set(String format, String type, int value) {
-  document[format][type] = value;
-}
-
-void Data::set(String format, String type, float value) {
-  document[format][type] = value;
-}
-
-void Data::set(String format, String type, double value) {
-  document[format][type] = value;
-}
-
-void Data::set(String format, String type, bool value) {
-  document[format][type] = value;
-}
-
-void Data::set(String format, String type, String value) {
-  document[format][type] = value;
-}
-
-void Data::set(String format, String type, const char* value) {
-  document[format][type] = value;
-}
-
-void Data::set(String format, String type, float values[], int length) {
-  JsonArray d = document[format].createNestedArray(type);
-  for (int i = 0; i < length; i++) {
-    d.add(values[i]);
-  }
-}
-
-void Data::set(String format, String type, Vector3D value) {
-  // Vector string
-  //document[format][type] = String(value);
-  // JSON array alternative
-  JsonArray d = document[format].createNestedArray(type);
-  d.add(value.x);
-  d.add(value.y);
-  d.add(value.z);
-}
-
-void Data::set(String format, String value) {
-  document[format].add(value);
-}
-
-void Data::clear(String format) {
-  if (document[format].is<JsonArray>()) { // debug
-    JsonArray array = document[format].as<JsonArray>();
-    //Serial.println("Clearing " + String(array.size()) + " debug entries");
-    for(JsonArray::iterator it=array.begin(); it!=array.end(); ++it) {
-      array.remove(it);
-    }
-  } else {
-    for (JsonObject::iterator it=document[format].as<JsonObject>().begin(); it!=document[format].as<JsonObject>().end(); ++it) {
-      document[format].remove(it->key().c_str());
-    }
-  }
+void Data::add(String type, String value) {
+  processed += type + SEPARATE_CHAR + value + END_CHAR;
 }
 
 void Data::clearData() {
-  clear(RAW);
-  clear(PROCESSED);
-  clear(FILTERED);
+  raw = "";
+  processed = "";
+  filtered = "";
+}
+
+void Data::set(String format, String type, String value) {
+  String& string = getString(format);
+  int startIndex = string.indexOf(type);
+  String replacement = type + SEPARATE_CHAR + value + END_CHAR;
+  if (startIndex == -1) { // string does not contain type
+    string += replacement;
+  } else { // replace old with new
+    int stopIndex = string.indexOf(END_CHAR, startIndex);
+    String current = string.substring(startIndex, stopIndex + END_CHAR.length());
+    string.replace(current, replacement);
+  }
+}
+
+String Data::get(String format, String type) {
+  String& string = getString(format);
+  int startIndex = string.indexOf(type);
+  int stopIndex = string.indexOf(END_CHAR, startIndex);
+  return string.substring(startIndex + type.length() + SEPARATE_CHAR.length(), stopIndex);
 }

@@ -1,26 +1,23 @@
 #pragma once
-#include <ArduinoJson.h>
-#include "Vector3D.h"
+#include <Wire.h>
 #include "Defines.h"
+
+#define SEPARATE_CHAR String(":")
+#define END_CHAR String(";")
 
 class Data {
   private:
-    static Data* instance;
-    static DynamicJsonDocument document;
-    Data();
   public:
-    static Data* getInstance();
-    static String getString(bool pretty=false);
-    static JsonVariant get(String format, String type="");
-    static void set(String format, String type, int value);
-    static void set(String format, String type, float value);
-    static void set(String format, String type, double value);
-    static void set(String format, String type, bool value);
+    static String command;
+    static String debug;
+    static String raw;
+    static String processed;
+    static String filtered;
+    static String status;
+    static String combined;
     static void set(String format, String type, String value);
-    static void set(String format, String type, const char* value);
-    static void set(String format, String type, float values[], int length);
-    static void set(String format, String type, Vector3D value);
-    static void set(String format, String value);
-    static void clear(String format);
+    static String get(String format, String type);
+    static void add(String type, String value);
+    static String& getString(String format);
     static void clearData();
 };

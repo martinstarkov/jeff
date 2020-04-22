@@ -1,21 +1,28 @@
 #pragma once
+#include <Wire.h>
 
-#define VECTOR_SPLIT_CHARACTER ","
+#define LEFT_WRAP "("
+#define RIGHT_WRAP ")"
+#define SPLIT_CHARACTER ","
 
 struct Vector3D {
   float x, y, z;
   
   Vector3D(float x, float y, float z) : x(x), y(y), z(z) {}
-  Vector3D() : x(0), y(0), z(0) {}
-  Vector3D(auto a) { // json array -> vector object conversion
-    JsonArray array = a;
-    x = array[0].as<float>();
-    y = array[1].as<float>();
-    z = array[2].as<float>();
+  Vector3D() : x(0.0), y(0.0), z(0.0) {}
+  float minValue() {
+    float m = min(x, y);
+    return min(m, z);
   }
-  
+  float maxValue() {
+    float m = max(x, y);
+    return max(m, z);
+  }
   operator String() const {
-    return "(" + String(x) + VECTOR_SPLIT_CHARACTER + String(y) + VECTOR_SPLIT_CHARACTER + String(z) + ")";
+    return LEFT_WRAP + String(x, 1) + SPLIT_CHARACTER + String(y, 1) + SPLIT_CHARACTER + String(z, 1) + RIGHT_WRAP;
+  }
+  Vector3D operator* (const float num) const {
+    return Vector3D(x * num, y * num, z * num);
   }
   Vector3D operator/ (const float num) const {
     return Vector3D(x / num, y / num, z / num);

@@ -1,63 +1,58 @@
 #pragma once
-#include "Data.h"
 
 // General
 
-#define READ_REFRESH_DELAY 0 // milliseconds
 #define SCB_AIRCR (*(volatile uint32_t *)0xE000ED0C) // Teensy interruption and reset control location
-
-// JSON
-
-#define JSON_ALLOCATION 262144 // bytes in the RAM
 
 // Serials / SD
 
-#define SERIAL_BAUD 9600 // data mode: 9600, command mode: 38400
 #define SD_CHIP_SELECT 4 // SD card chip select
 #define FLIGHT_NUMBER_ADDRESS 0 // initial counter value for SD card file names (using EEPROM)
-#define SD_FILE_FORMAT "_flight_log.txt"
+#define SD_FILE_FORMAT String("_flight_log.txt")
 
-#define debug(message) { Data::set(DEBUG, message); } // debug function
+// Bluetooth commands
+#define COMMAND_INIT String("init")
+#define COMMAND_RESTART String("restart")
+#define COMMAND_ALL_DATA String("all")
+#define COMMAND_RAW String("raw")
+#define COMMAND_PROCESSED String("processed")
+#define COMMAND_FILTERED String("filtered")
+#define COMMAND_STATUS String("statuses")
+#define COMMAND_DEBUG String("debug")
 
   // Data formats
-  #define RAW "raw_data"
-  #define PROCESSED "processed_data"
-  #define FILTERED "filtered_data"
-  #define STATUS "statuses"
-  #define DEBUG "debug"
+  #define RAW String("RAW")
+  #define PROCESSED String("PRCSD")
+  #define FILTERED String("FLTR")
+  #define STATUS String("STAT")
+  #define DEBUG String("DBG")
 
   // Data types
-  #define BMP_PRESSURE "bmp_pressure"
-  #define BMP_ALTITUDE "bmp_altitude"
-  #define BMP_TEMPERATURE "bmp_temperature"
-  #define BNO_TEMPERATURE "bno_temperature"
-  #define BNO_ORIENTATION "bno_orientation"
-  #define BNO_ANGULAR_VELOCITY "bno_angular_velocity"
-  #define BNO_LINEAR_ACCELERATION "bno_linear_acceleration"
-  #define BNO_NET_ACCELERATION "bno_net_acceleration"
-  #define BNO_GRAVITY "bno_gravity"
-  #define BNO_MAGNETIC_FIELD "bno_magnetic_field"
+  #define PRESSURE String("press")
+  #define ALTITUDE String("alt")
+  #define BMP_TEMPERATURE String("bmp_temp")
+  #define BNO_TEMPERATURE String("bno_temp")
+  #define ORIENTATION String("orien")
+  #define ANGULAR_VELOCITY String("ng_vel")
+  #define NET_ACCELERATION String("net_accel")
+  #define MAGNETIC_FIELD String("mag_fld")
+  #define LINEAR_ACCELERATION String("lin_accel")
+  #define GRAVITY String("g")
 
   // Stages
-  #define STAGE "stage"
-  #define STAGE_STANDBY "standby"
-  #define STAGE_POWERED_ASCENT "powered_ascent"
-  #define STAGE_COASTING "coasting"
-  #define STAGE_DROGUE_DESCENT "drogue_descent"
-  #define STAGE_MAIN_DESCENT "main_descent"
-  #define STAGE_LANDED "landed"
+  #define STAGE "stage"//"S"//
+  #define STAGE_STANDBY "standby"//"1"//
+  #define STAGE_POWERED_ASCENT "powered_ascent"//"2"//
+  #define STAGE_COASTING "coasting"//"3"//
+  #define STAGE_DROGUE_DESCENT "drogue_descent"//"4"//
+  #define STAGE_MAIN_DESCENT "main_descent"//"5"//
+  #define STAGE_LANDED "landed"//"6"//
 
   // Statuses
-  #define TRANSMISSION_TIME "time_since_startup"
-  #define MAIN_CHUTE "main_chute_deployed"
-  #define DROGUE_CHUTE "drogue_chute_deployed"
+  #define CYCLE "cycle"//"c"//
+  #define TRANSMISSION_TIME "time"//"ut"//
   #define AIRBRAKES_DEPLOYED "airbrakes_deployed"
-  #define ENGINE_FIRING "engine_firing"
   #define AIRBRAKE_EXTENSION "airbrake_extension"
-  #define ROLL_RANGE "safe_roll_range"
-  #define PRESSURE_RANGE "safe_pressure_range"
-  #define TEMPERATURE_RANGE "safe_temperature_range"
-  #define ACCELERATION_RANGE "acceleration_tolerance"
   
 // Debug
 
@@ -109,11 +104,11 @@
   #define MAIN_DEPLOY_ALTITUDE 179 // 457.2 according to competition rules
   #define MAIN_SAFETY_FACTOR 0 // meters, distance above MAIN_DEPLOY_ALTITUDE for main chutes to activate
 
-// StateMachine
+// State Machine
 
 #define LIFTOFF_LOOP_LENGTH 10
+#define LIFTOFF_CONFIDENCE 8 // how many of the loop values must be evaluated as true in order for computer to consider liftoff event
+#define LIFTOFF_THRESHOLD 1 // m / s^2, net acceleration on smallest axis must be above this value
 #define BURNOUT_LOOP_LENGTH 10
-#define FREEFALL_LOOP_LENGTH 10
-#define LIFTOFF_THRESHOLD 1
-#define BURNOUT_THRESHOLD 2
-#define FREEFALL_THRESHOLD 10
+#define BURNOUT_CONFIDENCE 8
+#define BURNOUT_THRESHOLD -4 // m / s^2, net acceleration on smallest axis must be below this value

@@ -7,8 +7,9 @@
 #include <SPI.h>
 #include "BMP280.h"
 #include "BNO055.h"
-#include "Vector3D.h"
 #include "Defines.h"
+#include "Vector3D.h"
+#include "Data.h"
 
 class SensorController {
     private:

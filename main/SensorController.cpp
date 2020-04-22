@@ -2,7 +2,7 @@
 
 SensorController::SensorController() {
   init();
-  debug(SUCCESS + "Sensor controller initialized");
+  //debug(SUCCESS + "Sensor controller initialized");
 }
 
 //template <typename Sensor>
@@ -44,11 +44,11 @@ void SensorController::initBMPs() {
       }
     }
     if (bmpCount == BMPS) {
-      debug(SUCCESS + String(bmpCount) + "/" + String(BMPS) + " BMP sensor(s) initialized");
+      //debug(SUCCESS + String(bmpCount) + "/" + String(BMPS) + " BMP sensor(s) initialized");
     } else if (bmpCount == 0) {
-      debug(FAILURE + "No BMP sensor(s) detected");
+      //debug(FAILURE + "No BMP sensor(s) detected");
     } else { // some sensors but not all have initialized correctly
-      debug(WARNING + String(bmpCount) + "/" + String(BMPS) + " BMP sensor(s) initialized");
+      //debug(WARNING + String(bmpCount) + "/" + String(BMPS) + " BMP sensor(s) initialized");
     }
   }
 }
@@ -63,11 +63,11 @@ void SensorController::initBNOs() {
       }
     }
     if (bnoCount == BNOS) {
-      debug(SUCCESS + String(bnoCount) + "/" + String(BNOS) + " BNO sensor(s) initialized");
+      //debug(SUCCESS + String(bnoCount) + "/" + String(BNOS) + " BNO sensor(s) initialized");
     } else if (bnoCount == 0) {
-      debug(FAILURE + "No BNO sensor(s) detected");
+      //debug(FAILURE + "No BNO sensor(s) detected");
     } else { // some sensors but not all have initialized correctly
-      debug(WARNING + String(bnoCount) + "/" + String(BNOS) + " BNO sensor(s) initialized");
+      //debug(WARNING + String(bnoCount) + "/" + String(BNOS) + " BNO sensor(s) initialized");
     }
   }
 }
@@ -78,38 +78,16 @@ void SensorController::init() {
 }
 
 void SensorController::update() {
-  logRawValues();
-
-  // Temporary, move to error controller update function once that exists
-  Data::set(PROCESSED, BMP_PRESSURE, average(bmpCount, bmps, &BMP280::getPressure));
-  Data::set(PROCESSED, BMP_TEMPERATURE, average(bmpCount, bmps, &BMP280::getTemperature));
-  Data::set(PROCESSED, BMP_ALTITUDE, average(bmpCount, bmps, &BMP280::getAltitude));
-  
-  // Temporary, move to noise controller update function once that exists
-  Data::set(FILTERED, BMP_ALTITUDE, average(bmpCount, bmps, &BMP280::getAltitude));
-
-  Data::set(PROCESSED, BNO_TEMPERATURE, average(bnoCount, bnos, &BNO055::getTemperature));
-  Data::set(PROCESSED, BNO_ORIENTATION, average(bnoCount, bnos, &BNO055::getOrientation));
-  Data::set(PROCESSED, BNO_ANGULAR_VELOCITY, average(bnoCount, bnos, &BNO055::getAngularVelocity));
-  Data::set(PROCESSED, BNO_LINEAR_ACCELERATION, average(bnoCount, bnos, &BNO055::getLinearAcceleration));
-  Data::set(PROCESSED, BNO_NET_ACCELERATION, average(bnoCount, bnos, &BNO055::getNetAcceleration));
-  Data::set(PROCESSED, BNO_GRAVITY, average(bnoCount, bnos, &BNO055::getGravity));
-  Data::set(PROCESSED, BNO_MAGNETIC_FIELD, average(bnoCount, bnos, &BNO055::getMagneticField));
-}
-
-void SensorController::logRawValues() {
-  // BMP
-  float pressures[BMPS];
-  float temperatures[BMPS];
-  float altitudes[BMPS];
-  for (int i = 0; i < bmpCount; i++) {
-    pressures[i] = bmps[i]->getPressure();
-    temperatures[i] = bmps[i]->getTemperature();
-    altitudes[i] = bmps[i]->getAltitude();
-  }
-  Data::set(RAW, BMP_PRESSURE, pressures, bmpCount);
-  Data::set(RAW, BMP_TEMPERATURE, temperatures, bmpCount);
-  Data::set(RAW, BMP_ALTITUDE, altitudes, bmpCount);
+  Data::add(PRESSURE, String(average(bmpCount, bmps, &BMP280::getPressure), 1));
+  Data::add(ALTITUDE, String(average(bmpCount, bmps, &BMP280::getAltitude), 1));
+  Data::add(BMP_TEMPERATURE, String(average(bmpCount, bmps, &BMP280::getTemperature), 1));
+  Data::add(BNO_TEMPERATURE, String(average(bnoCount, bnos, &BNO055::getTemperature), 0));
+  Data::add(ORIENTATION, String(average(bnoCount, bnos, &BNO055::getOrientation)));
+  Data::add(ANGULAR_VELOCITY, String(average(bnoCount, bnos, &BNO055::getAngularVelocity)));
+  Data::add(NET_ACCELERATION, String(average(bnoCount, bnos, &BNO055::getNetAcceleration)));
+  //Data::add(MAGNETIC_FIELD, String(average(bnoCount, bnos, &BNO055::getMagneticField))); // optional
+  //Data::add(LINEAR_ACCELERATION, String(average(bnoCount, bnos, &BNO055::getLinearAcceleration))); // optional
+  //Data::add(GRAVITY, String(average(bnoCount, bnos, &BNO055::getGravity))); // optional
 }
 
 template <typename Data, typename Sensor>

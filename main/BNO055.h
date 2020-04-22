@@ -15,11 +15,11 @@ class BNO055 {
     BNO055(TwoWire* wire, uint8_t address) {
       instance = new Adafruit_BNO055(BNO_ID, address, wire);
       if (!instance->begin()) {
-        debug(FAILURE + "BNO sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " not detected, check wiring / I2C address");
+        //debug(FAILURE + "BNO sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " not detected, check wiring / I2C address");
       } else {
         id = "BNO055-" + String(address, HEX) + "-" + String(int(wire));
         status = true;
-        debug(SUCCESS + "BNO sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized");
+        //debug(SUCCESS + "BNO sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized");
       }
     }
     String getId() {
