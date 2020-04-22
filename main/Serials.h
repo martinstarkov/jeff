@@ -9,7 +9,6 @@ class Serials {
   public:
     static void begin();
     static void print(String string, bool newline=true);
-    static void inputHandler(String input); // static because it relies on arduino's serial event handlers which are static methods
     static void flush();
     static void end();
 };

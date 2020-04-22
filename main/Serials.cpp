@@ -21,31 +21,26 @@ void Serials::print(String string, bool newline) { // print to all serials
   }
 }
 
-void Serials::inputHandler(String input) {
-  input = input.replace("\r\n", "").toLowerCase(); // remove newline characters
-  if (input == COMMAND_INIT || input == COMMAND_RESTART) {
-    end();
-    (*(volatile uint32_t *)0xE000ED0C) = 0x05FA0004; // programmatic restart
-  } else if (input == COMMAND_ALL_DATA || input == COMMAND_RAW || input == COMMAND_PROCESSED || input == COMMAND_FILTERED || input == COMMAND_STATUS || input == COMMAND_DEBUG) {
-    //Data::command = input;
+void handleInput(Stream* serial) {
+  String input = "";
+  while (serial->available()) {
+    char c = (char)(serial->read()); // read byte
+    if (c == '\n') { // newline character is detected
+      Data::setCommand(input.replace("\r", "")); // commands are sent to Data class
+    }
+    input += c; // add byte to input
   }
 }
 
 // Serial event handlers
 void serialEvent() {
-  if (Serial.available()) {
-    Serials::inputHandler(Serial.readString());
-  }
+  handleInput(&Serial);
 }
 void serialEvent2() {
-  if (Serial2.available()) {
-    Serials::inputHandler(Serial2.readString());
-  }
+  handleInput(&Serial2);
 }
 void serialEvent3() {
-  if (Serial3.available()) {
-    Serials::inputHandler(Serial3.readString());
-  }
+  handleInput(&Serial3);
 }
 
 void Serials::flush() {
