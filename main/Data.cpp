@@ -1,55 +1,30 @@
 #include "Data.h"
 
-String Data::debug = "";
-String Data::raw = "";
-String Data::processed = "";
-String Data::filtered = "";
-String Data::status = "";
-String Data::combined = "";
+String Data::data = "";
 String Data::command = "";
 
-String& Data::getString(String format) {
-  if (format == PROCESSED) {
-    return processed;
-  } else if (format == FILTERED) {
-    return filtered;
-  } else if (format == STATUS) {
-    return status;
-  } else if (format == DEBUG) {
-    return debug;
-  } else if (format == RAW) {
-    return raw;
-  }
-  combined = processed + raw + filtered + status + debug;
-  return combined;
+void Data::setCommand(String newCommand) {
+  command = newCommand;
 }
 
-void Data::add(String type, String value) {
-  processed += type + SEPARATE_CHAR + value + END_CHAR;
+String Data::getCommand() {
+  return command;
+}
+
+String Data::getData() {
+  return data;
 }
 
 void Data::clearData() {
-  raw = "";
-  processed = "";
-  filtered = "";
+  data = "";
 }
 
-void Data::set(String format, String type, String value) {
-  String& string = getString(format);
-  int startIndex = string.indexOf(type);
-  String replacement = type + SEPARATE_CHAR + value + END_CHAR;
-  if (startIndex == -1) { // string does not contain type
-    string += replacement;
-  } else { // replace old with new
-    int stopIndex = string.indexOf(END_CHAR, startIndex);
-    String current = string.substring(startIndex, stopIndex + END_CHAR.length());
-    string.replace(current, replacement);
-  }
+String Data::get(String property) {
+  int startIndex = data.indexOf(property);
+  int stopIndex = data.indexOf(END_PROPERTY_CHAR, startIndex);
+  return data.substring(startIndex + property.length() + strlen(SEPARATE_PROPERTY_CHAR), stopIndex);
 }
 
-String Data::get(String format, String type) {
-  String& string = getString(format);
-  int startIndex = string.indexOf(type);
-  int stopIndex = string.indexOf(END_CHAR, startIndex);
-  return string.substring(startIndex + type.length() + SEPARATE_CHAR.length(), stopIndex);
+void Data::add(String property, String value) {
+  data += property + SEPARATE_PROPERTY_CHAR + value + END_PROPERTY_CHAR;
 }

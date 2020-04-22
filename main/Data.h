@@ -2,22 +2,18 @@
 #include <Wire.h>
 #include "Defines.h"
 
-#define SEPARATE_CHAR String(":")
-#define END_CHAR String(";")
+#define SEPARATE_PROPERTY_CHAR ":"
+#define END_PROPERTY_CHAR ";"
 
 class Data {
   private:
-  public:
+    static String data;
     static String command;
-    static String debug;
-    static String raw;
-    static String processed;
-    static String filtered;
-    static String status;
-    static String combined;
-    static void set(String format, String type, String value);
-    static String get(String format, String type);
-    static void add(String type, String value);
-    static String& getString(String format);
+  public:
+    static void setCommand(String newCommand);
+    static String getCommand();
+    static String getData();
     static void clearData();
+    static String get(String property);
+    static void add(String property, String value);
 };
