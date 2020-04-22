@@ -1,7 +1,7 @@
 #include "StateMachine.h"
 
 StateMachine::StateMachine() {
-  //cc = new CommunicationController();
+  cc = new CommunicationController();
   pc = new ParachuteController();
   ac = new AirbrakeController();
   // initial state set to standby
@@ -18,7 +18,7 @@ StateMachine::StateMachine() {
 }
 
 void StateMachine::update() {
-  Serials::print(Data::getString(Data::command));
+  cc->update();
   //pc->update(cycle);
   //determineStage();
   //cycle++;

@@ -1,6 +1,7 @@
 #pragma once
 #include "ParachuteController.h"
 #include "AirbrakeController.h"
+#include "CommunicationController.h"
 #include "Data.h"
 #include "Serials.h"
 #include "Defines.h"
@@ -20,7 +21,7 @@ class StateMachine {
     int cycle = 0;
     ParachuteController* pc;
     AirbrakeController* ac;
-    //CommunicationController* cc;
+    CommunicationController* cc;
     Stage currentStage;
     void determineStage();
     bool poweredAscentCheck();

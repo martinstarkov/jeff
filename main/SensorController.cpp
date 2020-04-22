@@ -33,12 +33,12 @@ void SensorController::initBMPs() {
   if (BMPS > 0) {
     for (uint8_t i = 0; i < sizeof(BMPAddresses) / sizeof(uint8_t); i++) { // initalize all BMPs
       BMP280* bmp = new BMP280(&Wire, BMPAddresses[i]);
-      if (bmp->initialized()) {
+      if (bmp->init()) {
         bmps[bmpCount] = bmp;
         bmpCount++;
       }
       bmp = new BMP280(&Wire1, BMPAddresses[i]);
-      if (bmp->initialized()) {
+      if (bmp->init()) {
         bmps[bmpCount] = bmp;
         bmpCount++;
       }
@@ -57,7 +57,7 @@ void SensorController::initBNOs() {
   if (BNOS > 0) {
     for (uint8_t i = 0; i < sizeof(BNOAddresses) / sizeof(uint8_t); i++) {
       BNO055* bno = new BNO055(&Wire, BNOAddresses[i]);
-      if (bno->initialized()) {
+      if (bno->init()) {
         bnos[bnoCount] = bno;
         bnoCount++;
       }
