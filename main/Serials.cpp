@@ -3,7 +3,7 @@
 void Serials::begin() {
   Serial.begin(SERIAL_BAUD); // USB
   while (!Serial);
-  Serial2.begin(SERIAL_BAUD); // Bluetooth
+  Serial2.begin(SERIAL_BAUD); // BT
   while (!Serial2);
   Serial3.begin(SERIAL_BAUD); // GPS
   while (!Serial3);
@@ -26,7 +26,7 @@ void handleInput(Stream* serial) {
   while (serial->available()) {
     char c = (char)(serial->read()); // read byte
     if (c == '\n') { // newline character is detected
-      Data::setCommand(input.replace("\r", "")); // commands are sent to Data class
+      Data::setCommand(input.replace("\r", "")); // formatted commands are sent to Data class
     }
     input += c; // add byte to input
   }

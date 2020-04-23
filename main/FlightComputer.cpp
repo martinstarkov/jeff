@@ -10,7 +10,7 @@ FlightComputer* FlightComputer::getInstance() {
 }
 
 FlightComputer::FlightComputer() {
-  // sub systems
+  // Sub system initialization
   sm = new StateMachine();
   ds = new DataService();
 }
@@ -19,9 +19,3 @@ void FlightComputer::update() { // update every flight component for each microc
   ds->update();
   sm->update();
 }
-
-//void CommunicationController::restartTeensy() { // Restart teensy programmatically
-//  // Make sure (at least how it was implemented online, need to test this) to end serials before this call
-//  end();
-//  SCB_AIRCR = 0x05FA0004; // write value for restart
-//}

@@ -6,26 +6,24 @@
 
 // Serials / SD
 
+#define SERIAL_BAUD 115200
 #define SD_CHIP_SELECT 4 // SD card chip select
 #define FLIGHT_NUMBER_ADDRESS 0 // initial counter value for SD card file names (using EEPROM)
 #define SD_FILE_FORMAT String("_flight_log.txt")
 
 // Bluetooth commands
+#define WAIT_FOR_INIT String("Waiting for initialization ('init'), current input: ")
 #define COMMAND_INIT String("init")
 #define COMMAND_RESTART String("restart")
-#define COMMAND_ALL_DATA String("all")
-#define COMMAND_RAW String("raw")
-#define COMMAND_PROCESSED String("processed")
-#define COMMAND_FILTERED String("filtered")
-#define COMMAND_STATUS String("statuses")
-#define COMMAND_DEBUG String("debug")
+#define COMMAND_DATA String("data")
+#define COMMAND_TIME String("time")
 
   // Data formats
   #define RAW String("RAW")
   #define PROCESSED String("PRCSD")
   #define FILTERED String("FLTR")
   #define STATUS String("STAT")
-  #define DEBUG String("DBG")
+  #define DEBUG String("D")
 
   // Data types
   #define PRESSURE String("press")
@@ -50,7 +48,7 @@
 
   // Statuses
   #define CYCLE "cycle"//"c"//
-  #define TRANSMISSION_TIME "time"//"ut"//
+  #define TRANSMISSION_TIME String("time")//"ut"//
   #define AIRBRAKES_DEPLOYED "airbrakes_deployed"
   #define AIRBRAKE_EXTENSION "airbrake_extension"
   

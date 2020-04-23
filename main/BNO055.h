@@ -3,18 +3,23 @@
 #include <Adafruit_BNO055.h>
 #include "Vector3D.h"
 #include "Defines.h"
+#include "Data.h"
 
 class BNO055 {
   private:
     Adafruit_BNO055* instance;
     sensors_event_t data;
+    uint8_t address;
+    TwoWire* wire;
   public:
     BNO055() {}
-    BNO055(TwoWire* wire, uint8_t address): instance(new Adafruit_BNO055(-1, address, wire)) {}
+    BNO055(TwoWire* wire, uint8_t address): instance(new Adafruit_BNO055(-1, address, wire)), address(address), wire(wire) {}
     bool init() {
       if (instance->begin()) {
+        Data::add(DEBUG, SUCCESS + "BNO sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized");
         return true;
       }
+      Data::add(DEBUG, FAILURE + "BNO sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " not detected, check wiring / I2C address");
       return false;
     }
     float getTemperature() { // Temperature (Celsius)

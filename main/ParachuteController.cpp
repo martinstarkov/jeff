@@ -7,7 +7,6 @@ ParachuteController::ParachuteController() {
   for (int i = 0; i < MAIN_LOOP_LENGTH; i++) {
     altitudeCache[i] = 0;
   }
-  //debug(SUCCESS + "Parachute controller initialized");
 }
 
 void ParachuteController::update(int _cycle) {
@@ -40,7 +39,6 @@ bool ParachuteController::drogueDescentCheck() {
   }
   altitudeDifferences[cycle % DROGUE_LOOP_LENGTH] = 0; // reset tile state each loop iteration
   if (decreasedAltitudes > DROGUE_CONFIDENCE) {
-    //Bluetooth::print("Parachute Deployed!");
     return true;
   }
   if (previousAltitude - altitude > DROGUE_SAFETY_FACTOR) { // altitude decreased

@@ -1,6 +1,7 @@
 #pragma once
 #include <Wire.h>
 #include "Defines.h"
+#include "Data.h"
 
 class ParachuteInterface {
   public:

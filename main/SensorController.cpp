@@ -2,7 +2,6 @@
 
 SensorController::SensorController() {
   init();
-  //debug(SUCCESS + "Sensor controller initialized");
 }
 
 //template <typename Sensor>
@@ -21,9 +20,9 @@ SensorController::SensorController() {
 //    }
 //  }
 //  if (num == count) {
-//    debug(SUCCESS + "Initialized " + String(num) + " " + String(s->getName()) + " sensor(s)");
+//    Data::get(DEBUG, SUCCESS + "Initialized " + String(num) + " " + String(s->getName()) + " sensor(s)");
 //  } else {
-//    debug(WARNING + "Only initialized " + String(num) + "/" + String(count) + " " + String(s->getName()) + " sensor(s)");
+//    Data::get(DEBUG, WARNING + "Only initialized " + String(num) + "/" + String(count) + " " + String(s->getName()) + " sensor(s)");
 //    // promptConfirmation();
 //  }
 //}
@@ -44,11 +43,11 @@ void SensorController::initBMPs() {
       }
     }
     if (bmpCount == BMPS) {
-      //debug(SUCCESS + String(bmpCount) + "/" + String(BMPS) + " BMP sensor(s) initialized");
+      //Data::get(DEBUG, SUCCESS + String(bmpCount) + "/" + String(BMPS) + " BMP sensor(s) initialized");
     } else if (bmpCount == 0) {
-      //debug(FAILURE + "No BMP sensor(s) detected");
+      //Data::get(DEBUG, FAILURE + "No BMP sensor(s) detected");
     } else { // some sensors but not all have initialized correctly
-      //debug(WARNING + String(bmpCount) + "/" + String(BMPS) + " BMP sensor(s) initialized");
+      //Data::get(DEBUG, WARNING + String(bmpCount) + "/" + String(BMPS) + " BMP sensor(s) initialized");
     }
   }
 }
@@ -63,11 +62,11 @@ void SensorController::initBNOs() {
       }
     }
     if (bnoCount == BNOS) {
-      //debug(SUCCESS + String(bnoCount) + "/" + String(BNOS) + " BNO sensor(s) initialized");
+      //Data::get(DEBUG, SUCCESS + String(bnoCount) + "/" + String(BNOS) + " BNO sensor(s) initialized");
     } else if (bnoCount == 0) {
-      //debug(FAILURE + "No BNO sensor(s) detected");
+      //Data::get(DEBUG, FAILURE + "No BNO sensor(s) detected");
     } else { // some sensors but not all have initialized correctly
-      //debug(WARNING + String(bnoCount) + "/" + String(BNOS) + " BNO sensor(s) initialized");
+      //Data::get(DEBUG, WARNING + String(bnoCount) + "/" + String(BNOS) + " BNO sensor(s) initialized");
     }
   }
 }

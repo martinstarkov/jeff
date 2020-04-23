@@ -1,6 +1,5 @@
 #pragma once
 #include <Wire.h>
-#include "Defines.h"
 
 #define SEPARATE_PROPERTY_CHAR ":"
 #define END_PROPERTY_CHAR ";"

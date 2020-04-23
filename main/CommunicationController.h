@@ -7,8 +7,10 @@ class CommunicationController {
   private:
     bool bmp = false;
     bool bno = false;
+    bool data = true;
+    bool time = false;
     void processInput(String input);
   public:
-    CommunicationController() {}
+    CommunicationController();
     void update();
 };

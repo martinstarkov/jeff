@@ -14,7 +14,6 @@ StateMachine::StateMachine() {
   for (int i = 0; i < BURNOUT_LOOP_LENGTH; i++) {
     burnoutCache[i] = 0;
   }
-  //debug(SUCCESS + "State machine initialized");
 }
 
 void StateMachine::update() {
@@ -28,7 +27,6 @@ void StateMachine::update() {
   Data::add(TRANSMISSION_TIME, String(millis() / 1000.000f));
   // Send everything via serials at the end of the cycle
   cc->update();
-  Data::clearData();
 }
 
 void StateMachine::determineStage() {

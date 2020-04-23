@@ -3,8 +3,6 @@
 #include "Defines.h"
 #include "Data.h"
 
-#define SERIAL_BAUD 115200
-
 class Serials {
   public:
     static void begin();
