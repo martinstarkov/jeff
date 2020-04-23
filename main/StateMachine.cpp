@@ -18,7 +18,6 @@ StateMachine::StateMachine() {
 }
 
 void StateMachine::update() {
-  cc->update();
   //pc->update(cycle);
   //determineStage();
   //cycle++;
@@ -26,8 +25,9 @@ void StateMachine::update() {
   //if (Data::cycle == 5) {
     //Data::clearDebug();
   //}
+  Data::add(TRANSMISSION_TIME, String(millis() / 1000.000f));
   // Send everything via serials at the end of the cycle
-  //cc->update();
+  cc->update();
   Data::clearData();
 }
 

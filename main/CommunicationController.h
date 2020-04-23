@@ -5,7 +5,9 @@
 
 class CommunicationController {
   private:
-    void inputHandler(String input);
+    bool bmp = false;
+    bool bno = false;
+    void processInput(String input);
   public:
     CommunicationController() {}
     void update();
