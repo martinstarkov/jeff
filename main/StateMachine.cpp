@@ -17,7 +17,7 @@ StateMachine::StateMachine() {
 }
 
 void StateMachine::update() {
-  //pc->update(cycle);
+  pc->update(cycle);
   //determineStage();
   //cycle++;
   // clear debug messages after 5 full cycles
