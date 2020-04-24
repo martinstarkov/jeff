@@ -7,9 +7,6 @@
 // Serials / SD
 
 #define SERIAL_BAUD 115200
-#define SD_CHIP_SELECT 4 // SD card chip select
-#define FLIGHT_NUMBER_ADDRESS 0 // initial counter value for SD card file names (using EEPROM)
-#define SD_FILE_FORMAT String("_flight_log.txt")
 
 // Bluetooth commands
 #define WAIT_FOR_INIT String("Waiting for initialization ('init'), current input: ")

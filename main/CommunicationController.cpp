@@ -7,12 +7,15 @@ CommunicationController::CommunicationController() {
     Serials::print(WAIT_FOR_INIT + Data::getCommand());
   }
   Data::add(DEBUG, NEUTRAL + "Initializing Darwin");
+  // SD initialization
+  sd = new Logger();
 }
 
 void CommunicationController::update() {
   processInput(Data::getCommand());
   if (data) {
     Serials::print(Data::getData());
+    sd->log(Data::getData());
   }
   if (time) {
     Serials::print("Time: " + Data::get(TRANSMISSION_TIME));
@@ -32,7 +35,8 @@ void CommunicationController::update() {
   Data::clearData();
 }
 
-void restartTeensy() {
+void CommunicationController::restartTeensy() {
+  sd->close();
   Serials::end();
   (*(volatile uint32_t *)0xE000ED0C) = 0x05FA0004;
 }
