@@ -3,9 +3,9 @@
 CommunicationController::CommunicationController() {
   // Serial initialization
   Serials::begin();
-  while (Data::getCommand() != COMMAND_INIT) { // wait for init command
-    Serials::print(WAIT_FOR_INIT + Data::getCommand());
-  }
+//  while (Data::getCommand() != COMMAND_INIT) { // wait for init command
+//    Serials::print(WAIT_FOR_INIT + Data::getCommand());
+//  }
   Data::add(DEBUG, NEUTRAL + "Initializing Darwin");
   // SD initialization
   sd = new Logger();

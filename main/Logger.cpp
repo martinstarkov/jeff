@@ -8,7 +8,7 @@ Logger::Logger() {
 }
 
 void Logger::initSD() {
-  // Initialize SD card on given chip select
+  // Initialize SD card reader on given chip select
   if (!SD.begin(SD_CHIP_SELECT)) {
     Data::add(DEBUG, WARNING + "Could not initialize SD card");
     return;
