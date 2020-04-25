@@ -2,6 +2,7 @@
 
 String Data::data = "";
 String Data::command = "";
+Stage Data::stage;
 
 void Data::setCommand(String newCommand) {
   command = newCommand;
@@ -9,6 +10,14 @@ void Data::setCommand(String newCommand) {
 
 String Data::getCommand() {
   return command;
+}
+
+void Data::setStage(Stage newStage) {
+  stage = newStage;
+}
+
+Stage Data::getStage() {
+  return stage;
 }
 
 String Data::getData() {

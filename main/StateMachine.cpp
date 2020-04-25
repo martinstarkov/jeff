@@ -5,7 +5,7 @@ StateMachine::StateMachine() {
   pc = new ParachuteController();
   ac = new AirbrakeController();
   // initial state set to standby
-  currentStage = STANDBY;
+  Data::setStage(STANDBY);
   //Data::stage = STAGE_STANDBY;
   // fill array caches for staging checks
   for (int i = 0; i < LIFTOFF_LOOP_LENGTH; i++) {
@@ -18,7 +18,7 @@ StateMachine::StateMachine() {
 
 void StateMachine::update() {
   pc->update(cycle);
-  //determineStage();
+  determineStage();
   //cycle++;
   // clear debug messages after 5 full cycles
   //if (Data::cycle == 5) {
@@ -30,40 +30,35 @@ void StateMachine::update() {
 }
 
 void StateMachine::determineStage() {
-  switch (currentStage) { // switch statement because stage transition can only occur incrementally
+  switch (Data::getStage()) { // switch statement because stage transition can only occur incrementally
     case STANDBY:
       // check if criteria for powered ascent are met
       if (poweredAscentCheck()) {
-        currentStage = POWERED_ASCENT;
-        //Data::stage = STAGE_POWERED_ASCENT;
+        Data::setStage(POWERED_ASCENT);
       }
       break;
     case POWERED_ASCENT:
       // check if criteria for coasting are met
       if (coastingCheck()) {
-        currentStage = COASTING;
-        //Data::stage = STAGE_COASTING;
+        Data::setStage(COASTING);
       }
       break;
     case COASTING:
       // check if criteria for drogue chute deploy are met
       if (pc->drogueDescentCheck()) {
-        currentStage = DROGUE_DESCENT;
-        //Data::stage = STAGE_DROGUE_DESCENT;
+        Data::setStage(DROGUE_DESCENT);
       }
       break;
     case DROGUE_DESCENT:
       // check if criteria for main chute deploy are met
       if (pc->mainDescentCheck()) {
-        currentStage = MAIN_DESCENT;
-        //Data::stage = STAGE_MAIN_DESCENT;
+        Data::setStage(MAIN_DESCENT);
       }
       break;
     case MAIN_DESCENT:
       // check if criteria for sufficient still time (i.e. landing) are met
       if (landingCheck()) {
-        currentStage = LANDED;
-        //Data::stage = STAGE_LANDED;
+        Data::setStage(LANDED);
       }
       break;
     case LANDED:

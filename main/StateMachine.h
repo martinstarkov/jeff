@@ -7,22 +7,12 @@
 #include "Defines.h"
 #include "Vector3D.h"
 
-enum Stage {
-  STANDBY,
-  POWERED_ASCENT,
-  COASTING,
-  DROGUE_DESCENT,
-  MAIN_DESCENT,
-  LANDED
-};
-
 class StateMachine {
   private:
     int cycle = 0;
     ParachuteController* pc;
     AirbrakeController* ac;
     CommunicationController* cc;
-    Stage currentStage;
     void determineStage();
     bool poweredAscentCheck();
     int liftoffCache[LIFTOFF_LOOP_LENGTH];
