@@ -11,46 +11,31 @@
 #define SD_FILE_FORMAT "_flight_log.txt"
 
 // Bluetooth commands
-#define WAIT_FOR_INIT String("Waiting for initialization ('init'), current input: ")
-#define COMMAND_INIT String("init")
-#define COMMAND_RESTART String("restart")
-#define COMMAND_DATA String("data")
-#define COMMAND_TIME String("time")
+#define WAIT_FOR_INIT String("Waiting for initialization ('i'), current input: ")
+#define COMMAND_INIT String("i")
+#define COMMAND_RESTART String("r")
+#define COMMAND_DATA String("d")
 
-  // Data formats
-  #define RAW String("RAW")
-  #define PROCESSED String("PRCSD")
-  #define FILTERED String("FLTR")
-  #define STATUS String("STAT")
-  #define DEBUG String("D")
+// Data properties
+#define DEBUG String("d")
+#define CYCLE String("cyc")
 
-  // Data types
-  #define PRESSURE String("press")
-  #define ALTITUDE String("alt")
-  #define BMP_TEMPERATURE String("bmp_temp")
-  #define BNO_TEMPERATURE String("bno_temp")
-  #define ORIENTATION String("orien")
-  #define ANGULAR_VELOCITY String("ng_vel")
-  #define NET_ACCELERATION String("net_accel")
-  #define MAGNETIC_FIELD String("mag_fld")
-  #define LINEAR_ACCELERATION String("lin_accel")
-  #define GRAVITY String("g")
+#define TRANSMISSION_TIME String("time")//"ut"//
+#define STAGE String("stg")
 
-  // Stages
-  #define STAGE "stage"//"S"//
-  #define STAGE_STANDBY "standby"//"1"//
-  #define STAGE_POWERED_ASCENT "powered_ascent"//"2"//
-  #define STAGE_COASTING "coasting"//"3"//
-  #define STAGE_DROGUE_DESCENT "drogue_descent"//"4"//
-  #define STAGE_MAIN_DESCENT "main_descent"//"5"//
-  #define STAGE_LANDED "landed"//"6"//
+#define AIRBRAKE_EXTENSION String("a_ext")
 
-  // Statuses
-  #define CYCLE "cycle"//"c"//
-  #define TRANSMISSION_TIME String("time")//"ut"//
-  #define AIRBRAKES_DEPLOYED "airbrakes_deployed"
-  #define AIRBRAKE_EXTENSION "airbrake_extension"
-  
+#define PRESSURE String("press")
+#define ALTITUDE String("alt")
+#define BMP_TEMPERATURE String("bmp_temp")
+#define BNO_TEMPERATURE String("bno_temp")
+#define ORIENTATION String("orien")
+#define ANGULAR_VELOCITY String("ng_vel")
+#define NET_ACCELERATION String("net_accel")
+#define MAGNETIC_FIELD String("mag_fld")
+#define LINEAR_ACCELERATION String("lin_accel")
+#define GRAVITY String("g")
+
 // Debug
 
 #define FAILURE String("FAILURE: ") // String conversion required because Arduino interprets "" as char*
@@ -104,8 +89,8 @@
 // State Machine
 
 #define LIFTOFF_LOOP_LENGTH 10
-#define LIFTOFF_CONFIDENCE 8 // how many of the loop values must be evaluated as true in order for computer to consider liftoff event
+#define LIFTOFF_CONFIDENCE 3 // how many of the loop values must be evaluated as true in order for computer to consider liftoff event
 #define LIFTOFF_THRESHOLD 1 // m / s^2, net acceleration on smallest axis must be above this value
 #define BURNOUT_LOOP_LENGTH 10
-#define BURNOUT_CONFIDENCE 8
+#define BURNOUT_CONFIDENCE 3
 #define BURNOUT_THRESHOLD -4 // m / s^2, net acceleration on smallest axis must be below this value

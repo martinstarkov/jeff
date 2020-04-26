@@ -4,8 +4,9 @@ StateMachine::StateMachine() {
   cc = new CommunicationController();
   pc = new ParachuteController();
   ac = new AirbrakeController();
-  // initial state set to standby
+  // initial state set to standby and cycle to 1
   Data::setStage(STANDBY);
+  Data::add(CYCLE, String(1));
   //Data::stage = STAGE_STANDBY;
   // fill array caches for staging checks
   for (int i = 0; i < LIFTOFF_LOOP_LENGTH; i++) {
@@ -17,16 +18,15 @@ StateMachine::StateMachine() {
 }
 
 void StateMachine::update() {
-  pc->update(cycle);
+  cycle = Data::get(CYCLE).toInt();
+  pc->update();
   determineStage();
-  //cycle++;
-  // clear debug messages after 5 full cycles
-  //if (Data::cycle == 5) {
-    //Data::clearDebug();
-  //}
   Data::add(TRANSMISSION_TIME, String(millis() / 1000.000f));
+  Data::add(STAGE, String(Data::getStage()));
   // Send everything via serials at the end of the cycle
   cc->update();
+  Data::add(CYCLE, String(cycle + 1));
+  Data::clearData();
 }
 
 void StateMachine::determineStage() {
@@ -78,7 +78,7 @@ bool StateMachine::poweredAscentCheck() {
   if (liftoffCount >= LIFTOFF_CONFIDENCE) { // enough accel values are above threshold to trigger liftoff event
     return true;
   }
-  Vector3D netAcceleration = Vector3D();//Data::get(PROCESSED, BNO_NET_ACCELERATION));
+  netAcceleration = Vector3D(Data::get(NET_ACCELERATION));
   // negative sign due to BNO thinking downward is positive
   float minAcceleration = -netAcceleration.maxValue();
   if (minAcceleration > LIFTOFF_THRESHOLD) { // upwards acceleration on smallest axis, i.e. axis experiecing the largest gravitational acceleration begins accelerating above threshold
@@ -96,7 +96,7 @@ bool StateMachine::coastingCheck() {
   if (burnoutCount >= BURNOUT_CONFIDENCE) { // enough accel values are below threshold to trigger coasting event
     return true;
   }
-  Vector3D netAcceleration = Vector3D();//Data::get(PROCESSED, BNO_NET_ACCELERATION));
+  netAcceleration = Vector3D(Data::get(NET_ACCELERATION));
   // negative sign due to BNO thinking downward is positive
   float minAcceleration = -netAcceleration.maxValue();
   if (minAcceleration < BURNOUT_THRESHOLD) { // upwards acceleration on smallest axis, i.e. axis experiecing the largest gravitational acceleration begins accelerating above threshold

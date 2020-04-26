@@ -9,12 +9,12 @@ ParachuteController::ParachuteController() {
   }
 }
 
-void ParachuteController::update(int _cycle) {
-  cycle = _cycle;
+void ParachuteController::update() {
+  cycle = Data::get(CYCLE).toInt();
+  altitude = Data::get(ALTITUDE).toFloat();
 }
 
 bool ParachuteController::mainDescentCheck() {
-  float altitude = 0;
   belowThresholdAltitudes = 0;
   if (abs(altitude - MAIN_SAFETY_FACTOR) < MAIN_DEPLOY_ALTITUDE) {
     altitudeCache[cycle % MAIN_LOOP_LENGTH] = 1;
@@ -33,7 +33,6 @@ bool ParachuteController::mainDescentCheck() {
 }
 
 bool ParachuteController::drogueDescentCheck() {
-  float altitude = 0;
   if (altitudeDifferences[cycle % DROGUE_LOOP_LENGTH] == 1) {
     decreasedAltitudes--;
   }
