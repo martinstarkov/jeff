@@ -10,7 +10,7 @@ ParachuteController::ParachuteController() {
 }
 
 void ParachuteController::update() {
-  cycle = Data::get(CYCLE).toInt();
+  cycle = Data::getCycle();
   altitude = Data::get(ALTITUDE).toFloat();
 }
 

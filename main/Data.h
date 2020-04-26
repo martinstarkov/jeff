@@ -18,7 +18,10 @@ class Data {
     static String data;
     static Stage stage;
     static String command;
+    static int cycle;
   public:
+    static int getCycle();
+    static void incrementCycle();
     static void setCommand(String newCommand);
     static String getCommand();
     static void setStage(Stage newStage);

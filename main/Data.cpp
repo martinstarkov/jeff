@@ -2,6 +2,7 @@
 
 String Data::data = "";
 String Data::command = "";
+int Data::cycle = 0;
 Stage Data::stage;
 
 void Data::setCommand(String newCommand) {
@@ -20,6 +21,13 @@ Stage Data::getStage() {
   return stage;
 }
 
+int Data::getCycle() {
+  return cycle;
+}
+void Data::incrementCycle() {
+  cycle++;
+}
+    
 String Data::getData() {
   return data;
 }
