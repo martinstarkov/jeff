@@ -34,7 +34,7 @@
 #define NET_ACCELERATION String("net_accel")
 #define MAGNETIC_FIELD String("mag_fld")
 #define LINEAR_ACCELERATION String("lin_accel")
-#define GRAVITY String("g")
+#define GRAVITY String("grav")
 
 // Debug
 
@@ -89,8 +89,8 @@
 // State Machine
 
 #define LIFTOFF_LOOP_LENGTH 10
-#define LIFTOFF_CONFIDENCE 3 // how many of the loop values must be evaluated as true in order for computer to consider liftoff event
-#define LIFTOFF_THRESHOLD 1 // m / s^2, net acceleration on smallest axis must be above this value
+#define LIFTOFF_CONFIDENCE 4 // how many of the loop values must be evaluated as true in order for computer to consider liftoff event
+#define LIFTOFF_THRESHOLD 3 // m / s^2, net acceleration on smallest axis must be above this value
 #define BURNOUT_LOOP_LENGTH 10
-#define BURNOUT_CONFIDENCE 3
-#define BURNOUT_THRESHOLD -4 // m / s^2, net acceleration on smallest axis must be below this value
+#define BURNOUT_CONFIDENCE 4
+#define BURNOUT_THRESHOLD -3 // m / s^2, net acceleration on smallest axis must be below this value
