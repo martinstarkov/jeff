@@ -9,7 +9,8 @@
 
 class StateMachine {
   private:
-    int cycle = 0;
+    int cycle;
+    Vector3D netAcceleration;
     ParachuteController* pc;
     AirbrakeController* ac;
     CommunicationController* cc;
