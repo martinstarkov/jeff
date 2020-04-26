@@ -32,7 +32,6 @@ void CommunicationController::update() {
     Serials::print("Acceleration: " + Data::get(NET_ACCELERATION));
     Serials::print("Angular Velocity: " + Data::get(ANGULAR_VELOCITY));
   }
-  Data::clearData();
 }
 
 void CommunicationController::restartTeensy() {
@@ -50,24 +49,6 @@ void CommunicationController::processInput(String input) {
         data = false;
       } else {
         data = true;
-      }
-    } else if (input == COMMAND_TIME) {
-      if (time) {
-        time = false;
-      } else {
-        time = true;
-      }
-    } else if (input == "bmp") {
-      if (bmp) {
-        bmp = false;
-      } else {
-        bmp = true;
-      }
-    } else if (input == "bno") {
-      if (bno) {
-        bno = false;
-      } else {
-        bno = true;
       }
     }
     Data::setCommand(""); // reset command after actions completed
