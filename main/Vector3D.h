@@ -18,6 +18,22 @@ struct Vector3D {
     y = v.substring(firstSplit + 1, secondSplit).toFloat(); // everything between first and second comma
     z = v.substring(secondSplit + 1, v.length()).toFloat(); // everything after second comma
   }
+  int maxis() { // axis of maximum value
+    if (maxValue() == x) {
+      return 0; // x-axis
+    } else if (maxValue() == y) {
+      return 1; // y-axis
+    }
+    return 2; // z-axis
+  }
+  int mixis() { // axis of minimum value
+    if (minValue() == x) {
+      return 0; // x-axis
+    } else if (minValue() == y) {
+      return 1; // y-axis
+    }
+    return 2; // z-axis
+  }
   float minValue() {
     float m = min(x, y);
     return min(m, z);
@@ -25,6 +41,18 @@ struct Vector3D {
   float maxValue() {
     float m = max(x, y);
     return max(m, z);
+  }
+  float getAxis(int i) {
+    switch (i) {
+      case 0:
+        return x;
+      case 1:
+        return y;
+      case 2:
+        return z;
+      default:
+        return 0;
+    }
   }
   operator String() const {
     return LEFT_WRAP + String(x, 1) + SPLIT_CHARACTER + String(y, 1) + SPLIT_CHARACTER + String(z, 1) + RIGHT_WRAP;
@@ -37,6 +65,9 @@ struct Vector3D {
   }
   Vector3D operator+ (const Vector3D &v) const {
     return Vector3D(x + v.x, y + v.y, z + v.z);
+  }
+  Vector3D operator- () const {
+    return Vector3D(-x, -y, -z);
   }
   bool operator== (const Vector3D &v) const {
     return x == v.x && y == v.y && z == v.z;
