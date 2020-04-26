@@ -10,7 +10,8 @@
 class StateMachine {
   private:
     int cycle;
-    Vector3D netAcceleration;
+    Vector3D acceleration;
+    int axisOfAcceleration;
     ParachuteController* pc;
     AirbrakeController* ac;
     CommunicationController* cc;

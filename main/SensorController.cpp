@@ -85,8 +85,8 @@ void SensorController::update() {
   Data::add(ANGULAR_VELOCITY, String(average(bnoCount, bnos, &BNO055::getAngularVelocity)));
   Data::add(NET_ACCELERATION, String(average(bnoCount, bnos, &BNO055::getNetAcceleration)));
   //Data::add(MAGNETIC_FIELD, String(average(bnoCount, bnos, &BNO055::getMagneticField))); // optional
-  //Data::add(LINEAR_ACCELERATION, String(average(bnoCount, bnos, &BNO055::getLinearAcceleration))); // optional
-  //Data::add(GRAVITY, String(average(bnoCount, bnos, &BNO055::getGravity))); // optional
+  Data::add(LINEAR_ACCELERATION, String(average(bnoCount, bnos, &BNO055::getLinearAcceleration))); // optional
+  Data::add(GRAVITY, String(average(bnoCount, bnos, &BNO055::getGravity))); // optional
 }
 
 template <typename Data, typename Sensor>

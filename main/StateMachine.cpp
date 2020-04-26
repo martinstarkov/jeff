@@ -18,15 +18,22 @@ StateMachine::StateMachine() {
 }
 
 void StateMachine::update() {
-  cycle = Data::get(CYCLE).toInt();
+  cycle = Data::getCycle();
   pc->update();
+  // determine which axis has gravity acceleration
+  if (cycle < 100) {
+    Vector3D gravity = Vector3D(Data::get(GRAVITY));
+    axisOfAcceleration = gravity.maxis();
+  }
+  acceleration = Vector3D(Data::get(LINEAR_ACCELERATION));
   determineStage();
+  Data::add(CYCLE, String(cycle));
   Data::add(TRANSMISSION_TIME, String(millis() / 1000.000f));
   Data::add(STAGE, String(Data::getStage()));
   // Send everything via serials at the end of the cycle
   cc->update();
-  Data::add(CYCLE, String(cycle + 1));
   Data::clearData();
+  Data::incrementCycle();
 }
 
 void StateMachine::determineStage() {
@@ -75,15 +82,13 @@ bool StateMachine::poweredAscentCheck() {
     liftoffCount--;
   }
   liftoffCache[cycle % LIFTOFF_LOOP_LENGTH] = 0; // reset tile state each loop iteration
-  if (liftoffCount >= LIFTOFF_CONFIDENCE) { // enough accel values are above threshold to trigger liftoff event
-    return true;
-  }
-  netAcceleration = Vector3D(Data::get(NET_ACCELERATION));
-  // negative sign due to BNO thinking downward is positive
-  float minAcceleration = -netAcceleration.maxValue();
-  if (minAcceleration > LIFTOFF_THRESHOLD) { // upwards acceleration on smallest axis, i.e. axis experiecing the largest gravitational acceleration begins accelerating above threshold
+  if (acceleration.getAxis(axisOfAcceleration) > LIFTOFF_THRESHOLD) { // upwards acceleration on smallest axis, i.e. axis experiecing the largest gravitational acceleration begins accelerating above threshold
     liftoffCache[cycle % LIFTOFF_LOOP_LENGTH] = 1; // update tile state
     liftoffCount++;
+  }
+  Serials::print("------------- netAccel: " + String(acceleration) + ", minAccel: " + String(acceleration.getAxis(axisOfAcceleration)) + ", Liftoff count: " + String(liftoffCount));
+  if (liftoffCount >= LIFTOFF_CONFIDENCE) { // enough accel values are above threshold to trigger liftoff event
+    return true;
   }
   return false;
 }
@@ -93,15 +98,13 @@ bool StateMachine::coastingCheck() {
     burnoutCount--;
   }
   burnoutCache[cycle % BURNOUT_LOOP_LENGTH] = 0; // reset tile state each loop iteration
-  if (burnoutCount >= BURNOUT_CONFIDENCE) { // enough accel values are below threshold to trigger coasting event
-    return true;
-  }
-  netAcceleration = Vector3D(Data::get(NET_ACCELERATION));
-  // negative sign due to BNO thinking downward is positive
-  float minAcceleration = -netAcceleration.maxValue();
-  if (minAcceleration < BURNOUT_THRESHOLD) { // upwards acceleration on smallest axis, i.e. axis experiecing the largest gravitational acceleration begins accelerating above threshold
+  if (acceleration.getAxis(axisOfAcceleration) < BURNOUT_THRESHOLD) { // upwards acceleration on smallest axis, i.e. axis experiecing the largest gravitational acceleration begins accelerating above threshold
     burnoutCache[cycle % BURNOUT_LOOP_LENGTH] = 1; // update tile state
     burnoutCount++;
+  }
+  Serials::print("------------- netAccel: " + String(acceleration) + ", minAccel: " + String(acceleration.getAxis(axisOfAcceleration)) + ", burnout count: " + String(burnoutCount));
+  if (burnoutCount >= BURNOUT_CONFIDENCE) { // enough accel values are below threshold to trigger coasting event
+    return true;
   }
   return false;
 }
