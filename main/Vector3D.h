@@ -10,6 +10,17 @@ struct Vector3D {
   
   Vector3D(float x, float y, float z) : x(x), y(y), z(z) {}
   Vector3D() : x(0.0), y(0.0), z(0.0) {}
+  Vector3D(String v) {
+    v = v.substring(1, v.length() - 2);
+    int firstSplit = v.indexOf(SPLIT_CHARACTER);
+    int secondSplit = v.indexOf(SPLIT_CHARACTER, firstSplit);
+    Serial.println(v.substring(0, firstSplit - 1));
+    Serial.println(v.substring(firstSplit + 1, secondSplit - 1));
+    Serial.println(v.substring(secondSplit + 1, v.length() - 1));
+    x = v.substring(0, firstSplit - 1).toFloat();
+    y = v.substring(firstSplit + 1, secondSplit - 1).toFloat();
+    z = v.substring(secondSplit + 1, v.length() - 1).toFloat();
+  }
   float minValue() {
     float m = min(x, y);
     return min(m, z);
