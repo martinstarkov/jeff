@@ -11,15 +11,12 @@ struct Vector3D {
   Vector3D(float x, float y, float z) : x(x), y(y), z(z) {}
   Vector3D() : x(0.0), y(0.0), z(0.0) {}
   Vector3D(String v) {
-    v = v.substring(1, v.length() - 2);
-    int firstSplit = v.indexOf(SPLIT_CHARACTER);
-    int secondSplit = v.indexOf(SPLIT_CHARACTER, firstSplit);
-    Serial.println(v.substring(0, firstSplit - 1));
-    Serial.println(v.substring(firstSplit + 1, secondSplit - 1));
-    Serial.println(v.substring(secondSplit + 1, v.length() - 1));
-    x = v.substring(0, firstSplit - 1).toFloat();
-    y = v.substring(firstSplit + 1, secondSplit - 1).toFloat();
-    z = v.substring(secondSplit + 1, v.length() - 1).toFloat();
+    v = v.substring(1, v.length() - 1); // remove first and last character, i.e. wrapping chars
+    int firstSplit = v.indexOf(SPLIT_CHARACTER); // index of first split character
+    int secondSplit = v.indexOf(SPLIT_CHARACTER, firstSplit + 1); // index of second split character
+    x = v.substring(0, firstSplit).toFloat(); // everything before first comma
+    y = v.substring(firstSplit + 1, secondSplit).toFloat(); // everything between first and second comma
+    z = v.substring(secondSplit + 1, v.length()).toFloat(); // everything after second comma
   }
   float minValue() {
     float m = min(x, y);
