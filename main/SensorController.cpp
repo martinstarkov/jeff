@@ -80,13 +80,13 @@ void SensorController::update() {
   Data::add(PRESSURE, String(average(bmpCount, bmps, &BMP280::getPressure), 1));
   Data::add(ALTITUDE, String(average(bmpCount, bmps, &BMP280::getAltitude), 1));
   Data::add(BMP_TEMPERATURE, String(average(bmpCount, bmps, &BMP280::getTemperature), 1));
-  Data::add(BNO_TEMPERATURE, String(average(bnoCount, bnos, &BNO055::getTemperature), 0));
-  Data::add(ORIENTATION, String(average(bnoCount, bnos, &BNO055::getOrientation)));
-  Data::add(ANGULAR_VELOCITY, String(average(bnoCount, bnos, &BNO055::getAngularVelocity)));
+  //Data::add(BNO_TEMPERATURE, String(average(bnoCount, bnos, &BNO055::getTemperature), 0));
+  //Data::add(ORIENTATION, String(average(bnoCount, bnos, &BNO055::getOrientation)));
+  //Data::add(ANGULAR_VELOCITY, String(average(bnoCount, bnos, &BNO055::getAngularVelocity)));
   Data::add(NET_ACCELERATION, String(average(bnoCount, bnos, &BNO055::getNetAcceleration)));
   //Data::add(MAGNETIC_FIELD, String(average(bnoCount, bnos, &BNO055::getMagneticField))); // optional
-  Data::add(LINEAR_ACCELERATION, String(average(bnoCount, bnos, &BNO055::getLinearAcceleration))); // optional
-  Data::add(GRAVITY, String(average(bnoCount, bnos, &BNO055::getGravity))); // optional
+  //Data::add(LINEAR_ACCELERATION, String(average(bnoCount, bnos, &BNO055::getLinearAcceleration))); // optional
+  //Data::add(GRAVITY, String(average(bnoCount, bnos, &BNO055::getGravity))); // optional
 }
 
 template <typename Data, typename Sensor>
