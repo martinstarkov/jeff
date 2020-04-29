@@ -21,11 +21,10 @@ void StateMachine::update() {
   cycle = Data::getCycle();
   pc->update();
   // determine which axis has gravity acceleration
-  if (cycle < 100) {
-    Vector3D gravity = Vector3D(Data::get(GRAVITY));
-    axisOfAcceleration = gravity.maxis();
+  acceleration = Vector3D(Data::get(NET_ACCELERATION));
+  if (cycle < 100) { // fix gravity axis detection later
+    axisOfAcceleration = acceleration.maxis();
   }
-  acceleration = Vector3D(Data::get(LINEAR_ACCELERATION));
   determineStage();
   Data::add(CYCLE, String(cycle));
   Data::add(TRANSMISSION_TIME, String(millis() / 1000.000f));
