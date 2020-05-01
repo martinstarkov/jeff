@@ -1,8 +1,7 @@
-/*
 #pragma once
 #include <stdlib.h>
 
-class ErrorCorrection {
+class ErrorController {
   private:
     
   public:
@@ -10,4 +9,3 @@ class ErrorCorrection {
     float getAverage(float data[]);
     bool getAverage(bool data[]);
 };
-*/

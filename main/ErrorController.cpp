@@ -1,17 +1,15 @@
-/*
-#include "ErrorCorrection.h" 
-#include <stdlib.h>
+#include "ErrorController.h"
 
 //TODO: previous value for threshold, compare each data point with prev to decide if it should be disregarded
 
 float _threshold;
 float prev_value = 0;
 
-void ErrorCorrection::init(float threshold) {
+void ErrorController::init(float threshold) {
   _threshold = threshold;
 }
 
-float ErrorCorrection::getAverage(float data[]) {
+float ErrorController::getAverage(float data[]) {
   int data_count = 0;
   float sum = 0;
   int arraylength = sizeof(data) / sizeof(*data);
@@ -25,7 +23,7 @@ float ErrorCorrection::getAverage(float data[]) {
   return sum / data_count;
 }
 
-// float ErrorCorrection::getAverage(float data[]) {
+// float ErrorController::getAverage(float data[]) {
 //   int data_count = 0;
 //   float sum = 0;
 //   int arraylength = sizeof(data)/sizeof(*data);
@@ -47,7 +45,7 @@ float ErrorCorrection::getAverage(float data[]) {
 //   return sum / data_count;
 // }
 
-bool ErrorCorrection::getAverage(bool data[]) {
+bool ErrorController::getAverage(bool data[]) {
   int true_count = 0;
   int false_count = 0;
   int arraylength = sizeof(data) / sizeof(*data);
@@ -66,4 +64,3 @@ bool ErrorCorrection::getAverage(bool data[]) {
     return false;
   }
 }
-*/
