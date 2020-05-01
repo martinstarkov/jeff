@@ -6,6 +6,7 @@ class ErrorController {
     
   public:
     void init(float threshold);
+    // replace averages with template average
     float getAverage(float data[]);
     bool getAverage(bool data[]);
 };
