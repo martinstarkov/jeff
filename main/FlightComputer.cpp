@@ -1,21 +1,35 @@
 #include "FlightComputer.h"
 
-FlightComputer* FlightComputer::instance = 0;
+FlightComputer* FlightComputer::_instance = nullptr;
 
 FlightComputer* FlightComputer::getInstance() {
-  if (!instance) {
-    instance = new FlightComputer();
+  if (!_instance) {
+    _instance = new FlightComputer();
   }
-  return instance;
+  return _instance;
 }
 
 FlightComputer::FlightComputer() {
   // Sub system initialization
-  sm = new StateMachine();
-  ds = new DataService();
+  _sm = new StateMachine();
+  _ds = new DataService();
+}
+
+FlightComputer::~FlightComputer() {
+  delete _sm;
+  delete _ds;
+  _sm = nullptr;
+  _ds = nullptr;
 }
 
 void FlightComputer::update() { // update every flight component for each microcontroller cycle
-  ds->update();
-  sm->update();
+  _ds->update();
+  _sm->update();
 }
+
+/*
+void FlightComputer::clean() {
+  delete instance;
+  instance = nullptr;
+}
+*/
