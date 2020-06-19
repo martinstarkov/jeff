@@ -10,10 +10,22 @@ void operator delete(void* memory, size_t size) {
 	free(memory);
 }
 
-std::uint32_t AllocationMetrics::_totalAllocated = 0;
-std::uint32_t AllocationMetrics::_totalFreed = 0;
+void* operator new[] (size_t size)
+{
+	AllocationMetrics::allocation(size);
+    return (operator new)(size);
+}
 
-std::uint32_t AllocationMetrics::currentUsage() {
+void operator delete[](void* memory)
+{
+	AllocationMetrics::deallocation(size);
+    return (operator delete)(memory);
+}
+
+uint32_t AllocationMetrics::_totalAllocated = 0;
+uint32_t AllocationMetrics::_totalFreed = 0;
+
+uint32_t AllocationMetrics::currentUsage() {
 	return _totalAllocated - _totalFreed;
 }
 
