@@ -2,7 +2,7 @@
 
 #define REFRESH_DELAY 0
 
-FlightComputer* fc;
+FlightComputer* fc = nullptr;
 
 void setup() {
   fc = FlightComputer::getInstance();
