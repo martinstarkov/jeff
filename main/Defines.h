@@ -16,6 +16,15 @@
 #define COMMAND_RESTART String("r")
 #define COMMAND_DATA String("d")
 
+// States
+
+#define STATE_STANDBY 0
+#define STATE_POWERED_ASCENT 1
+#define STATE_COASTING 2
+#define STATE_DROGUE_DESCENT 3
+#define STATE_MAIN_DESCENT 4
+#define STATE_LANDED 5
+
 // Data properties
 #define DEBUG String("d")
 #define CYCLE String("cyc")

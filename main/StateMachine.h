@@ -1,29 +1,34 @@
 #pragma once
-#include "ParachuteController.h"
-#include "AirbrakeController.h"
-#include "CommunicationController.h"
-#include "Data.h"
-#include "Serials.h"
+
 #include "Defines.h"
-#include "Vector3D.h"
+
+#include "State.h"
+#include "States.h"
 
 class StateMachine {
-  private:
-    int cycle;
-    Vector3D acceleration;
-    int axisOfAcceleration;
-    ParachuteController* pc;
-    AirbrakeController* ac;
-    CommunicationController* cc;
-    void determineStage();
-    bool poweredAscentCheck();
-    int liftoffCache[LIFTOFF_LOOP_LENGTH];
-    int liftoffCount = 0;
-    bool coastingCheck();
-    int burnoutCache[BURNOUT_LOOP_LENGTH];
-    int burnoutCount = 0;
-    bool landingCheck();
-  public:
-    StateMachine();
-    void update();
+public:
+  using StateID = unsigned int;
+	StateMachine() {
+		// add state pointers to state map
+		_states[STATE_STANDBY] = new State(&StandbyState::onEntry, &StandbyState::update, &StandbyState::onExit);
+    _states[STATE_POWERED_ASCENT] = new State(&PoweredAscentState::onEntry, &PoweredAscentState::update, &PoweredAscentState::onExit);
+		
+		// initialize what state the program starts on
+    _currentState = STATE_STANDBY;
+		_states[_currentState]->onEntry();
+	}
+	void update() {
+		_states[_currentState]->update(this);
+	}
+	void changeState(StateID state) {
+		_states[_currentState]->onExit();
+		_currentState = state;
+		_states[_currentState]->onEntry();
+	}
+  StateID getState() {
+    return _currentState;
+  }
+private:
+	State* _states[STATE_LANDED + 1];
+	StateID _currentState;
 };
