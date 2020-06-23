@@ -25,9 +25,9 @@ class SensorController {
 //      template <typename Sensor> 
 //      void initI2C(int count, Sensor* sensors[], uint8_t* addresses);
     public:
-      SensorController();
+      SensorController() {}
       void init();
       void initBMPs();
       void initBNOs();
-      void update();
+      void update() {}
 };

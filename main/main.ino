@@ -1,14 +1,16 @@
 #include "FlightComputer.h"
-
-#define REFRESH_DELAY 0
+#include "Serials.h"
+#include "Defines.h"
 
 FlightComputer* fc = nullptr;
 
 void setup() {
+  Serials::begin(SERIAL_BAUD);
   fc = FlightComputer::getInstance();
 }
 
 void loop() {
   fc->update();
-  delay(REFRESH_DELAY);
+  AllocationMetrics::printMemoryUsage();
+  delay(1000); // Comment for final use
 }
