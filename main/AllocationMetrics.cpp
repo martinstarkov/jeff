@@ -10,18 +10,6 @@ void operator delete(void* memory, size_t size) {
 	free(memory);
 }
 
-void* operator new[] (size_t size)
-{
-	AllocationMetrics::allocation(size);
-    return (operator new)(size);
-}
-
-void operator delete[](void* memory)
-{
-	AllocationMetrics::deallocation(size);
-    return (operator delete)(memory);
-}
-
 uint32_t AllocationMetrics::_totalAllocated = 0;
 uint32_t AllocationMetrics::_totalFreed = 0;
 
@@ -38,5 +26,5 @@ void AllocationMetrics::deallocation(const size_t& size) {
 }
 
 void AllocationMetrics::printMemoryUsage() {
-	LOG("Memory Usage: " << currentUsage() << " bytes");
+	LOG("Memory Usage: " + String(currentUsage()) + " bytes");
 }
