@@ -1,18 +1,39 @@
 #pragma once
-#include "DataService.h"
+
+#include "common.h"
+
+#include "DataController.h"
 #include "StateMachine.h"
 
 class FlightComputer {
   public:
-    static FlightComputer* getInstance();
-    // static void clean(); // it is important to implement good habits of memory clean up, even if Arduino doesn't have anything past the loop() method
-  public:
-    void update();
-  private:
-    static FlightComputer* _instance;
-  private:
-    FlightComputer();
-    ~FlightComputer();
-    DataService* _ds;
+    static FlightComputer* getInstance() {
+      static FlightComputer* instance = nullptr;
+      if (!instance) {
+        instance = new FlightComputer();
+      }
+      return instance;
+    }
+    static void clean() {
+      FlightComputer* fc = getInstance();
+      delete fc;
+      fc = nullptr;
+    }
+    void update() {
+      //_dc->update();
+      _sm->update();
+    }
     StateMachine* _sm;
+  private:
+    FlightComputer() {
+      _dc = new DataController();
+      _sm = new StateMachine();
+    }
+    ~FlightComputer() {
+      delete _dc;
+      _dc = nullptr;
+      delete _sm;
+      _sm = nullptr;
+    }
+    DataController* _dc;
 };
