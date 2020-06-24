@@ -11,6 +11,6 @@ void setup() {
 
 void loop() {
   fc->update();
-  AllocationMetrics::printMemoryUsage();
+  //AllocationMetrics::printMemoryUsage();
   delay(1000); // Comment for final use
 }
