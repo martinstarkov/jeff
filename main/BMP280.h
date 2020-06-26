@@ -1,8 +1,6 @@
 #pragma once
-#include <Wire.h>
 #include <Adafruit_BMP280.h>
 #include "Defines.h"
-#include "Data.h"
 
 class BMP280 {
   private:
@@ -20,10 +18,8 @@ class BMP280 {
     */
     bool init() {
       if (instance->begin(address)) {
-        Data::add(DEBUG, SUCCESS + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " initialized");
         return true;
       }
-      Data::add(DEBUG, FAILURE + "BMP sensor with address=" + String(address, HEX) + ", wire=" + String(int(wire)) + " not detected, check wiring / I2C address");
       return false;
     }
     float getPressure() { // Pressure (pascals)
