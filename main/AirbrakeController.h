@@ -1,8 +1,6 @@
 #pragma once
 #include <PWMServo.h>
 #include "PID_v1.h"
-#include "Defines.h"
-#include "Data.h"
 
 class AirbrakeController {
   private:
