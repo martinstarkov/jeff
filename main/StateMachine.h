@@ -23,6 +23,7 @@ public:
 	}
 	void update() {
 		_states[_currentState]->update(this);
+    Serial.println(_currentState);
 	}
 	void changeState(StateID state) {
 		_states[_currentState]->onExit();

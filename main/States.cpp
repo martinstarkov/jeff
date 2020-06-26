@@ -1,8 +1,11 @@
 #include "States.h"
 #include "StateMachine.h"
+#include "DataInterface.h"
 
 void StandbyState::update(StateMachine* stateMachine) {
-  stateMachine->changeState(STATE_POWERED_ASCENT);
+  if (DataInterface::getInstance()->getProcessedData().netAcceleration.x > 5.0f) {
+    stateMachine->changeState(STATE_POWERED_ASCENT);
+  }
 }
 
 void PoweredAscentState::update(StateMachine* stateMachine) {
