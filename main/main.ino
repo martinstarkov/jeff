@@ -1,6 +1,7 @@
 #include "FlightComputer.h"
 #include "Serials.h"
 #include "Defines.h"
+#include "DataInterface.h"
 #include <limits.h>
 
 FlightComputer* fc = nullptr;
@@ -9,7 +10,7 @@ uint64_t startTime = 0;
 uint64_t endTime = 0;
 uint64_t counter = 0;
 
-constexpr uint64_t BENCHMARK = 1000000000; // 10
+constexpr uint64_t BENCHMARK = 100;//1000000000; // 10
 
 char * uintToStr( const uint64_t num, char *str )
 {
@@ -35,7 +36,11 @@ char str[21];
 void setup() {
   Serials::begin(SERIAL_BAUD);
   fc = FlightComputer::getInstance();
-  
+  DataInterface::getInstance()->getProcessedData().altitude = 30.0f;
+  DataInterface::getInstance()->getProcessedData().orientation = Vector3D(1.0f, 1.0f, 1.0f);
+  DataInterface::getInstance()->getProcessedData().angularVelocity = Vector3D(2.0f, 2.0f, 2.0f);
+  DataInterface::getInstance()->getProcessedData().linearAcceleration = Vector3D(3.0f, 3.0f, 3.0f);
+  DataInterface::getInstance()->getProcessedData().netAcceleration = Vector3D(4.0f, 4.0f, 4.0f);
   Serial.println(uintToStr((millis() - startTime), str));
 }
 

@@ -1,16 +1,7 @@
 #pragma once
-#include <Wire.h>
 #include "Defines.h"
-#include "Data.h"
 
-class ParachuteInterface {
-  public:
-    virtual void update() = 0;
-    virtual bool drogueDescentCheck() = 0;
-    virtual bool mainDescentCheck() = 0;
-};
-
-class ParachuteController : public ParachuteInterface {
+class ParachuteController {
   private:
     int cycle;
     float altitude;
